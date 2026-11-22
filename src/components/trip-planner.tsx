@@ -24,6 +24,7 @@ import yearlyRaw from "@/data/anio.json";
 import destinationsRaw from "@/data/destinos.json";
 import experienceRaw from "@/data/destination-experience.json";
 import allInclusiveRaw from "@/data/all-inclusive.json";
+import historicalStaysRaw from "@/data/historical-stays.json";
 import { StaySearch } from "@/components/stay-search";
 import { LiveContext } from "@/components/live-context";
 import { HistoricalStays } from "@/components/historical-stays";
@@ -57,6 +58,7 @@ const destinations = destinationsRaw as unknown as Record<string, Destination>;
 const yearly = yearlyRaw as unknown as YearlyData;
 const experiences = experienceRaw as Record<string, Experience>;
 const allInclusive = allInclusiveRaw as unknown as AllInclusive;
+const historicalStayKeys = new Set(Object.keys(historicalStaysRaw));
 const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 function usd(value: number) {
@@ -215,7 +217,7 @@ export function TripPlanner() {
                   <div className="proposal-total"><span>{usd(item.perPerson)} por persona</span><strong>{usd(item.total)}</strong></div>
                   {item.experience?.how && <p className="proposal-how"><Plane />{item.experience.how}</p>}
                   <div className="card-actions">
-                    <button onClick={() => { setSelectedKey(item.key); setTab("alojamientos"); }}>Ver alojamientos</button>
+                    <button onClick={() => { setSelectedKey(item.key); setTab(historicalStayKeys.has(item.key) ? "alojamientos" : "vivo"); }}>{historicalStayKeys.has(item.key) ? "Ver alojamientos" : "Buscar en vivo"}</button>
                     <a href={sourceUrl(item.destination, month, travelers)} target="_blank" rel="noreferrer">Ver disponibilidad <ExternalLink /></a>
                   </div>
                 </div>
