@@ -107,17 +107,18 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .route.win small{color:var(--sun-ink)}
 .route.sel{outline:2px solid var(--accent);outline-offset:-2px}
 .route.na{opacity:.5}
-#lmap{height:min(72vh,640px);border-radius:14px;border:1px solid var(--line);z-index:0}
+#lmap{height:min(80vh,720px);min-height:560px;border-radius:14px;border:1px solid var(--line);z-index:0}
 .lpin{background:var(--surface);color:var(--ink);border:1.5px solid var(--accent);border-radius:999px;padding:2px 7px;font:700 11px var(--f-mono);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translate(-50%,-50%);display:inline-block}
 .lpin.grp.g-top{box-shadow:0 0 0 3px var(--sun)}.lpin.grp.g-ok{box-shadow:0 0 0 3px var(--good)}.lpin.grp.g-over{box-shadow:0 0 0 3px var(--warn)}
 .tleg{display:inline-block;transform:translate(-50%,-50%);white-space:nowrap;font:700 11px var(--f-mono);padding:2px 7px;border-radius:999px;background:#fff;border:1.5px solid #0a7c86;color:#0a5b62;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .tleg.gnd{border-color:#c2410c;color:#9a3412}.tleg.tr{border-color:#5b6b73;color:#374151}
 .leaflet-bottom.leaflet-left .tripbox{max-height:45vh;overflow:auto}
-@media (max-width:700px){.tripbox{width:auto;font-size:12px}.tripbox ol{display:none}}
+@media (max-width:700px){.tripbox{width:auto;font-size:13px}}@media (max-width:700px){.lpopw{display:none}}.tripout .lpopc{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.tripout{width:auto;max-width:none;margin-top:10px;box-shadow:none}
 .tripbox{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 4px 18px rgba(0,0,0,.18);width:290px;max-width:calc(100vw - 60px);font:13px/1.35 var(--f-body,Inter,system-ui,sans-serif)}
 .tripbox .tbig{display:flex;gap:14px;margin:6px 0 2px;font:700 17px var(--f-mono)}.tripbox .tbig small{display:block;font:400 11px var(--f-body,Inter,sans-serif);color:var(--muted)}
 .tripbox ol{margin:6px 0;padding:0;list-style:none;display:grid;gap:4px}.tripbox li{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:12px;border-top:1px solid var(--line);padding-top:4px}
-.tripbox li span:nth-child(n+2){font-family:var(--f-mono);white-space:nowrap}.tripbox li em{display:block;font-style:normal;color:var(--muted);font-size:11px}.tripbox li em.w{color:#b45309;font-weight:600}.laytip{font:600 11px var(--f-mono);padding:2px 6px}
+.tripbox li span:nth-child(n+2){font-family:var(--f-mono);white-space:nowrap}.tripbox li em{display:block;font-style:normal;color:var(--muted);font-size:11px}.tripbox li em.w{color:#b45309;font-weight:600}.laytip{font:600 11px var(--f-mono);padding:2px 6px}.laytip.lw{color:#b45309}
 .carstops{margin-top:12px;padding:10px 12px;border:1px solid var(--line,#ddd);border-radius:10px}.carstops h4{margin:0 0 6px;font-size:14px}.carstops ol{margin:0;padding-left:18px;font-size:13px}.carstops .w{color:var(--warn);font-weight:600;font-size:13px}
 .tripbox .tsub{font-size:12px;color:var(--muted)}.tripbox>small{color:var(--muted);font-size:11px}
 .lclim{display:flex;flex-wrap:wrap;gap:4px 10px;margin:6px 0;padding:6px 8px;border-radius:8px;background:color-mix(in srgb,#3b8ea5 10%,transparent);font-size:12px}.lclim b{flex-basis:100%}.lclim small{flex-basis:100%;color:var(--muted)}
@@ -1719,7 +1720,7 @@ let LMAP=null,LLAYER=null,LROWS=[];
 function initLMap(){if(LMAP||typeof L==="undefined")return;const el=document.getElementById("lmap");if(!el||el.offsetParent===null)return;
   LMAP=L.map(el,{scrollWheelZoom:false,worldCopyJump:true}).setView([-15,-50],4);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(LMAP);
-  LLAYER=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:38,showCoverageOnHover:false,iconCreateFunction:c=>{const v=c.getAllChildMarkers().map(m=>m.options.tot).filter(isFinite);return L.divIcon({className:"",html:LMF.color==="lluvia"?(()=>{const b=Math.min(...c.getAllChildMarkers().map(m=>m.options.sv).filter(isFinite));return `<span class="lpin grp ${b<90?"g-top":b<180?"g-ok":"g-over"}">${c.getChildCount()} playas<br>la más seca ${isFinite(b)?b+" mm":"s/d"}</span>`;})():LMF.color!=="total"?(()=>{const b=Math.max(...c.getAllChildMarkers().map(m=>m.options.sv).filter(isFinite));return `<span class="lpin grp ${b>=8.5?"g-top":b>=7?"g-ok":"g-over"}">${c.getChildCount()} playas<br>la mejor ${String(+b.toFixed(1)).replace(".",",")}/10</span>`;})():`<span class="lpin grp">${c.getChildCount()} playas<br>desde ${Math.round(Math.min(...v)).toLocaleString("es-AR")}</span>`,iconSize:null});}}):L.layerGroup()).addTo(LMAP);drawLMap(true);}
+  LLAYER=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:z=>z<4?55:z<7?45:30,showCoverageOnHover:false,iconCreateFunction:c=>{const v=c.getAllChildMarkers().map(m=>m.options.tot).filter(isFinite);return L.divIcon({className:"",html:LMF.color==="lluvia"?(()=>{const b=Math.min(...c.getAllChildMarkers().map(m=>m.options.sv).filter(isFinite));return `<span class="lpin grp ${b<90?"g-top":b<180?"g-ok":"g-over"}">${c.getChildCount()} playas<br>la más seca ${isFinite(b)?b+" mm":"s/d"}</span>`;})():LMF.color!=="total"?(()=>{const b=Math.max(...c.getAllChildMarkers().map(m=>m.options.sv).filter(isFinite));return `<span class="lpin grp ${b>=8.5?"g-top":b>=7?"g-ok":"g-over"}">${c.getChildCount()} playas<br>la mejor ${String(+b.toFixed(1)).replace(".",",")}/10</span>`;})():`<span class="lpin grp">${c.getChildCount()} playas<br>desde ${Math.round(Math.min(...v)).toLocaleString("es-AR")}</span>`,iconSize:null});}}):L.layerGroup()).addTo(LMAP);drawLMap(true);}
 function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.parts?r.parts[0][0]:r.k,nt=NINOTXT[r.zone];
   const ph=[1,2,3].map(i=>`<img src="/playas/${k}-${i}.jpg" alt="${r.name}" loading="lazy" onerror="this.remove()">`).join("");
   return `<div class="lpop"><div class="ph">${ph}</div><h4>${r.name}</h4><div class="z">${r.zone} · ${r.how||""}</div>
@@ -1731,12 +1732,14 @@ function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.parts?r.parts
     ${(()=>{const c=climOf(r);if(!c)return "";return `<div class="lclim"><b>Clima esperado en ${MESL[c.m-1]}</b><span>☀ máx ${c.tmax}°</span><span>🌊 mar ${c.mar}°</span><span>🌧 ${c.esp} mm</span><span>☔ ~${Math.round(c.dias)} días con lluvia</span>${c.ep?`<small>Promedio 2015–2024: ${c.mm} mm; con El Niño se esperan ${c.ep>0?"+":""}${c.ep} mm.</small>`:`<small>Promedio 2015–2024 (Open-Meteo).</small>`}</div>`;})()}
     <div class="row"><span>Playa ${r.s[0]}/10</span><span>Noche ${r.s[1]}/10</span><span>Movida ${r.s[2]}/10</span></div>
     <p style="margin:4px 0">${r.vibe||""}</p>${nt?`<div class="z">${nt[1]}</div>`:""}
-    <div class="hw"><b>Cómo llegar</b>${[...RKEYS,"car"].filter(x=>r.rt&&r.rt[x]&&isFinite(r.rt[x].p)).sort((x,y)=>r.rt[x].p-r.rt[y].p).map(x=>{const l=r.rt[x];const tot=/⏱ ([^<]*) en total/.exec(finfo(x,l,r.ap)||"");const hh=x==="car"?`~${l.cc.hrs} h manejando`:tot?tot[1]:"";
+    <div class="hw"><b>Cómo llegar</b>${[...RKEYS,"car"].filter(x=>r.rt&&r.rt[x]&&isFinite(r.rt[x].p)).sort((x,y)=>r.rt[x].p-r.rt[y].p).map(x=>{const l=r.rt[x];const tot=/⏱ ([^<]*) en total/.exec(finfo(x,l,r.ap)||"");let hh=x==="car"?`~${l.cc.hrs} h manejando`:tot?tot[1]:"";if(x!=="car"){try{const lg=tripLegs({...r,flk:x},null);if(lg.length&&lg.every(g=>g.m==="cruce"||g.h!=null))hh=hfmt(lg.reduce((a,g)=>a+(g.h||0),0));}catch(_){}}
       return `<button type="button" class="hwr ${x===r.flk?"on":""}" data-rpick="${r.k}" data-rk="${x}"><span>${x==="car"?"En auto":RLAB[x]}</span><span>${hh}</span><b>${Math.round(l.p+(x==="car"?r.tr:0)).toLocaleString("es-AR")}</b></button>`;}).join("")}</div>
     <button type="button" onclick="goCard('${r.k}')">Ver la ficha completa</button><div class="cr">Fotos: Wikimedia Commons (deslizá)</div></div>`;}
 // Clima esperado de la playa en el mes elegido: [máx °C, lluvia mm, días de lluvia, mar °C] (Open-Meteo 2015–2024) + efecto El Niño (solo enero)
 const climMes=r=>typeof S.mes==="number"?S.mes:(r.leg&&r.leg.m)||1;
-function climOf(r){const k=r.parts?r.parts[0][0]:r.combo&&r.comboParts?r.comboParts[0].k:r.k,m=climMes(r),c=ANIO.cl&&ANIO.cl[k]&&ANIO.cl[k][m];if(!c)return null;
+// Si a una playa le falta el clima, usa el de la playa con datos más cercana (mismo clima regional)
+const CLN={};function climNear(k){if(k in CLN)return CLN[k];const g=GEO[k];let b=null,bd=1e9;if(g)for(const j in ANIO.cl){const h=GEO[j],c=ANIO.cl[j];if(j===k||!h||!c||!c[1]||c[1][1]==null)continue;const d=(g[0]-h[0])**2+(g[1]-h[1])**2;if(d<bd){bd=d;b=j;}}return CLN[k]=bd<1?b:null;}
+function climOf(r){const k=r.parts?r.parts[0][0]:r.combo&&r.comboParts?r.comboParts[0].k:r.k,m=climMes(r);let c=ANIO.cl&&ANIO.cl[k]&&ANIO.cl[k][m];if(!c||c[1]==null){const nk=climNear(k);c=nk&&ANIO.cl[nk][m];}if(!c||c[1]==null)return null;
   let ep=0;try{if(m===1&&GEO[k])ep=ngVal({parts:[[k,1]]},"ep").v;}catch(_){}
   return {m,tmax:c[0],mm:c[1],dias:c[2],mar:c[3],ep,esp:Math.max(0,Math.round(c[1]+ep))};}
 const rainCls=mm=>mm<90?"top":mm<180?"ok":"over";
@@ -1752,7 +1755,7 @@ function layInfo(t){const m=/^(.*?) en (.*)$/.exec(t||"");if(!m)return null;cons
 // Detalle del vuelo más barato de cada tramo (horarios, duración, escalas)
 function fdet(o,ap){const f=fd0(o,ap);if(!f)return null;return {al:f[2],st:f[1],dep:f[3],arr:f[4],nd:f[5],dur:f[6],lay:(f[7]||[]).map(layInfo).filter(Boolean),from:f[8]||"",to:f[9]||""};}
 // Tramos del viaje según la forma de llegar elegida: {a,b: [lat,lon], m: avión|micro|auto|cruce|traslado, t: texto, h: horas por tramo, c: costo ida y vuelta por persona}
-function tripLegs(r,ll){const k=r.flk,l=r.rt&&r.rt[k];if(!l)return [];const ap=r.ap,T=ORGEO.TUC.slice(0,2),G=x=>(ORGEO[x]||APGEO[x]||[]).slice(0,2),A=APGEO[ap];
+function tripLegs(r,ll){const k=r.flk,l=r.rt&&r.rt[k];if(!l)return [];const ap=r.ap,T=ORGEO.TUC.slice(0,2),G=x=>(ORGEO[x]||APGEO[x]||[]).slice(0,2),A=APGEO[ap];ll=ll||(GEO[r.k]?GEO[r.k]:A);if(!A||!ll)return [];
   const air=(a,b,t,h,c,st,o2)=>({a,b,m:"avión",t,h,c,st,fd:o2?fdet(o2[0],o2[1]):null}),gnd=(a,b,m,t,h,c)=>({a,b,m,t,h,c});const L=[];
   const f0=o=>{const f=fd0(o,ap);return f?{al:f[2],st:f[1]}:{};};
   if(k==="car"){const c=l.cc;L.push({a:T,b:ll,m:"auto",t:`Tucumán → ${r.name} en auto (${c.km.toLocaleString("es-AR")} km, ${c.legDays} ${c.legDays>1?"días":"día"})`,h:c.hrs,c:l.p+r.tr,car:1});return L;}
@@ -1781,7 +1784,7 @@ function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMA
   const lab=(g)=>`${IC[g.m]} ${g.h!=null?hfmt(g.h):"? h"}${g.c?` · ${fmt(g.c)}`:""}`;
   legs.forEach((g,i)=>{if(g.m==="cruce")return;const via=g.fd?g.fd.lay.filter(x=>x.ll).map(x=>x.ll):[];const chain=[g.a,...via,g.b];
     const line=g.m==="avión"?chain.slice(1).flatMap((b,j)=>arcPts(chain[j],b,.12).slice(j?1:0)):[g.a,g.b];pts.push(...chain);
-    if(g.fd)g.fd.lay.forEach(x=>{if(!x.ll)return;L.circleMarker(x.ll,{radius:6,color:x.warn?"#b45309":"#0a7c86",weight:2,fillColor:"#fff",fillOpacity:1}).bindTooltip(`Escala en ${x.name}: ${x.dur}${x.warn?" · "+x.warn:""}`,{permanent:true,direction:"right",className:"laytip"}).addTo(LTRIP);});
+    if(g.fd)g.fd.lay.forEach(x=>{if(!x.ll)return;L.circleMarker(x.ll,{radius:6,color:x.warn?"#b45309":"#0a7c86",weight:2,fillColor:"#fff",fillOpacity:1}).bindTooltip(`⏸ ${x.name} · ${x.dur}${x.warn?" ⚠":""}`,{permanent:true,direction:"top",offset:[0,-8],className:"laytip"+(x.warn?" lw":"")}).bindPopup(`Escala en <b>${x.name}</b>: ${x.dur}${x.warn?"<br>"+x.warn:""}`).addTo(LTRIP);});
     const pl=L.polyline(line,ST[g.m]).addTo(LTRIP);
     const mid=line[Math.floor(line.length/2)]||g.b;
     L.marker(mid,{icon:L.divIcon({className:"",html:`<span class="tleg ${g.m==="avión"?"air":g.m==="traslado"?"tr":"gnd"}">${lab(g)}</span>`,iconSize:null}),interactive:false}).addTo(LTRIP);
@@ -1793,15 +1796,19 @@ function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMA
   stops.forEach(([p,t],i)=>L.circleMarker(p,{radius:i===0?7:5,color:"#0e2a33",weight:2,fillColor:i===0?"#f2c230":"#fff",fillOpacity:1}).bindTooltip(t).addTo(LTRIP));
   // cuadro resumen
   const tot=legs.reduce((s,g)=>s+(g.h||0),0),miss=legs.some(g=>g.h==null),cost=legs.reduce((s,g)=>s+(g.c||0),0),esc=legs.filter(g=>g.st).reduce((s,g)=>s+g.st,0);
-  if(!TRIPBOX){TRIPBOX=L.control({position:"bottomleft"});TRIPBOX.onAdd=()=>{const d=L.DomUtil.create("div","tripbox");L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d;};TRIPBOX.addTo(LMAP);}
-  const el=TRIPBOX.getContainer();el.hidden=false;
+  const el=tripEl();el.hidden=false;
   el.innerHTML=`<b>${r.k==="car"||r.flk==="car"?"En auto":RLAB[r.flk]} · Tucumán → ${r.name}</b>
     <div class="tbig"><span>⏱ ${miss?"~":""}${hfmt(tot)}<small> puerta a puerta, por tramo</small></span><span>${fmt(cost)}<small> ida y vuelta c/u</small></span></div>
     ${esc?`<div class="tsub">${esc} escala${esc>1?"s":""} en los vuelos</div>`:""}
     <ol>${legs.map(g=>`<li><span>${IC[g.m]} ${g.t}${g.st!=null&&g.m==="avión"?` · ${stx(g.st)}`:""}${g.fd?`<em>Sale ${g.fd.dep}${g.fd.from?" de "+g.fd.from:""} · llega ${g.fd.arr}${g.fd.to?" a "+g.fd.to:""}${g.fd.nd?" (día siguiente)":""} · ${g.fd.dur}</em>${g.fd.lay.map(x=>`<em class="${x.warn?"w":""}">↳ Escala ${x.dur} en ${x.name}${x.warn?" — "+x.warn:""}</em>`).join("")}`:""}</span><span>${g.h!=null?hfmt(g.h):"s/d"}</span><span>${g.c?fmt(g.c):"—"}</span></li>`).join("")}</ol>
     <small>Horas: cada tramo de ida (la vuelta es igual). Costos: ida y vuelta por persona.</small>`;
-  try{LMAP.fitBounds(L.latLngBounds(pts).pad(.15),{maxZoom:7,paddingTopLeft:[20,20],paddingBottomRight:innerWidth<700?[20,200]:[320,20]});}catch(_){}}
-function hideTrip(){if(LTRIP)LTRIP.clearLayers();if(TRIPBOX)TRIPBOX.getContainer().hidden=true;}
+  // El popup se abre arriba de la playa: se deja lugar arriba para él y a la izquierda (o abajo en el celular) para el cuadro del viaje
+  try{const mob=innerWidth<700;LMAP.fitBounds(L.latLngBounds(pts),{maxZoom:7,paddingTopLeft:mob?[30,40]:[300,360],paddingBottomRight:mob?[30,30]:[60,60]});}catch(_){}}
+// En la compu el cuadro va dentro del mapa; en el celular, debajo del mapa para no taparlo
+function tripEl(){if(innerWidth<700){let d=document.getElementById("tripout");if(!d){d=document.createElement("div");d.id="tripout";d.className="tripbox tripout";document.getElementById("lmap").after(d);}if(TRIPBOX)TRIPBOX.getContainer().hidden=true;return d;}
+  if(!TRIPBOX){TRIPBOX=L.control({position:"bottomleft"});TRIPBOX.onAdd=()=>{const d=L.DomUtil.create("div","tripbox");L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d;};TRIPBOX.addTo(LMAP);}
+  const o=document.getElementById("tripout");if(o)o.hidden=true;return TRIPBOX.getContainer();}
+function hideTrip(){if(LTRIP)LTRIP.clearLayers();if(TRIPBOX)TRIPBOX.getContainer().hidden=true;const o=document.getElementById("tripout");if(o)o.hidden=true;}
 const LMF={q:"",zone:"",max:3000,fit:false,ap:false,rain:false,color:"total"};let LAPL=null;
 const lmParts=()=>norm(LMF.q).split(/\s*[,;]\s*/).map(x=>x.trim()).filter(Boolean);
 function lmRows(){const qs=lmParts();return LROWS.filter(r=>isFinite(r.total)&&(!qs.length||qs.some(q=>norm(r.name+" "+r.zone).includes(q)))&&(!LMF.zone||r.zone===LMF.zone)&&r.total<=LMF.max&&(!LMF.fit||r.total<=S.target));}
@@ -1812,7 +1819,7 @@ let LRAIN=null;
 function drawRain(){if(!LMAP)return;if(LRAIN)LRAIN.clearLayers();else LRAIN=L.layerGroup().addTo(LMAP);if(!LMF.rain)return;const seen=new Set();
   lmRows().forEach(r=>{const k=r.parts?r.parts[0][0]:r.k,ll=PLL[k],c=climOf(r);if(!ll||!c||seen.has(k))return;seen.add(k);
     const col=c.esp<90?"#e0a400":c.esp<180?"#3b8ea5":"#1d4e89";
-    L.circle(ll,{radius:4000+c.esp*180,color:col,weight:1,fillColor:col,fillOpacity:Math.min(.55,.12+c.esp/600),interactive:true})
+    L.circleMarker(ll,{radius:Math.min(26,5+c.esp/14),color:col,weight:1,fillColor:col,fillOpacity:Math.min(.5,.18+c.esp/700),interactive:true})
      .bindTooltip(`<b>${r.name}</b> · ${MESL[c.m-1]}<br>🌧 ${c.esp} mm en ~${Math.round(c.dias)} días${c.ep?` (normal ${c.mm} mm, El Niño ${c.ep>0?"+":""}${c.ep})`:""}<br>☀ máx ${c.tmax}° · 🌊 mar ${c.mar}°`).addTo(LRAIN);});}
 function drawAirports(){if(!LMAP)return;if(LAPL)LAPL.clearLayers();else LAPL=L.layerGroup().addTo(LMAP);if(!LMF.ap)return;
   const by={};lmRows().forEach(r=>{(by[r.ap]=by[r.ap]||[]).push(r);});
@@ -1846,10 +1853,10 @@ function drawLMap(fit){if(!LMAP)return;initLMBar();lmLegend();LLAYER.clearLayers
   rows.forEach(r=>{const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,ll=PLL[k];if(!ll||!isFinite(r.total))return;pts.push(ll);
     const cls=lmClass(r,best);
     L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${lmLabel(r)}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k,sv:LMF.color==="lluvia"?(()=>{const c=climOf(r);return c?c.esp:null;})():LMF.color==="night"?(r.s[1]+r.s[2])/2:LMF.color==="beach"?r.s[0]:LMF.color==="clima"?NINO[r.zone]:null})
-      .bindPopup(()=>lpop(r),{maxWidth:300}).on('popupopen',()=>drawTrip(r,ll)).on('popupclose',hideTrip).addTo(LLAYER);});
+      .bindPopup(()=>lpop(r),{maxWidth:innerWidth<700?250:300,autoPan:false,maxHeight:innerWidth<700?200:310,className:'lpopw'}).on('popupopen',()=>{drawTrip(r,ll);if(innerWidth<700){const o=tripEl();const c=document.createElement('div');c.className='lpopc';c.innerHTML=lpop(r);o.prepend(c);}}).on('popupclose',hideTrip).addTo(LLAYER);});
   if(fit)LMAP.invalidateSize();if(fit&&pts.length===1)LMAP.setView(pts[0],11);else if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
   if(window.__reopen){const k=window.__reopen;window.__reopen=null;LLAYER.eachLayer(m=>{if(m.options.k===k){if(LLAYER.zoomToShowLayer)LLAYER.zoomToShowLayer(m,()=>m.openPopup());else m.openPopup();}});}}
-document.addEventListener("click",e=>{if(e.target.closest('[data-tab="mapa"]'))setTimeout(()=>{initLMap();if(LMAP){LMAP.invalidateSize();drawLMap(false);}},60);});
+document.addEventListener("click",e=>{if(e.target.closest('[data-tab="mapa"]'))setTimeout(()=>{initLMap();if(LMAP){LMAP.invalidateSize();drawLMap(!LMAP.__shown);LMAP.__shown=1;}},60);});
 function renderMap(base,out){MAPARGS=[base,out];LROWS=out;if(LMAP)drawLMap(false);else setTimeout(initLMap,0);
   const V=VIEWS[S.view];P=V.P;const svg=document.getElementById("map");const z=MZ[S.view];const [vx,vy,vw,vh]=clampZ();
   svg.setAttribute("viewBox",`${vx.toFixed(1)} ${vy.toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}`);svg.setAttribute("class",S.view+(z.k>1?" zoomed":""));
