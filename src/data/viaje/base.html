@@ -1706,7 +1706,7 @@ function drawLMap(fit){if(!LMAP)return;initLMBar();LLAYER.clearLayers();const pt
     const cls=lmClass(r,best);
     L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${lmLabel(r)}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k})
       .bindPopup(()=>lpop(r),{maxWidth:300}).on('popupopen',()=>drawTrip(r,ll)).on('popupclose',()=>LTRIP&&LTRIP.clearLayers()).addTo(LLAYER);});
-  if(fit&&pts.length===1)LMAP.setView(pts[0],11);else if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
+  if(fit)LMAP.invalidateSize();if(fit&&pts.length===1)LMAP.setView(pts[0],11);else if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
   if(window.__reopen){const k=window.__reopen;window.__reopen=null;LLAYER.eachLayer(m=>{if(m.options.k===k){if(LLAYER.zoomToShowLayer)LLAYER.zoomToShowLayer(m,()=>m.openPopup());else m.openPopup();}});}}
 document.addEventListener("click",e=>{if(e.target.closest('[data-tab="mapa"]'))setTimeout(()=>{initLMap();if(LMAP){LMAP.invalidateSize();drawLMap(false);}},60);});
 function renderMap(base,out){MAPARGS=[base,out];LROWS=out;if(LMAP)drawLMap(false);else setTimeout(initLMap,0);
