@@ -20,5 +20,7 @@ export async function GET() {
       if (!/<body/.test(html)) html = banner + html;
     }
   }
+  // La plantilla es un artefacto (sin <head>): se agrega lo necesario para que el celular la muestre a su ancho real
+  if (!/name="viewport"/.test(html)) html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` + html;
   return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=300, stale-while-revalidate=3600" } });
 }
