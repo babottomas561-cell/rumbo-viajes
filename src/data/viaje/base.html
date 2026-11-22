@@ -110,6 +110,16 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 #lmap{height:min(72vh,640px);border-radius:14px;border:1px solid var(--line);z-index:0}
 .lpin{background:var(--surface);color:var(--ink);border:1.5px solid var(--accent);border-radius:999px;padding:2px 7px;font:700 11px var(--f-mono);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translate(-50%,-50%);display:inline-block}
 .lpin.grp.g-top{box-shadow:0 0 0 3px var(--sun)}.lpin.grp.g-ok{box-shadow:0 0 0 3px var(--good)}.lpin.grp.g-over{box-shadow:0 0 0 3px var(--warn)}
+.tleg{display:inline-block;transform:translate(-50%,-50%);white-space:nowrap;font:700 11px var(--f-mono);padding:2px 7px;border-radius:999px;background:#fff;border:1.5px solid #0a7c86;color:#0a5b62;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.tleg.gnd{border-color:#c2410c;color:#9a3412}.tleg.tr{border-color:#5b6b73;color:#374151}
+.leaflet-bottom.leaflet-left .tripbox{max-height:45vh;overflow:auto}
+@media (max-width:700px){.tripbox{width:auto;font-size:12px}.tripbox ol{display:none}}
+.tripbox{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 4px 18px rgba(0,0,0,.18);width:290px;max-width:calc(100vw - 60px);font:13px/1.35 var(--f-body,Inter,system-ui,sans-serif)}
+.tripbox .tbig{display:flex;gap:14px;margin:6px 0 2px;font:700 17px var(--f-mono)}.tripbox .tbig small{display:block;font:400 11px var(--f-body,Inter,sans-serif);color:var(--muted)}
+.tripbox ol{margin:6px 0;padding:0;list-style:none;display:grid;gap:4px}.tripbox li{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:12px;border-top:1px solid var(--line);padding-top:4px}
+.tripbox li span:nth-child(n+2){font-family:var(--f-mono);white-space:nowrap}.tripbox .tsub{font-size:12px;color:var(--muted)}.tripbox>small{color:var(--muted);font-size:11px}
+.lclim{display:flex;flex-wrap:wrap;gap:4px 10px;margin:6px 0;padding:6px 8px;border-radius:8px;background:color-mix(in srgb,#3b8ea5 10%,transparent);font-size:12px}.lclim b{flex-basis:100%}.lclim small{flex-basis:100%;color:var(--muted)}
+.lmchips{display:inline-flex;flex-wrap:wrap;gap:6px}.lmchips .chip{font-size:12px}
 .lmleg{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}.lmleg .lpin{transform:none;margin-right:5px}
 .lmapbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:10px 0}.lmapbar .tin{max-width:200px}.lmr{display:flex;align-items:center;gap:6px;font-size:13px}.lmr b{font-family:var(--f-mono);min-width:70px}
 .lpin .ln{font-family:var(--f-body);font-weight:600;margin-right:3px}.lpin.grp{background:var(--ink);border-color:var(--ink);color:var(--bg);text-align:center;line-height:1.25;padding:3px 8px}.lpin.ok{background:var(--good);border-color:var(--good);color:#fff}.lpin.over{background:var(--surface);border-color:var(--warn);color:var(--warn)}.lpin.top{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
@@ -515,7 +525,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
 <nav class="tabs" id="tabs" aria-label="Secciones"><div class="tabscroll" role="tablist"><button type="button" role="tab" data-tab="propuestas" aria-selected="true">Propuestas</button><button type="button" role="tab" data-tab="mapa" aria-selected="false">Mapa</button><button type="button" role="tab" data-tab="anio" aria-selected="false">Todo el año</button><button type="button" role="tab" data-tab="clima" aria-selected="false">Clima y El Niño</button><button type="button" role="tab" data-tab="temporada" aria-selected="false">Temporada</button><button type="button" role="tab" data-tab="auto" aria-selected="false">En auto</button><button type="button" role="tab" data-tab="vuelos" aria-selected="false">Vuelos</button><button type="button" role="tab" data-tab="reservar" aria-selected="false">Antes de reservar</button><button type="button" role="tab" data-tab="metodo" aria-selected="false">Cómo se calculó</button></div><button type="button" class="filtbtn" id="openf" aria-haspopup="dialog" aria-controls="drawer"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Filtros <span class="fc" id="fcount"></span></button></nav>
 <div class="panel" data-panel="propuestas" role="tabpanel"><div class="qbar" id="qbar">
   <div class="qrow">
-    <label class="qsearch"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Buscar destino: Floripa, Jurerê, Camboriú, Salvador…" list="qlist" autocomplete="off" aria-label="Buscar destino"><datalist id="qlist"></datalist></label>
+    <label class="qsearch"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Buscar: Floripa, Jurerê… (varias separadas por coma)" list="qlist" autocomplete="off" aria-label="Buscar destino"><datalist id="qlist"></datalist></label>
   </div>
   <div class="qplaces" id="qplaces" role="group" aria-label="Destinos rápidos">
     <button type="button" data-q="">Todos</button><button type="button" data-q="floripa">Floripa (todas las playas)</button><button type="button" data-q="jurere">Jurerê</button><button type="button" data-q="camboriu">Camboriú</button><button type="button" data-q="rosa">Praia do Rosa</button><button type="button" data-q="sur">Sur de Brasil</button><button type="button" data-q="rio">Río y Búzios</button><button type="button" data-q="bahia">Bahía</button><button type="button" data-q="nordeste">Nordeste</button><button type="button" data-q="caribe">Caribe</button>
@@ -588,12 +598,13 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
     <p class="hint">Un solo mapa con todas las playas. Usá los filtros de acá o los generales (Filtros) y tocá una playa para ver fotos, gastos, rango de precios y cómo llegar.</p>
   </div>
   <div class="lmapbar" id="lmapbar">
-    <input type="search" id="lm-q" class="tin" placeholder="Buscar playa…" autocomplete="off">
+    <input type="search" id="lm-q" class="tin" placeholder="Playas (varias con coma)…" list="lm-list" autocomplete="off"><datalist id="lm-list"></datalist><span class="lmchips" id="lm-chips"></span>
     <select id="lm-zone" class="carsel"><option value="">Todas las zonas</option></select>
     <label class="lmr">Hasta <b id="lm-maxv"></b><input type="range" id="lm-max" min="500" max="3000" step="50"></label>
-    <select id="lm-color" class="carsel"><option value="total">Color: precio</option><option value="night">Color: noche y movida</option><option value="beach">Color: playa</option><option value="clima">Color: clima con El Niño</option></select>
+    <select id="lm-color" class="carsel"><option value="total">Color: precio</option><option value="night">Color: noche y movida</option><option value="beach">Color: playa</option><option value="clima">Color: clima con El Niño</option><option value="lluvia">Color: lluvia esperada (mm)</option></select>
     <label class="chk"><input type="checkbox" id="lm-fit"> Solo las que entran en el presupuesto</label>
     <label class="chk"><input type="checkbox" id="lm-ap"> Mostrar aeropuertos</label>
+    <label class="chk"><input type="checkbox" id="lm-rain"> Capa de lluvia del mes</label>
     <span class="hint" id="lm-count"></span>
     <div class="lmleg" id="lm-leg"></div>
   </div>
@@ -1421,7 +1432,7 @@ const norm=s=>(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCas
 const QSET={floripa:r=>/floripa|florianopolis/.test(norm(r.name)),sur:r=>r.zone==="Sur",rio:r=>r.ap==="RIO",bahia:r=>r.zone==="Bahía",nordeste:r=>r.zone==="Nordeste",caribe:r=>r.zone==="Caribe"};
 function matchQ(r){const q=norm(S.q).trim();if(!q)return true;if(QSET[q])return QSET[q](r);
   const hay=norm([r.name,r.zone,CITY[r.ap],r.ap].join(" ")).replace("florianopolis","florianopolis floripa");
-  return q.split(/\s+/).every(w=>hay.includes(w));}
+  return q.split(/\s*[,;]\s*/).filter(Boolean).some(part=>QSET[part]?QSET[part](r):part.split(/\s+/).every(w=>hay.includes(w)));}
 // ---- Lista de precios (vista compacta) ----
 function priceTable(out){
   return `<div class="ptable" role="table" aria-label="Lista de precios">
@@ -1705,7 +1716,7 @@ let LMAP=null,LLAYER=null,LROWS=[];
 function initLMap(){if(LMAP||typeof L==="undefined")return;const el=document.getElementById("lmap");if(!el||el.offsetParent===null)return;
   LMAP=L.map(el,{scrollWheelZoom:false,worldCopyJump:true}).setView([-15,-50],4);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(LMAP);
-  LLAYER=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:38,showCoverageOnHover:false,iconCreateFunction:c=>{const v=c.getAllChildMarkers().map(m=>m.options.tot).filter(isFinite);return L.divIcon({className:"",html:LMF.color!=="total"?(()=>{const b=Math.max(...c.getAllChildMarkers().map(m=>m.options.sv).filter(isFinite));return `<span class="lpin grp ${b>=8.5?"g-top":b>=7?"g-ok":"g-over"}">${c.getChildCount()} playas<br>la mejor ${String(+b.toFixed(1)).replace(".",",")}/10</span>`;})():`<span class="lpin grp">${c.getChildCount()} playas<br>desde ${Math.round(Math.min(...v)).toLocaleString("es-AR")}</span>`,iconSize:null});}}):L.layerGroup()).addTo(LMAP);drawLMap(true);}
+  LLAYER=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:38,showCoverageOnHover:false,iconCreateFunction:c=>{const v=c.getAllChildMarkers().map(m=>m.options.tot).filter(isFinite);return L.divIcon({className:"",html:LMF.color==="lluvia"?(()=>{const b=Math.min(...c.getAllChildMarkers().map(m=>m.options.sv).filter(isFinite));return `<span class="lpin grp ${b<90?"g-top":b<180?"g-ok":"g-over"}">${c.getChildCount()} playas<br>la más seca ${isFinite(b)?b+" mm":"s/d"}</span>`;})():LMF.color!=="total"?(()=>{const b=Math.max(...c.getAllChildMarkers().map(m=>m.options.sv).filter(isFinite));return `<span class="lpin grp ${b>=8.5?"g-top":b>=7?"g-ok":"g-over"}">${c.getChildCount()} playas<br>la mejor ${String(+b.toFixed(1)).replace(".",",")}/10</span>`;})():`<span class="lpin grp">${c.getChildCount()} playas<br>desde ${Math.round(Math.min(...v)).toLocaleString("es-AR")}</span>`,iconSize:null});}}):L.layerGroup()).addTo(LMAP);drawLMap(true);}
 function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.parts?r.parts[0][0]:r.k,nt=NINOTXT[r.zone];
   const ph=[1,2,3].map(i=>`<img src="/playas/${k}-${i}.jpg" alt="${r.name}" loading="lazy" onerror="this.remove()">`).join("");
   return `<div class="lpop"><div class="ph">${ph}</div><h4>${r.name}</h4><div class="z">${r.zone} · ${r.how||""}</div>
@@ -1714,25 +1725,79 @@ function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.parts?r.parts
       if(!rt.length)return "";const lo=base+Math.min(...rt)+(hs.length?Math.min(...hs):r.stayPP),hi=base+Math.max(...rt)+(hs.length?Math.max(...hs):r.stayPP);
       return `<div class="z"><b>Rango: ${fmt(lo)} – ${fmt(hi)}</b> por persona (de la salida y casa más baratas a las más caras)</div>`;})()}
     ${r.dc?`<div class="z">Por día y persona: súper ${Math.round(r.dc.sup)} · comer afuera ${Math.round(r.dc.eat)} · noche ${Math.round(r.dc.night)} (trago ~${r.dc.c.drink}, entrada ~${r.dc.c.ent}) · playa ${Math.round(r.dc.beach)} USD</div>`:""}
+    ${(()=>{const c=climOf(r);if(!c)return "";return `<div class="lclim"><b>Clima esperado en ${MESL[c.m-1]}</b><span>☀ máx ${c.tmax}°</span><span>🌊 mar ${c.mar}°</span><span>🌧 ${c.esp} mm</span><span>☔ ~${Math.round(c.dias)} días con lluvia</span>${c.ep?`<small>Promedio 2015–2024: ${c.mm} mm; con El Niño se esperan ${c.ep>0?"+":""}${c.ep} mm.</small>`:`<small>Promedio 2015–2024 (Open-Meteo).</small>`}</div>`;})()}
     <div class="row"><span>Playa ${r.s[0]}/10</span><span>Noche ${r.s[1]}/10</span><span>Movida ${r.s[2]}/10</span></div>
     <p style="margin:4px 0">${r.vibe||""}</p>${nt?`<div class="z">${nt[1]}</div>`:""}
     <div class="hw"><b>Cómo llegar</b>${[...RKEYS,"car"].filter(x=>r.rt&&r.rt[x]&&isFinite(r.rt[x].p)).sort((x,y)=>r.rt[x].p-r.rt[y].p).map(x=>{const l=r.rt[x];const tot=/⏱ ([^<]*) en total/.exec(finfo(x,l,r.ap)||"");const hh=x==="car"?`~${l.cc.hrs} h manejando`:tot?tot[1]:"";
       return `<button type="button" class="hwr ${x===r.flk?"on":""}" data-rpick="${r.k}" data-rk="${x}"><span>${x==="car"?"En auto":RLAB[x]}</span><span>${hh}</span><b>${Math.round(l.p+(x==="car"?r.tr:0)).toLocaleString("es-AR")}</b></button>`;}).join("")}</div>
     <button type="button" onclick="goCard('${r.k}')">Ver la ficha completa</button><div class="cr">Fotos: Wikimedia Commons (deslizá)</div></div>`;}
-let LTRIP=null;
-// Dibuja el recorrido de la forma de llegar elegida: avión (línea llena), micro o auto (punteado)
+// Clima esperado de la playa en el mes elegido: [máx °C, lluvia mm, días de lluvia, mar °C] (Open-Meteo 2015–2024) + efecto El Niño (solo enero)
+const climMes=r=>typeof S.mes==="number"?S.mes:(r.leg&&r.leg.m)||1;
+function climOf(r){const k=r.parts?r.parts[0][0]:r.combo&&r.comboParts?r.comboParts[0].k:r.k,m=climMes(r),c=ANIO.cl&&ANIO.cl[k]&&ANIO.cl[k][m];if(!c)return null;
+  let ep=0;try{if(m===1&&GEO[k])ep=ngVal({parts:[[k,1]]},"ep").v;}catch(_){}
+  return {m,tmax:c[0],mm:c[1],dias:c[2],mar:c[3],ep,esp:Math.max(0,Math.round(c[1]+ep))};}
+const rainCls=mm=>mm<90?"top":mm<180?"ok":"over";
+// Tramos del viaje según la forma de llegar elegida: {a,b: [lat,lon], m: avión|micro|auto|cruce|traslado, t: texto, h: horas por tramo, c: costo ida y vuelta por persona}
+function tripLegs(r,ll){const k=r.flk,l=r.rt&&r.rt[k];if(!l)return [];const ap=r.ap,T=ORGEO.TUC.slice(0,2),G=x=>(ORGEO[x]||APGEO[x]||[]).slice(0,2),A=APGEO[ap];
+  const air=(a,b,t,h,c,st)=>({a,b,m:"avión",t,h,c,st}),gnd=(a,b,m,t,h,c)=>({a,b,m,t,h,c});const L=[];
+  const f0=o=>{const f=fd0(o,ap);return f?{al:f[2],st:f[1]}:{};};
+  if(k==="car"){const c=l.cc;L.push({a:T,b:ll,m:"auto",t:`Tucumán → ${r.name} en auto (${c.km.toLocaleString("es-AR")} km, ${c.legDays} ${c.legDays>1?"días":"día"})`,h:c.hrs,c:l.p+r.tr,car:1});return L;}
+  if(k==="tuc"){const f=f0("TUC");L.push(air(T,A,`Vuelo Tucumán → ${CITY[ap]}${f.al?" · "+f.al:""}`,fdur("TUC",ap),l.p,f.st));}
+  else if(k==="rio"){L.push(air(T,G("RIO"),"Vuelo Tucumán → Río",fdur("TUC","RIO"),l.leg1));L.push(air(G("RIO"),A,`Vuelo Río → ${CITY[ap]}`,fdur("RIO",ap),l.leg2));}
+  else if(k==="igr"){L.push(air(T,G("IGU"),"Vuelo Tucumán → Puerto Iguazú",fdur("TUC","IGR"),l.leg1));L.push(gnd(G("IGU"),G("IGU"),"cruce","Remís y cruce a Foz",1,IGR_X));const f=f0("IGU");L.push(air(G("IGU"),A,`Vuelo Foz → ${CITY[ap]}${f.al?" · "+f.al:""}`,fdur("IGU",ap),l.air,f.st));}
+  else{const H={bue:["BUE",CS.hub?"auto":"avión",CS.hub?13:fdur("TUC","BUE"),CS.hub?"Auto Tucumán → Buenos Aires":"Vuelo Tucumán → Ezeiza"],cor:["COR",CS.hub?"auto":"micro",CS.hub?6:9,CS.hub?"Auto Tucumán → Córdoba":"Micro Tucumán → Córdoba"],
+      foz:["IGU",CS.hub?"auto":"micro",CS.hub?16:BUS_FOZ_H,CS.hub?"Auto Tucumán → Foz":"Micro Tucumán → Puerto Iguazú"],sla:["SLA",CS.hub?"auto":"micro",4.5,CS.hub?"Auto Tucumán → Salta":"Micro Tucumán → Salta"]}[k];
+    if(!H)return [];const [h,mo,hh,tx]=H;L.push(gnd(T,G(h),mo,tx,hh,hubCost(k)));if(k==="foz")L.push(gnd(G("IGU"),G("IGU"),"cruce","Cruce a Foz do Iguaçu",1,0));
+    const fa=k==="sla"?(ANIO.fl[ap]&&ANIO.fl[ap][1]):null,f=f0(h);
+    L.push(air(G(h),A,`Vuelo ${ORGEO[h][2]} → ${CITY[ap]}${k==="sla"?(fa&&fa[9]?" · "+fa[9]:""):(f.al?" · "+f.al:"")}`,k==="sla"?(fa&&fa[10]?hrs(fa[10]):null):fdur(h==="IGU"?"IGU":h,ap),l.air,k==="sla"?(fa?fa[8]:null):f.st));}
+  // aeropuerto → playa
+  const km=A?Math.round(Math.hypot((A[0]-ll[0])*111,(A[1]-ll[1])*111*Math.cos(ll[0]*Math.PI/180))*1.3):0;
+  L.push(gnd(A,ll,"traslado",`Traslado aeropuerto → ${r.name} (~${km} km)`,km<15?.5:Math.round(km/55*2+1)/2,r.tr));
+  return L;}
+// Curva suave para los vuelos (se ve como ruta aérea)
+function arcPts(a,b,bend=.18){const n=24,mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[1]-a[1],dy=b[0]-a[0],c=[mx+dx*bend,my-dy*bend],o=[];
+  for(let i=0;i<=n;i++){const t=i/n,u=1-t;o.push([u*u*a[0]+2*u*t*c[0]+t*t*b[0],u*u*a[1]+2*u*t*c[1]+t*t*b[1]]);}return o;}
+const OSRMC={};
+let LTRIP=null,TRIPBOX=null;
+// Dibuja el recorrido de la forma de llegar elegida, tramo por tramo, con horas y costo; en auto, la ruta real por rutas (OSRM)
 function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMAP);LTRIP.clearLayers();
-  const T=ORGEO.TUC.slice(0,2),k=r.flk,G=x=>(ORGEO[x]||APGEO[x]||[]).slice(0,2),air={color:"#0a7c86",weight:3},bus={color:"#a86b12",weight:3,dashArray:"6 6"};
-  const seg=(a,b,st)=>{if(a.length===2&&b.length===2)L.polyline([a,b],st).addTo(LTRIP);};
-  const hubs={bue:["BUE",air],cor:["COR",bus],foz:["IGU",bus],sla:["SLA",bus],igr:["IGU",air]};
-  if(k==="car")seg(T,ll,bus);else if(k==="tuc")seg(T,ll,air);else if(k==="rio"){seg(T,G("RIO"),air);seg(G("RIO"),ll,air);}
-  else if(hubs[k]){const [h,st]=hubs[k];seg(T,G(h),st);seg(G(h),ll,air);}
-  L.circleMarker(T,{radius:6,color:"#0e2a33",fillOpacity:1}).bindTooltip("Tucumán").addTo(LTRIP);}
-const LMF={q:"",zone:"",max:3000,fit:false,ap:false,color:"total"};let LAPL=null;
-function lmRows(){const q=norm(LMF.q);return LROWS.filter(r=>isFinite(r.total)&&(!q||norm(r.name+" "+r.zone).includes(q))&&(!LMF.zone||r.zone===LMF.zone)&&r.total<=LMF.max&&(!LMF.fit||r.total<=S.target));}
-function lmClass(r,best){if(LMF.color==="total")return r.total===best?"top":r.total<=S.target?"ok":"over";
+  const ST={"avión":{color:"#0a7c86",weight:3.5},"micro":{color:"#a86b12",weight:3.5,dashArray:"7 7"},"auto":{color:"#c2410c",weight:4},"traslado":{color:"#5b6b73",weight:3,dashArray:"2 6"},"cruce":{color:"#5b6b73",weight:3}};
+  const IC={"avión":"✈","micro":"🚌","auto":"🚗","traslado":"🚐","cruce":"⇄"};
+  const legs=tripLegs(r,ll);const pts=[];
+  const lab=(g)=>`${IC[g.m]} ${g.h!=null?hfmt(g.h):"? h"}${g.c?` · ${fmt(g.c)}`:""}`;
+  legs.forEach((g,i)=>{if(g.m==="cruce")return;const line=g.m==="avión"?arcPts(g.a,g.b):[g.a,g.b];pts.push(g.a,g.b);
+    const pl=L.polyline(line,ST[g.m]).addTo(LTRIP);
+    const mid=line[Math.floor(line.length/2)]||g.b;
+    L.marker(mid,{icon:L.divIcon({className:"",html:`<span class="tleg ${g.m==="avión"?"air":g.m==="traslado"?"tr":"gnd"}">${lab(g)}</span>`,iconSize:null}),interactive:false}).addTo(LTRIP);
+    if(g.car){const key=r.k;const draw=co=>{if(LTRIP.__k!==r.k)return;LTRIP.removeLayer(pl);L.polyline(co,ST.auto).addTo(LTRIP);};
+      if(OSRMC[key])draw(OSRMC[key]);else fetch(`https://router.project-osrm.org/route/v1/driving/${g.a[1]},${g.a[0]};${g.b[1]},${g.b[0]}?overview=simplified&geometries=geojson`).then(x=>x.json()).then(j=>{const co=j.routes[0].geometry.coordinates.map(([lo,la])=>[la,lo]);OSRMC[key]=co;draw(co);}).catch(()=>{});}});
+  LTRIP.__k=r.k;
+  // puntos de cada parada
+  const stops=[[ORGEO.TUC.slice(0,2),"Salida: Tucumán"],...legs.filter(g=>g.m!=="cruce").map(g=>[g.b,g===legs[legs.length-1]?r.name:(Object.values(ORGEO).find(o=>o[0]===g.b[0])||[])[2]||CITY[r.ap]||""])];
+  stops.forEach(([p,t],i)=>L.circleMarker(p,{radius:i===0?7:5,color:"#0e2a33",weight:2,fillColor:i===0?"#f2c230":"#fff",fillOpacity:1}).bindTooltip(t).addTo(LTRIP));
+  // cuadro resumen
+  const tot=legs.reduce((s,g)=>s+(g.h||0),0),miss=legs.some(g=>g.h==null),cost=legs.reduce((s,g)=>s+(g.c||0),0),esc=legs.filter(g=>g.st).reduce((s,g)=>s+g.st,0);
+  if(!TRIPBOX){TRIPBOX=L.control({position:"bottomleft"});TRIPBOX.onAdd=()=>{const d=L.DomUtil.create("div","tripbox");L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d;};TRIPBOX.addTo(LMAP);}
+  const el=TRIPBOX.getContainer();el.hidden=false;
+  el.innerHTML=`<b>${r.k==="car"||r.flk==="car"?"En auto":RLAB[r.flk]} · Tucumán → ${r.name}</b>
+    <div class="tbig"><span>⏱ ${miss?"~":""}${hfmt(tot)}<small> puerta a puerta, por tramo</small></span><span>${fmt(cost)}<small> ida y vuelta c/u</small></span></div>
+    ${esc?`<div class="tsub">${esc} escala${esc>1?"s":""} en los vuelos</div>`:""}
+    <ol>${legs.map(g=>`<li><span>${IC[g.m]} ${g.t}${g.st!=null&&g.m==="avión"?` · ${stx(g.st)}`:""}</span><span>${g.h!=null?hfmt(g.h):"s/d"}</span><span>${g.c?fmt(g.c):"—"}</span></li>`).join("")}</ol>
+    <small>Horas: cada tramo de ida (la vuelta es igual). Costos: ida y vuelta por persona.</small>`;
+  try{LMAP.fitBounds(L.latLngBounds(pts).pad(.15),{maxZoom:7,paddingTopLeft:[20,20],paddingBottomRight:innerWidth<700?[20,200]:[320,20]});}catch(_){}}
+function hideTrip(){if(LTRIP)LTRIP.clearLayers();if(TRIPBOX)TRIPBOX.getContainer().hidden=true;}
+const LMF={q:"",zone:"",max:3000,fit:false,ap:false,rain:false,color:"total"};let LAPL=null;
+const lmParts=()=>norm(LMF.q).split(/\s*[,;]\s*/).map(x=>x.trim()).filter(Boolean);
+function lmRows(){const qs=lmParts();return LROWS.filter(r=>isFinite(r.total)&&(!qs.length||qs.some(q=>norm(r.name+" "+r.zone).includes(q)))&&(!LMF.zone||r.zone===LMF.zone)&&r.total<=LMF.max&&(!LMF.fit||r.total<=S.target));}
+function lmClass(r,best){if(LMF.color==="lluvia"){const c=climOf(r);return c?rainCls(c.esp):"over";}if(LMF.color==="total")return r.total===best?"top":r.total<=S.target?"ok":"over";
   const v=LMF.color==="night"?(r.s[1]+r.s[2])/2:LMF.color==="beach"?r.s[0]:NINO[r.zone];return v>=8.5?"top":v>=7?"ok":"over";}
-function lmLabel(r){const v=LMF.color==="night"?((r.s[1]+r.s[2])/2).toFixed(1).replace(".0",""):LMF.color==="beach"?r.s[0]:LMF.color==="clima"?NINO[r.zone]:null;return v==null?Math.round(r.total).toLocaleString("es-AR"):v+"/10";}
+function lmLabel(r){if(LMF.color==="lluvia"){const c=climOf(r);return c?c.esp+" mm":"s/d";}const v=LMF.color==="night"?((r.s[1]+r.s[2])/2).toFixed(1).replace(".0",""):LMF.color==="beach"?r.s[0]:LMF.color==="clima"?NINO[r.zone]:null;return v==null?Math.round(r.total).toLocaleString("es-AR"):v+"/10";}
+let LRAIN=null;
+function drawRain(){if(!LMAP)return;if(LRAIN)LRAIN.clearLayers();else LRAIN=L.layerGroup().addTo(LMAP);if(!LMF.rain)return;const seen=new Set();
+  lmRows().forEach(r=>{const k=r.parts?r.parts[0][0]:r.k,ll=PLL[k],c=climOf(r);if(!ll||!c||seen.has(k))return;seen.add(k);
+    const col=c.esp<90?"#e0a400":c.esp<180?"#3b8ea5":"#1d4e89";
+    L.circle(ll,{radius:4000+c.esp*180,color:col,weight:1,fillColor:col,fillOpacity:Math.min(.55,.12+c.esp/600),interactive:true})
+     .bindTooltip(`<b>${r.name}</b> · ${MESL[c.m-1]}<br>🌧 ${c.esp} mm en ~${Math.round(c.dias)} días${c.ep?` (normal ${c.mm} mm, El Niño ${c.ep>0?"+":""}${c.ep})`:""}<br>☀ máx ${c.tmax}° · 🌊 mar ${c.mar}°`).addTo(LRAIN);});}
 function drawAirports(){if(!LMAP)return;if(LAPL)LAPL.clearLayers();else LAPL=L.layerGroup().addTo(LMAP);if(!LMF.ap)return;
   const by={};lmRows().forEach(r=>{(by[r.ap]=by[r.ap]||[]).push(r);});
   Object.entries(by).forEach(([ap,rs])=>{const g=APGEO[ap];if(!g)return;L.circleMarker(g,{radius:8,color:"#0e2a33",weight:2,fillColor:"#fff",fillOpacity:1}).bindTooltip(`✈ ${CITY[ap]||ap} (${ap}): ${rs.length} playa${rs.length>1?"s":""}, desde ${fmt(Math.min(...rs.map(r=>r.total)))}`).addTo(LAPL);});
@@ -1740,26 +1805,32 @@ function drawAirports(){if(!LMAP)return;if(LAPL)LAPL.clearLayers();else LAPL=L.l
 function initLMBar(){const z=document.getElementById("lm-zone");if(!z||z.dataset.ok)return;z.dataset.ok=1;
   z.innerHTML+=[...new Set(D.map(d=>d.zone))].map(v=>`<option>${v}</option>`).join("");
   const mx=document.getElementById("lm-max"),mv=document.getElementById("lm-maxv");mx.value=LMF.max;mv.textContent=LMF.max>=3000?"sin tope":fmt(LMF.max);
-  const up=()=>{drawLMap(false);drawAirports();};
-  document.getElementById("lm-q").addEventListener("input",e=>{LMF.q=e.target.value;drawLMap(true);drawAirports();});
+  const up=()=>{drawLMap(false);drawAirports();drawRain();};
+  document.getElementById("lm-list").innerHTML=[...new Set(LROWS.map(r=>r.name))].sort().map(n=>`<option value="${n}">`).join("");
+  const qi=document.getElementById("lm-q"),chips=document.getElementById("lm-chips");LMF.sel=LMF.sel||[];
+  const sync=()=>{LMF.q=[...LMF.sel,qi.value].filter(x=>x&&x.trim()).join(", ");chips.innerHTML=LMF.sel.map((n,i)=>`<button type="button" class="chip" data-i="${i}">${n} ×</button>`).join("")+(LMF.sel.length>1?`<button type="button" class="linkbtn" data-i="all">Quitar todas</button>`:"");drawLMap(true);drawAirports();drawRain();};
+  qi.addEventListener("input",e=>{const v=qi.value;const exact=LROWS.find(r=>r.name===v.trim());if(exact||/,\s*$/.test(v)){const n=(exact?exact.name:v.replace(/,\s*$/,"")).trim();if(n&&!LMF.sel.includes(n))LMF.sel.push(n);qi.value="";}sync();});
+  chips.addEventListener("click",e=>{const b=e.target.closest("[data-i]");if(!b)return;if(b.dataset.i==="all")LMF.sel=[];else LMF.sel.splice(+b.dataset.i,1);sync();});
   z.addEventListener("change",e=>{LMF.zone=e.target.value;drawLMap(true);drawAirports();});
   mx.addEventListener("input",e=>{LMF.max=+e.target.value;mv.textContent=+e.target.value>=3000?"sin tope":fmt(+e.target.value);up();});
   document.getElementById("lm-color").addEventListener("change",e=>{LMF.color=e.target.value;up();});
   document.getElementById("lm-fit").addEventListener("change",e=>{LMF.fit=e.target.checked;up();});
   document.getElementById("lm-ap").addEventListener("change",e=>{LMF.ap=e.target.checked;drawAirports();});
+  document.getElementById("lm-rain").addEventListener("change",e=>{LMF.rain=e.target.checked;drawRain();});
   document.querySelectorAll("#view button").forEach(b=>b.addEventListener("click",()=>{if(!LMAP)return;if(b.dataset.v==="br")LMAP.fitBounds([[-34,-58],[-2,-34]]);else drawLMap(true);}));}
 function lmLegend(){const el=document.getElementById("lm-leg");if(!el)return;const t=fmt(S.target);
   const L={total:[["top","La más barata"],["ok","Entra en el presupuesto ("+t+")"],["over","Se pasa del presupuesto"]],
     night:[["top","Mucha noche (8,5 o más)"],["ok","Algo de salida (7 a 8)"],["over","Tranquila (menos de 7)"]],
     beach:[["top","Playa espectacular (8,5 o más)"],["ok","Muy linda (7 a 8)"],["over","Más común (menos de 7)"]],
-    clima:[["top","Buen clima con El Niño (8,5 o más)"],["ok","Aceptable (7 a 8)"],["over","Riesgo de lluvia (menos de 7)"]]}[LMF.color];
+    clima:[["top","Buen clima con El Niño (8,5 o más)"],["ok","Aceptable (7 a 8)"],["over","Riesgo de lluvia (menos de 7)"]],
+    lluvia:[["top","Seco: menos de 90 mm en el mes"],["ok","Algo de lluvia: 90 a 180 mm"],["over","Lluvioso: más de 180 mm"]]}[LMF.color];
   el.innerHTML=L.map(([c,x])=>`<span><span class="lpin ${c}">&nbsp;</span>${x}</span>`).join("")+`<span><span class="lpin grp">3</span>Varias playas juntas: acercate o tocalas</span>`;}
 function drawLMap(fit){if(!LMAP)return;initLMBar();lmLegend();LLAYER.clearLayers();const pts=[];const rows=lmRows();const best=rows.length?Math.min(...rows.map(r=>r.total)):0;
   const ct=document.getElementById("lm-count");if(ct)ct.textContent=`${rows.length} playas en el mapa`;
   rows.forEach(r=>{const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,ll=PLL[k];if(!ll||!isFinite(r.total))return;pts.push(ll);
     const cls=lmClass(r,best);
-    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${lmLabel(r)}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k,sv:LMF.color==="night"?(r.s[1]+r.s[2])/2:LMF.color==="beach"?r.s[0]:LMF.color==="clima"?NINO[r.zone]:null})
-      .bindPopup(()=>lpop(r),{maxWidth:300}).on('popupopen',()=>drawTrip(r,ll)).on('popupclose',()=>LTRIP&&LTRIP.clearLayers()).addTo(LLAYER);});
+    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${lmLabel(r)}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k,sv:LMF.color==="lluvia"?(()=>{const c=climOf(r);return c?c.esp:null;})():LMF.color==="night"?(r.s[1]+r.s[2])/2:LMF.color==="beach"?r.s[0]:LMF.color==="clima"?NINO[r.zone]:null})
+      .bindPopup(()=>lpop(r),{maxWidth:300}).on('popupopen',()=>drawTrip(r,ll)).on('popupclose',hideTrip).addTo(LLAYER);});
   if(fit)LMAP.invalidateSize();if(fit&&pts.length===1)LMAP.setView(pts[0],11);else if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
   if(window.__reopen){const k=window.__reopen;window.__reopen=null;LLAYER.eachLayer(m=>{if(m.options.k===k){if(LLAYER.zoomToShowLayer)LLAYER.zoomToShowLayer(m,()=>m.openPopup());else m.openPopup();}});}}
 document.addEventListener("click",e=>{if(e.target.closest('[data-tab="mapa"]'))setTimeout(()=>{initLMap();if(LMAP){LMAP.invalidateSize();drawLMap(false);}},60);});
