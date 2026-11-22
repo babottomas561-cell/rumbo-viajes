@@ -1,5 +1,9 @@
 <title>Brasil Verano 2027</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
@@ -103,6 +107,15 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .route.win small{color:var(--sun-ink)}
 .route.sel{outline:2px solid var(--accent);outline-offset:-2px}
 .route.na{opacity:.5}
+#lmap{height:min(72vh,640px);border-radius:14px;border:1px solid var(--line);z-index:0}
+.lpin{background:var(--surface);color:var(--ink);border:1.5px solid var(--accent);border-radius:999px;padding:2px 7px;font:700 11px var(--f-mono);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translate(-50%,-50%);display:inline-block}
+.lpin.grp{background:var(--ink);border-color:var(--ink);color:var(--bg);text-align:center;line-height:1.25;padding:3px 8px}.lpin.ok{background:var(--good);border-color:var(--good);color:#fff}.lpin.over{background:var(--surface);border-color:var(--warn);color:var(--warn)}.lpin.top{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
+.lpop{width:270px;font:13px/1.4 var(--f-body)}.lpop .ph{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:4px;border-radius:10px;margin-bottom:8px}
+.lpop .ph img{width:270px;height:170px;object-fit:cover;flex:0 0 100%;scroll-snap-align:start;border-radius:10px;background:#ccc}
+.lpop h4{margin:0 0 2px;font:700 16px var(--f-display)}.lpop .z{color:#557079;font-size:12px}.lpop .t{font:700 15px var(--f-mono);margin:6px 0 2px}
+.lpop .row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.lpop .row span{background:#e0f1f2;color:#0a7c86;border-radius:999px;padding:1px 8px;font-size:11.5px}
+.lpop button{margin-top:6px;width:100%;padding:7px;border:0;border-radius:8px;background:#0a7c86;color:#fff;font:600 13px var(--f-body);cursor:pointer}.lpop .cr{font-size:10px;color:#557079;margin-top:4px}
+.leaflet-popup-content{margin:10px}
 @keyframes flash{0%{box-shadow:0 0 0 3px var(--sun)}100%{box-shadow:0 0 0 3px transparent}}.card.flash{animation:flash 1.8s ease-out}
 button.route{font-family:inherit;line-height:inherit;color:inherit;background:var(--surface);text-align:left;cursor:pointer}button.route:hover:not(:disabled){border-color:var(--accent)}button.route.win{background:var(--sun)}
 .route small.fi{font-family:var(--f-body);font-size:10.5px;line-height:1.3}.route .hh{font-family:var(--f-mono);font-size:11px;font-weight:700}
@@ -557,6 +570,9 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
     <div class="seg mapviews" id="view" role="group" aria-label="Vista del mapa"><button type="button" data-v="am" aria-pressed="true">Toda América</button><button type="button" data-v="br" aria-pressed="false">Brasil</button></div>
     <p class="hint">Los círculos grandes son aeropuertos y los puntos chicos, las playas, con el color según el total por persona. Tocá una playa para ver su ficha, o un aeropuerto para acercarte y ver sus playas. Arrastrá para moverte y usá + y − para el zoom.</p>
   </div>
+  <div class="lmapwrap"><div id="lmap" aria-label="Mapa con la ubicación exacta de cada playa"></div>
+    <p class="hint">Mapa real (OpenStreetMap): cada etiqueta es una playa con el total por persona según lo elegido arriba. Tocala para ver fotos, descripción, clima y precio. Fotos de Wikimedia Commons.</p></div>
+  <h3 class="dgrp" style="margin-top:18px">Mapa por aeropuerto</h3>
   <div class="mapwrap">
     <div class="mapbox" id="mapbox"><svg id="map" viewBox="0 0 690 625" role="img" aria-label="Mapa interactivo con playas, aeropuertos de llegada y ciudades de salida"></svg><div class="mapctl"><button type="button" data-z="in" aria-label="Acercar">+</button><button type="button" data-z="out" aria-label="Alejar">−</button><button type="button" data-z="reset">Ver todo</button></div><div class="mappop" id="mappop" hidden></div><div class="mapnote" id="mapnote" hidden>Para acercar: Ctrl + rueda, pellizcá o usá +</div></div>
     <div class="aplist" id="aplist"></div>
@@ -1553,7 +1569,28 @@ function redrawMap(){cancelAnimationFrame(MAPRAF);MAPRAF=requestAnimationFrame((
 function zoomAt(f,cx,cy){const z=MZ[S.view],[,,w,h]=vb0(),[x,y,W,H]=clampZ();if(cx==null){cx=x+W/2;cy=y+H/2;}
   const nk=Math.min(10,Math.max(1,z.k*f)),fx=(cx-x)/W,fy=(cy-y)/H;z.k=nk;z.x=cx-fx*w/nk;z.y=cy-fy*h/nk;redrawMap();}
 function centerOn(lat,lon,k){const z=MZ[S.view],[,,w,h]=vb0(),[px,py]=VIEWS[S.view].P(lat,lon);z.k=Math.max(z.k,k);z.x=px-w/z.k/2;z.y=py-h/z.k/2;redrawMap();}
-function renderMap(base,out){MAPARGS=[base,out];
+// ===== Mapa real con Leaflet =====
+const PLL={"rio":[-22.98,-43.2],"buzios":[-22.75,-41.88],"arraialcabo":[-22.97,-42.03],"ilhagrande":[-23.14,-44.17],"paraty":[-23.22,-44.71],"floripa":[-27.6,-48.47],"jurere":[-27.438,-48.497],"canasvieiras":[-27.428,-48.457],"daniela":[-27.452,-48.535],"brava":[-27.398,-48.418],"ingleses":[-27.437,-48.395],"barralagoa":[-27.578,-48.428],"campeche":[-27.672,-48.483],"armacao":[-27.75,-48.505],"bombinhas":[-27.143,-48.51],"garopaba":[-28.03,-48.62],"guarda":[-27.905,-48.59],"guarajuba":[-12.645,-38.06],"japaratinga":[-9.09,-35.26],"curazao":[12.09,-68.88],"maresias":[-23.79,-45.565],"ubatuba":[-23.445,-45.07],"ilhabela":[-23.79,-45.36],"camboriu":[-26.99,-48.63],"rosa":[-28.13,-48.64],"porto":[-16.43,-39.06],"ajuda":[-16.49,-39.07],"caraiva":[-16.81,-39.15],"trancoso":[-16.59,-39.1],"itacare":[-14.28,-38.99],"morro":[-13.38,-38.91],"salvador":[-13.01,-38.53],"praiaforte":[-12.58,-38.0],"maceio":[-9.66,-35.71],"frances":[-9.77,-35.84],"maragogi":[-9.01,-35.22],"milagres":[-9.27,-35.37],"galinhas":[-8.5,-35.0],"carneiros":[-8.7,-35.08],"jpa":[-7.12,-34.84],"pipa":[-6.23,-35.05],"natal":[-5.88,-35.18],"gostoso":[-5.12,-35.63],"jeri":[-2.8,-40.51],"canoa":[-4.53,-37.69],"cumbuco":[-3.63,-38.73],"fortaleza":[-3.73,-38.5],"atins":[-2.57,-42.74],"cabofrio":[-22.88,-42.02],"saquarema":[-22.93,-42.49],"barragrande":[-13.87,-38.95],"imbassai":[-12.49,-37.96],"icarai":[-3.03,-39.65],"barrasm":[-9.84,-35.9],"mardelplata":[-38,-57.55],"villagesell":[-37.26,-56.97],"pinamar":[-37.11,-56.86],"puntadiablo":[-34.04,-53.54],"lapedrera":[-34.59,-54.13],"puntadeleste":[-34.96,-54.94],"cartagena":[10.42,-75.55],"santamarta":[11.2,-74.22],"sanandres":[12.58,-81.7],"puntacana":[18.68,-68.42],"playadelcarmen":[20.63,-87.07],"bocas":[9.34,-82.24],"tamarindo":[10.3,-85.84],"mancora":[-4.1,-81.05],"renaca":[-32.97,-71.54],"iquique":[-20.23,-70.15],"arica":[-18.48,-70.32],"montanita":[-1.83,-80.75],"huanchaco":[-8.08,-79.12],"eltunco":[13.49,-89.38],"sanjuandelsur":[11.25,-85.87],"puertoescondido":[15.86,-97.07],"sayulita":[20.87,-105.44],"playavenao":[7.43,-80.19]};
+let LMAP=null,LLAYER=null,LROWS=[];
+function initLMap(){if(LMAP||typeof L==="undefined")return;const el=document.getElementById("lmap");if(!el||el.offsetParent===null)return;
+  LMAP=L.map(el,{scrollWheelZoom:false,worldCopyJump:true}).setView([-15,-50],4);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(LMAP);
+  LLAYER=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:38,showCoverageOnHover:false,iconCreateFunction:c=>{const v=c.getAllChildMarkers().map(m=>m.options.tot).filter(isFinite);return L.divIcon({className:"",html:`<span class="lpin grp">${c.getChildCount()} playas<br>desde ${Math.round(Math.min(...v)).toLocaleString("es-AR")}</span>`,iconSize:null});}}):L.layerGroup()).addTo(LMAP);drawLMap(true);}
+function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,nt=NINOTXT[r.zone];
+  const ph=[1,2,3].map(i=>`<img src="/playas/${k}-${i}.jpg" alt="${r.name}" loading="lazy" onerror="this.remove()">`).join("");
+  return `<div class="lpop"><div class="ph">${ph}</div><h4>${r.name}</h4><div class="z">${r.zone} · ${r.how||""}</div>
+    <div class="t">${fmt(r.total)} por persona</div><div class="z">${RLAB[r.flk]||""}${r.total<=S.target?" · entra en "+fmt(S.target):" · "+fmt(r.total-S.target)+" arriba"}</div>
+    <div class="row"><span>Playa ${r.s[0]}/10</span><span>Noche ${r.s[1]}/10</span><span>Movida ${r.s[2]}/10</span></div>
+    <p style="margin:4px 0">${r.vibe||""}</p>${nt?`<div class="z">${nt[1]}</div>`:""}
+    <button type="button" onclick="goCard('${r.k}')">Ver la ficha completa</button><div class="cr">Fotos: Wikimedia Commons (deslizá)</div></div>`;}
+function drawLMap(fit){if(!LMAP)return;LLAYER.clearLayers();const pts=[];const best=LROWS.length?Math.min(...LROWS.map(r=>r.total)):0;
+  LROWS.forEach(r=>{const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,ll=PLL[k];if(!ll||!isFinite(r.total))return;pts.push(ll);
+    const cls=r.total===best?"top":r.total<=S.target?"ok":"over";
+    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}">${Math.round(r.total).toLocaleString("es-AR")}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total})
+      .bindPopup(()=>lpop(r),{maxWidth:300}).addTo(LLAYER);});
+  if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});}
+document.addEventListener("click",e=>{if(e.target.closest('[data-tab="mapa"]'))setTimeout(()=>{initLMap();if(LMAP){LMAP.invalidateSize();drawLMap(false);}},60);});
+function renderMap(base,out){MAPARGS=[base,out];LROWS=out;if(LMAP)drawLMap(false);else setTimeout(initLMap,0);
   const V=VIEWS[S.view];P=V.P;const svg=document.getElementById("map");const z=MZ[S.view];const [vx,vy,vw,vh]=clampZ();
   svg.setAttribute("viewBox",`${vx.toFixed(1)} ${vy.toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}`);svg.setAttribute("class",S.view+(z.k>1?" zoomed":""));
   const s=1/z.k;svg.style.setProperty("--zs",s);
