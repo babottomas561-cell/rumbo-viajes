@@ -623,7 +623,9 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
   <div class="carbox">
     <div class="carctl">
       <div class="ctl"><span class="lbl">Vehículo</span><div class="seg" id="carveh" role="group" aria-label="Vehículo"><button type="button" data-v="auto" aria-pressed="true">Auto nafta (10 km/l)</button><button type="button" data-v="cam" aria-pressed="false">Camioneta diésel (9,5 km/l)</button></div></div>
-      <div class="ctl"><span class="lbl">Cuántos vehículos</span><div class="seg" id="carn" role="group" aria-label="Cuántos vehículos"><button type="button" data-v="1" aria-pressed="false">1 (7 plazas)</button><button type="button" data-v="2" aria-pressed="true">2 (3 por auto)</button><button type="button" data-v="3" aria-pressed="false">3</button></div></div>
+      <div class="ctl"><span class="lbl">Cuántos vehículos</span><div class="seg" id="carn" role="group" aria-label="Cuántos vehículos"><button type="button" data-v="1" aria-pressed="false">1</button><button type="button" data-v="2" aria-pressed="true">2</button><button type="button" data-v="3" aria-pressed="false">3</button><button type="button" data-v="4" aria-pressed="false">4</button></div></div>
+      <div class="ctl"><label class="lbl" for="carcap">Plazas por vehículo (contando al que maneja)</label><select id="carcap" class="carsel"><option value="4">4</option><option value="5" selected>5</option><option value="7">7 (camioneta o SUV de 3 filas)</option><option value="9">9 (combi)</option></select></div>
+      <div class="ctl"><label class="lbl" for="carpay">Cuántos pagan los gastos del auto</label><select id="carpay" class="carsel"></select><span class="hint" id="carpayhint"></span></div>
       <div class="ctl"><span class="lbl">Ritmo de manejo</span><div class="seg" id="carnoches" role="group" aria-label="Horas de manejo por día"><button type="button" data-v="10" aria-pressed="true">Tranquilo (10 h por día)</button><button type="button" data-v="13" aria-pressed="false">Largo (13 h por día)</button></div></div>
       <label class="chk"><input type="checkbox" id="cardesg" checked> Sumar desgaste del auto (service, cubiertas: USD 0,04 por km)</label>
       <div class="carprices">
@@ -1435,7 +1437,7 @@ const hfmt=x=>{const h=Math.floor(x),m=Math.round((x-h)*60);return m?`${h} h ${S
 const fdur=(o,ap)=>{const f=fd0(o,ap);return f?hrs(f[6]):null;};
 // Aerolínea, escalas y horas de viaje de puerta a puerta (micro + cruce + vuelos), por tramo de ida
 function finfo(k,l,ap){
-  if(k==="car"){const c=l.cc;return `🚗 ~${c.hrs} h de manejo (${c.legDays} ${c.legDays>1?"días":"día"})`;}
+  if(k==="car"){const c=l.cc;return `🚗 ~${c.hrs} h de manejo (${c.legDays} ${c.legDays>1?"días":"día"})<br>${CS.n} × ${CS.cap} plazas${carPay()<PAX?`, pagan ${carPay()}`:""}${carFits()?"":` <b style="color:var(--warn)">no entran</b>`}`;}
   if(l.m&&l.m!==1)return [l.al,stx(l.st)].filter(Boolean).join(" · ");
   const parts=[];let tot=0,ok=true;const leg=(lab,h)=>{if(h==null){ok=false;parts.push(lab);}else{tot+=h;parts.push(`${lab} ${hfmt(h)}`);}};
   let head="";
@@ -1457,7 +1459,7 @@ function flightRows(r){const l=r.leg;
   const tramo=(CS.hub?{bue:["Auto TUC ↔ Bs. As. y estacionamiento",hubCar("bue")],cor:["Auto TUC ↔ Córdoba y estacionamiento",hubCar("cor")],foz:["Auto TUC ↔ Foz, Carta Verde y estacionamiento",hubCar("foz")]}:{bue:["TUC ↔ EZE en JetSMART",TUC_BUE],cor:["Micro TUC ↔ Córdoba (estimado)",BUS_COR],foz:["Micro TUC ↔ Puerto Iguazú (estimado)",BUS_FOZ]})[r.flk];
   return `<span>${tramo[0]}</span><span>${fmt(tramo[1])}</span><span>Vuelo ${l.o} ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;}
 
-function render(){PAX=S.pax;DAYS=S.nights+1;syncQuick();try{if(typeof renderAnio==='function'&&document.getElementById('yrt')&&document.getElementById('yrt').innerHTML)setTimeout(renderAnio,0);}catch(e){}document.querySelectorAll(".v-pax").forEach(e=>e.textContent=PAX);document.querySelectorAll(".v-nights").forEach(e=>e.textContent=NIGHTS());document.querySelectorAll(".v-days").forEach(e=>e.textContent=DAYS);
+function render(){PAX=S.pax;DAYS=S.nights+1;try{fillPay();}catch(_){}syncQuick();try{if(typeof renderAnio==='function'&&document.getElementById('yrt')&&document.getElementById('yrt').innerHTML)setTimeout(renderAnio,0);}catch(e){}document.querySelectorAll(".v-pax").forEach(e=>e.textContent=PAX);document.querySelectorAll(".v-nights").forEach(e=>e.textContent=NIGHTS());document.querySelectorAll(".v-days").forEach(e=>e.textContent=DAYS);
   const {base,out,all,noflight,rows}=build();
   renderMap(base,out);{const fm=document.getElementById("fmap");if(fm)fm.innerHTML=floripaMap(out);}renderFit(rows);renderCar(rows);
   document.querySelectorAll(".v-ndest").forEach(e=>e.textContent=D.length+C.length);document.getElementById("count").textContent=`${out.length} de ${all} propuestas${S.aloj==="ai"?" con all inclusive":""}`+(S.mes===1?"":S.mes==="best"?` · el mes más barato entre ${MESL[Math.min(S.m1,S.m2)-1]} y ${MESL[Math.max(S.m1,S.m2)-1]}`:` · en ${MESL[S.mes-1]}`)+(S.ap?` · llegando a ${CITY[S.ap]}`:"");
@@ -1760,11 +1762,13 @@ const CARKM={floripa:[1401,660,0,16858],camboriu:[1401,740,0,16858],rosa:[1401,7
 const NOCAR=new Set(["curazao", "sanandres", "puntacana", "playadelcarmen", "bocas", "tamarindo", "eltunco", "sanjuandelsur", "puertoescondido", "sayulita", "playavenao"]);
 // Manejar hasta el aeropuerto: km de ida, peajes de ida (ARS), estacionamiento USD/día, si cruza a Brasil
 const HUB={bue:{km:1273,toll:27566,park:15,n:"Aeroparque o Ezeiza"},cor:{km:532,toll:3000,park:8,n:"el aeropuerto de Córdoba"},sla:{km:310,toll:0,park:8,n:"el aeropuerto de Salta"},foz:{km:1424,toll:18358,park:7,cv:1,n:"el aeropuerto de Foz"}};
-const CS={veh:"auto",n:2,desg:true,hub:false,dest:"floripa",hd:10,naftaAR:2240,gasoilAR:2300,gasBR:6.46,dieBR:7.24,usd:1560,brl:5.76,gasUY:1.85};
-const kml=()=>CS.veh==="auto"?10:9.5;
+const CS={cap:5,pay:0,veh:"auto",n:2,desg:true,hub:false,dest:"floripa",hd:10,naftaAR:2240,gasoilAR:2300,gasBR:6.46,dieBR:7.24,usd:1560,brl:5.76,gasUY:1.85};
+const kml=()=>CS.cap>=9?8:CS.cap>=7||CS.veh!=="auto"?9.5:10;
 const pAR=()=>(CS.veh==="auto"?CS.naftaAR:CS.gasoilAR)/CS.usd, pBR=()=>(CS.veh==="auto"?CS.gasBR:CS.dieBR)/CS.brl;
 const legNights=km=>Math.max(0,Math.ceil(km/80/CS.hd-0.25)-1);
-function carCost(k){const [ka,kb,ku,tollARS]=CARKM[k];const intl=kb+ku>0,local=intl?300:150,per=PAX/CS.n;
+// Los gastos del vehículo (nafta, peajes, Carta Verde, desgaste) se multiplican por la cantidad de vehículos y se dividen entre los que pagan.
+const carPay=()=>Math.min(PAX,CS.pay||PAX),carPer=()=>carPay()/CS.n,carFits=()=>CS.n*CS.cap>=PAX;
+function carCost(k){const [ka,kb,ku,tollARS]=CARKM[k];const intl=kb+ku>0,local=intl?300:150,per=carPer();
   // km de ida y vuelta por país; las movidas allá se cargan en el país del destino
   const kmAR=2*ka+(intl?0:local),kmBR=kb?2*kb+local:0,kmUY=ku?2*ku+local:0,kmT=kmAR+kmBR+kmUY;
   const lAR=kmAR/kml(),lBR=kmBR/kml(),lUY=kmUY/kml();
@@ -1777,7 +1781,7 @@ function carCost(k){const [ka,kb,ku,tollARS]=CARKM[k];const intl=kb+ku>0,local=i
     car:{fuel:carFuel,toll:carToll,cv:carCv,desg:carDesg},kmAR,kmBR,kmUY,kmT,lAR,lBR,lUY,ars,brl,uyd,per};
   c.carTotal=carFuel+carToll+carCv+carDesg;c.total=c.fuel+c.toll+c.cv+c.desg+c.hotel+c.food;return c;}
 // Costo por persona de ir en auto hasta el aeropuerto (ida y vuelta + estacionar 10 días)
-function hubCar(k){const H=HUB[k],per=PAX/CS.n;
+function hubCar(k){const H=HUB[k],per=carPer();
   const v=2*H.km/kml()*pAR()+2*H.toll/CS.usd+H.park*10+(H.cv?35:0)+(CS.desg?.04*2*H.km:0);
   const n=legNights(H.km);return Math.round(v/per+2*n*22+2*n*15);}
 const HUBBASE={bue:TUC_BUE,cor:BUS_COR,foz:BUS_FOZ,sla:BUS_SLA};
@@ -1796,7 +1800,7 @@ function renderCar(rows){const el=document.getElementById("carout");if(!el)retur
     <select id="cardest" class="carsel">${Object.keys(CARKM).map(k=>`<option value="${k}" ${k===CS.dest?"selected":""}>${nm(k)}</option>`).join("")}</select>
     <span class="eyebrow" style="margin-top:8px;display:block">Por persona, Tucumán ↔ ${nm(CS.dest)} · ${c.km.toLocaleString("es-AR")} km</span><div class="carbig">${money(c.total)}</div>
     <table class="carcmp carbd"><thead><tr><th></th><th>Por auto</th><th>Cada uno</th></tr></thead><tbody>${L.map(([l,a,v])=>`<tr><td>${l}</td><td>${a==null?"—":money(a)}</td><td>${money(v)}</td></tr>`).join("")}<tr class="tot"><td>Traslado en auto</td><td>${money(c.carTotal)}</td><td>${money(c.total)}</td></tr></tbody></table>
-    <p class="hint">${PAX/CS.n>5?`<b style="color:var(--warn)">Con ${PAX} personas no entran en ${CS.n} ${CS.n>1?"autos":"auto"}: hacen falta ${Math.ceil(PAX/5)}.</b> `:""}Lo del auto se divide entre ${+(PAX/CS.n).toFixed(1)} por vehículo${CS.n===1&&PAX>5?" (hace falta uno de 7 plazas)":""}; hotel y comida son por persona. ~${c.hrs} h de manejo por tramo: ${c.legDays} ${c.legDays>1?"días":"día"} de ida y ${c.legDays} de vuelta. El viaje pasa de ${DAYS} a ${DAYS+c.nights} días fuera de casa.</p>
+    <p class="hint">${!carFits()?`<b style="color:var(--warn)">Con ${PAX} personas no entran en ${CS.n} ${CS.n>1?"vehículos":"vehículo"} de ${CS.cap} plazas: hacen falta ${Math.ceil(PAX/CS.cap)}.</b> `:""}${CS.n} ${CS.n>1?"vehículos":"vehículo"} de ${CS.cap} plazas para ${PAX}. Lo del vehículo (nafta, peajes, Carta Verde, desgaste) lo pagan ${carPay()===PAX?"los "+PAX:carPay()+" de los "+PAX}: ${+carPer().toFixed(2)} por vehículo${carPay()<PAX?`; los otros ${PAX-carPay()} solo ponen hotel y comida de la ruta`:""}. ~${c.hrs} h de manejo por tramo: ${c.legDays} ${c.legDays>1?"días":"día"} de ida y ${c.legDays} de vuelta. El viaje pasa de ${DAYS} a ${DAYS+c.nights} días fuera de casa.</p>
     <table class="carcmp" style="margin-top:12px"><thead><tr><th>Solo el traslado, cada uno</th><th>Avión</th><th>Auto</th><th>Dif.</th></tr></thead><tbody>
     ${cmp.map(({r,air,cc,d,dias})=>`<tr><td>${r.name}<small>Avión: vuelo ${nf(r.fl)} + valija ${nf(r.bag)} + transfer ${nf(r.tr)} · ${DAYS} días<br>Auto: ${nf(cc.km)} km, ${cc.legDays} ${cc.legDays>1?"días":"día"} por tramo · ${dias} días</small></td><td>${money(air)}</td><td>${money(cc.total)}</td><td style="color:${d<0?"var(--good)":"var(--warn)"}">${d<0?"−":"+"}${nf(Math.abs(d))}</td></tr>`).join("")}</tbody></table>
     <p class="hint">El resto del viaje (casa, comida, seguro) es igual en los dos casos, así que la diferencia del traslado es la diferencia del viaje completo. El vuelo es el más barato desde Tucumán para esas fechas.</p>
@@ -1819,6 +1823,9 @@ function renderCar(rows){const el=document.getElementById("carout");if(!el)retur
 }
 ["naftaAR","gasoilAR","gasBR","dieBR","usd","brl","gasUY"].forEach(k=>{const i=document.getElementById("cp-"+k);i.value=CS[k];i.addEventListener("input",()=>{const v=parseFloat(i.value);if(v>0){CS[k]=v;render();}});});
 document.getElementById("cardesg").addEventListener("change",e=>{CS.desg=e.target.checked;render();});
+function fillPay(){const sel=document.getElementById("carpay");if(!sel)return;const v=carPay();sel.innerHTML=Array.from({length:PAX},(_,i)=>i+1).reverse().map(n=>`<option value="${n}" ${n===v?"selected":""}>${n===PAX?`Todos (${PAX})`:n}</option>`).join("");}
+document.getElementById("carcap").addEventListener("change",e=>{CS.cap=+e.target.value;render();});
+document.getElementById("carpay").addEventListener("change",e=>{CS.pay=+e.target.value===PAX?0:+e.target.value;render();});
 [["carveh","veh",v=>v],["carn","n",Number],["carnoches","hd",Number]].forEach(([id,key,cast])=>document.getElementById(id).addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;CS[key]=cast(b.dataset.v);setSeg(id,CS[key]);render();}));
 
 
