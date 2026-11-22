@@ -103,6 +103,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .route.win small{color:var(--sun-ink)}
 .route.sel{outline:2px solid var(--accent);outline-offset:-2px}
 .route.na{opacity:.5}
+@keyframes flash{0%{box-shadow:0 0 0 3px var(--sun)}100%{box-shadow:0 0 0 3px transparent}}.card.flash{animation:flash 1.8s ease-out}
 button.route{font-family:inherit;line-height:inherit;color:inherit;background:var(--surface);text-align:left;cursor:pointer}button.route:hover:not(:disabled){border-color:var(--accent)}button.route.win{background:var(--sun)}
 .route small.fi{font-family:var(--f-body);font-size:10.5px;line-height:1.3}.route .hh{font-family:var(--f-mono);font-size:11px;font-weight:700}
 .links{display:flex;flex-wrap:wrap;gap:8px}
@@ -1426,6 +1427,7 @@ function houseCard(h,label,on,small,k){
 function legLinks(r){const l=r.leg;if(!isFinite(l.p))return "";
   if(r.flk==="rio")return `<a class="btn" href="${GFL("TUC","RIO",l.d,l.r)}" target="_blank" rel="noopener">TUC → RIO</a><a class="btn" href="${GFL("RIO",r.ap,l.x.d,l.x.r)}" target="_blank" rel="noopener">RIO → ${r.ap}</a>`;
   if(r.flk==="igr")return `<a class="btn" href="${GFL2("TUC","IGR",l.a.d,l.r)}" target="_blank" rel="noopener">TUC → IGR</a><a class="btn" href="${GFL("IGU",r.ap,l.d,l.r)}" target="_blank" rel="noopener">IGU → ${r.ap}</a>`;
+  if(r.flk==="car")return `<a class="btn" href="https://www.google.com/maps/dir/Tucum%C3%A1n/${encodeURIComponent(r.name)}" target="_blank" rel="noopener">Ver la ruta en Google Maps</a>`;
   return `<a class="btn" href="${GFL(l.o,r.ap,l.d,l.r)}" target="_blank" rel="noopener">Ver vuelos ${l.o} → ${r.ap}</a>`;}
 // Aerolínea, escalas y horas de viaje de cada forma de salir (datos de Google Flights)
 function fd0(o,ap){const f=FD[o+"-"+ap];return f&&f.o&&f.o[0];}
@@ -1935,7 +1937,10 @@ function renderAnioDet(k,m){const r=yRows().find(x=>x.d.k===k);const box=documen
 document.addEventListener("click",e=>{const b=e.target.closest("[data-yprop]");if(!b)return;S.mes=+b.dataset.ym;S.q="";S.zone="all";try{setSeg("zone","all");}catch(_){}render();if(window.__syncQuick)__syncQuick();if(window.__syncChips)__syncChips();},true);
 // Elegir una casa en la tarjeta: el total de esa propuesta se recalcula con esa casa
 document.addEventListener("click",e=>{const b=e.target.closest("[data-rpick]");if(!b)return;e.preventDefault();e.stopPropagation();
-  const k=b.dataset.rpick,v=b.dataset.rk;if(!v||RPICK[k]===v)delete RPICK[k];else RPICK[k]=v;saveRPick();render();});
+  const k=b.dataset.rpick,v=b.dataset.rk;if(!v||RPICK[k]===v)delete RPICK[k];else RPICK[k]=v;saveRPick();
+  const art=b.closest("article.card"),top=art?art.getBoundingClientRect().top:0;render();followCard(k,top);});
+// Al elegir vuelo, auto o casa la lista se reordena: llevar la vista a la ficha y resaltarla
+function followCard(k,top){const c=document.getElementById("card-"+k);if(!c)return;window.scrollBy(0,c.getBoundingClientRect().top-top);c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),900);}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-pick],[data-unpick]");if(!b)return;e.preventDefault();e.stopPropagation();
   const k=b.dataset.pick||b.dataset.unpick;if(b.dataset.unpick!=null||PICK[k]===b.dataset.hid)delete PICK[k];else PICK[k]=b.dataset.hid;savePick();
   const art=b.closest("article.card"),id=art&&art.id,top=art?art.getBoundingClientRect().top:0;
