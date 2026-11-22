@@ -1,0 +1,2942 @@
+{
+  "rio": [
+    {
+      "price": 1204,
+      "rating": 5,
+      "reviews": 17,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Depto de 110 m² en Copacabana",
+      "id": "2306547",
+      "level": "Económica"
+    },
+    {
+      "price": 1552,
+      "rating": 4.98,
+      "reviews": 55,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Posto 9 / Arpoador, a 300 m de la playa",
+      "id": "46614450",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2496,
+      "rating": 4.93,
+      "reviews": 136,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Leblon Boutique, 4 habitaciones",
+      "id": "1003740454753726849",
+      "level": "Premium"
+    }
+  ],
+  "buzios": [
+    {
+      "price": 862,
+      "rating": 5,
+      "reviews": 37,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 8,
+      "name": "Casa amplia y luminosa, 4 dormitorios",
+      "id": "1292105499832480594",
+      "level": "Económica"
+    },
+    {
+      "price": 1592,
+      "rating": 4.99,
+      "reviews": 84,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 5,
+      "beds": 7,
+      "name": "3 suites de alto estándar en Praia Rasa",
+      "id": "17282142",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2740,
+      "rating": 4.96,
+      "reviews": 51,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 4,
+      "beds": 6,
+      "name": "Entre Ferradura y Rua das Pedras",
+      "id": "44320288",
+      "level": "Premium"
+    }
+  ],
+  "arraialcabo": [
+    {
+      "price": 765,
+      "rating": 4.95,
+      "reviews": 38,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 9,
+      "name": "Cobertura dúplex para hasta 12",
+      "id": "29331312",
+      "level": "Económica"
+    },
+    {
+      "price": 1237,
+      "rating": 4.94,
+      "reviews": 34,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Frente al mar en Pontal do Atalaia",
+      "id": "1114515300394812524",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1347,
+      "rating": 5,
+      "reviews": 69,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 4.5,
+      "beds": 10,
+      "name": "Casa de 4 dormitorios cerca de Praia Grande",
+      "id": "18158891",
+      "level": "Premium"
+    }
+  ],
+  "ilhagrande": [
+    {
+      "price": 1219,
+      "rating": 4.77,
+      "reviews": 13,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Bela Sylvia Suites (Abraão)",
+      "id": "22288708",
+      "level": "Económica"
+    },
+    {
+      "price": 2295,
+      "rating": 5,
+      "reviews": 6,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa Alto do Bananal",
+      "id": "1275431915865020628",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3193,
+      "rating": 4.9,
+      "reviews": 61,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 8,
+      "name": "Casa con playa privada",
+      "id": "10649902",
+      "level": "Premium"
+    }
+  ],
+  "paraty": [
+    {
+      "price": 1220,
+      "rating": 4.92,
+      "reviews": 97,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "beds": 6,
+      "name": "Casa sobre la avenida de la playa",
+      "id": "784109008938176920",
+      "level": "Económica"
+    },
+    {
+      "price": 1288,
+      "rating": 5,
+      "reviews": 12,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 9,
+      "name": "Casa amplia a 5 min del centro histórico",
+      "id": "684213639542531603",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1657,
+      "rating": 4.89,
+      "reviews": 103,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Casa Siempre Viva, cerca de las playas",
+      "id": "45898727",
+      "level": "Premium"
+    }
+  ],
+  "floripa": [
+    {
+      "price": 1102,
+      "rating": 5,
+      "reviews": 21,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Casa cerca de Morro das Pedras",
+      "id": "53907554",
+      "level": "Económica"
+    },
+    {
+      "price": 1137,
+      "rating": 4.88,
+      "reviews": 64,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa de playa en Lagoa, Av. das Rendeiras",
+      "id": "52485740",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2228,
+      "rating": 4.94,
+      "reviews": 68,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 4,
+      "beds": 6,
+      "name": "Casa con pileta, 4 dormitorios, Campeche",
+      "id": "19328315",
+      "level": "Premium"
+    }
+  ],
+  "jurere": [
+    {
+      "price": 1839,
+      "rating": 5,
+      "reviews": 10,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Apartamento con vistas al mar de Jurerê",
+      "id": "24084466",
+      "level": "Económica"
+    },
+    {
+      "price": 2422,
+      "rating": 4.85,
+      "reviews": 73,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Apto 77 pie en la arena en condominio Jurerê /sc",
+      "id": "581883006339736762",
+      "level": "Recomendada"
+    },
+    {
+      "price": 5720,
+      "rating": 5,
+      "reviews": 5,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "Morada da Costa1-Playa del fuerte",
+      "id": "1016542400196609632",
+      "level": "Premium"
+    }
+  ],
+  "canasvieiras": [
+    {
+      "price": 1056,
+      "rating": 4.88,
+      "reviews": 41,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 5,
+      "name": "Hermosos apartamento con piscina.",
+      "id": "53539460",
+      "level": "Económica"
+    },
+    {
+      "price": 1373,
+      "rating": 5,
+      "reviews": 9,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 3,
+      "name": "Perfecto para familiares o amigos",
+      "id": "54260119",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2904,
+      "rating": 5,
+      "reviews": 22,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "beds": 7,
+      "name": "Casa en el centro de Canasvieiras",
+      "id": "42653034",
+      "level": "Premium"
+    }
+  ],
+  "daniela": [
+    {
+      "price": 2236,
+      "rating": 5,
+      "reviews": 9,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "beds": 6,
+      "name": "Casa en Daniela a 100 m de la playa",
+      "id": "1558705304045224948",
+      "level": "Económica"
+    },
+    {
+      "price": 2482,
+      "rating": 5,
+      "reviews": 8,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Promoción Casa en la Playa de Daniela",
+      "id": "746194849359054708",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3777,
+      "rating": 4.96,
+      "reviews": 23,
+      "guestFavorite": true,
+      "bedrooms": 5,
+      "bathrooms": 4,
+      "beds": 7,
+      "name": "¡MARAVILLOSA CASA A MENOS DE 50 METROS DE LA PLAYA!",
+      "id": "53933163",
+      "level": "Premium"
+    }
+  ],
+  "brava": [
+    {
+      "price": 1029,
+      "rating": 4.9,
+      "reviews": 40,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Cachoeira do Bom Jesus en la cuadra de la playa apto 03",
+      "id": "30226702",
+      "level": "Económica"
+    },
+    {
+      "price": 2531,
+      "rating": 5,
+      "reviews": 8,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 4,
+      "name": "Maravillosa ubicación casa junto al mar",
+      "id": "18854354",
+      "level": "Recomendada"
+    },
+    {
+      "price": 6324,
+      "rating": 5,
+      "reviews": 10,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 4.5,
+      "beds": 4,
+      "name": "Departamento Sunset | Marine Resort | 4 suites | Jacuzzi ",
+      "id": "1279040638143385163",
+      "level": "Premium"
+    }
+  ],
+  "ingleses": [
+    {
+      "price": 611,
+      "rating": 4.95,
+      "reviews": 21,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Casa con amplio césped en Ingleses do Rio Vermelho",
+      "id": "21007033",
+      "level": "Económica"
+    },
+    {
+      "price": 1294,
+      "rating": 5,
+      "reviews": 15,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2.5,
+      "beds": 5,
+      "name": "Apartamento nuevo, acogedor, a 80 metros de la playa.",
+      "id": "537535990968343068",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2492,
+      "rating": 5,
+      "reviews": 47,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2.5,
+      "beds": 5,
+      "name": "Departamento de 2 dormitorios con baño - hermoso, amplio y c",
+      "id": "30744036",
+      "level": "Premium"
+    }
+  ],
+  "barralagoa": [
+    {
+      "price": 1018,
+      "rating": 4.87,
+      "reviews": 15,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 3,
+      "beds": 7,
+      "name": "POUSADA BARRA DA LAGOA 2 DORMITORIOS 2 BAÑOS",
+      "id": "17975533",
+      "level": "Económica"
+    },
+    {
+      "price": 1099,
+      "rating": 5,
+      "reviews": 10,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 4,
+      "name": "Apartamento de 2 dormitorios en planta baja",
+      "id": "1048676147924349677",
+      "level": "Recomendada"
+    },
+    {
+      "price": 4313,
+      "rating": 4.94,
+      "reviews": 67,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Casinha da Velha",
+      "id": "54080063",
+      "level": "Premium"
+    }
+  ],
+  "campeche": [
+    {
+      "price": 1135,
+      "rating": 4.97,
+      "reviews": 36,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 5,
+      "name": "Apto a 1,3 km de la PLAYA, Río Tavares",
+      "id": "1326258911174553938",
+      "level": "Económica"
+    },
+    {
+      "price": 1539,
+      "rating": 4.95,
+      "reviews": 42,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Cantinho do Sossego en Campeche",
+      "id": "34198528",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2637,
+      "rating": 5,
+      "reviews": 9,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "Pileta y playa en Floripa a 7,5 km del aeropuerto",
+      "id": "1302299251554010385",
+      "level": "Premium"
+    }
+  ],
+  "armacao": [
+    {
+      "price": 1102,
+      "rating": 5,
+      "reviews": 21,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Casa cerca de Praia Morro das Pedras y el aeropuerto.",
+      "id": "53907554",
+      "level": "Económica"
+    },
+    {
+      "price": 1135,
+      "rating": 5,
+      "reviews": 13,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Casa-Temporada-Florianópolis",
+      "id": "746358874813419043",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3043,
+      "rating": 5,
+      "reviews": 12,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "Floripa-quadra do mar-Azores. También mensual/anual",
+      "id": "790686379361308391",
+      "level": "Premium"
+    }
+  ],
+  "bombinhas": [
+    {
+      "price": 1690,
+      "rating": 4.92,
+      "reviews": 49,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 2.5,
+      "beds": 5,
+      "name": "Casa con hermosa vista y frente a la playa",
+      "id": "15378197",
+      "level": "Económica"
+    },
+    {
+      "price": 1473,
+      "rating": 5,
+      "reviews": 8,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 4,
+      "name": "Residencial Beio & Beia, Casa de Nevis",
+      "id": "24471382",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3115,
+      "rating": 5,
+      "reviews": 26,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 3,
+      "name": "Azotea con jacuzzi al atardecer",
+      "id": "1318419592865539851",
+      "level": "Premium"
+    }
+  ],
+  "garopaba": [
+    {
+      "price": 1528,
+      "rating": 4.88,
+      "reviews": 33,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 5,
+      "name": "Apto 201 2D condominio con piscina bien ubicado",
+      "id": "755001365718022055",
+      "level": "Económica"
+    },
+    {
+      "price": 1966,
+      "rating": 5,
+      "reviews": 9,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Departamento de 100 m², cama Super King, aire acondicionado,",
+      "id": "1563188647536373955",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3956,
+      "rating": 5,
+      "reviews": 38,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 3,
+      "name": "Casas dos Silveira 04 Vista Mar/Lagoa",
+      "id": "735957305529090631",
+      "level": "Premium"
+    }
+  ],
+  "guarda": [
+    {
+      "price": 913,
+      "rating": 4.94,
+      "reviews": 90,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 1.5,
+      "beds": 5,
+      "name": "Casa con patio y parrilla, a 300 m de la playa",
+      "id": "45514360",
+      "level": "Económica"
+    },
+    {
+      "price": 1118,
+      "rating": 5,
+      "reviews": 8,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "casa en la playa de la gamboa",
+      "id": "1060351095923113137",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2197,
+      "rating": 5,
+      "reviews": 26,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "casa de Samir - Praia da Pinheira",
+      "id": "32662613",
+      "level": "Premium"
+    }
+  ],
+  "guarajuba": [
+    {
+      "price": 975,
+      "rating": 4.88,
+      "reviews": 17,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2.5,
+      "beds": 5,
+      "name": "Vilage planta baja, área gourmet privada y 2 suites",
+      "id": "1111095502077432747",
+      "level": "Económica"
+    },
+    {
+      "price": 1171,
+      "rating": 5,
+      "reviews": 10,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 4,
+      "name": "Espacio 09 Acogedora villa a 150 metros de la playa",
+      "id": "52638352",
+      "level": "Recomendada"
+    },
+    {
+      "price": 4301,
+      "rating": 5,
+      "reviews": 23,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "beds": 9,
+      "name": "Hermosa casa de playa en Guarajuba 4 suites y Wi-Fi",
+      "id": "48182502",
+      "level": "Premium"
+    }
+  ],
+  "japaratinga": [
+    {
+      "price": 708,
+      "rating": 5,
+      "reviews": 3,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "¡Casa dos Coqueiros a 50 metros de la playa!",
+      "id": "1258072676190196918",
+      "level": "Económica"
+    },
+    {
+      "price": 2215,
+      "rating": 5,
+      "reviews": 32,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Casa con azotea: estilo y comodidad a 1 minuto del mar.",
+      "id": "1317663656550614387",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3631,
+      "rating": 5,
+      "reviews": 3,
+      "guestFavorite": false,
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "beds": 8,
+      "name": "Villas A Casa Antunes",
+      "id": "1199959300289098779",
+      "level": "Premium"
+    }
+  ],
+  "curazao": [
+    {
+      "price": 6782,
+      "rating": 5,
+      "reviews": 12,
+      "guestFavorite": false,
+      "bedrooms": 5,
+      "bathrooms": 4,
+      "beds": 6,
+      "name": "Villa Larga - Piscina - Azotea - Jan Thiel",
+      "id": "1680610037647646320",
+      "level": "Económica"
+    },
+    {
+      "price": 3713,
+      "rating": 4.94,
+      "reviews": 69,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Penthouse junto al agua con piscina cerca de las playas",
+      "id": "806521629292202701",
+      "level": "Recomendada"
+    },
+    {
+      "price": 6595,
+      "rating": 5,
+      "reviews": 16,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "beds": 3,
+      "name": "Departamento de lujo de 3 dormitorios cerca de la playa de M",
+      "id": "1376315181345722787",
+      "level": "Premium"
+    }
+  ],
+  "maresias": [
+    {
+      "price": 757,
+      "rating": 4.92,
+      "reviews": 13,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa espaciosa en Boicucanga",
+      "id": "1288322250867856944",
+      "level": "Económica"
+    },
+    {
+      "price": 1555,
+      "rating": 4.96,
+      "reviews": 23,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "E4 - Paraíso en la playa de Maresias / 2 dormitorios",
+      "id": "872449730128512633",
+      "level": "Recomendada"
+    },
+    {
+      "price": 4227,
+      "rating": 5,
+      "reviews": 31,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 4,
+      "name": "Villa Oasis Residence, Lotus",
+      "id": "1243007758102155346",
+      "level": "Premium"
+    }
+  ],
+  "ubatuba": [
+    {
+      "price": 785,
+      "rating": 4.96,
+      "reviews": 25,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Doce Vista",
+      "id": "49704215",
+      "level": "Económica"
+    },
+    {
+      "price": 1046,
+      "rating": 5,
+      "reviews": 45,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Paraíso Ubatuba | Piscina no Rooftop + Vista Mar ",
+      "id": "1007409066120837590",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3171,
+      "rating": 5,
+      "reviews": 27,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Apartamento de 3 habitaciones con vista al mar (3)",
+      "id": "45594905",
+      "level": "Premium"
+    }
+  ],
+  "ilhabela": [
+    {
+      "price": 707,
+      "rating": 4.86,
+      "reviews": 51,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 6,
+      "name": "Casa con hermosas vistas al mar",
+      "id": "39387854",
+      "level": "Económica"
+    },
+    {
+      "price": 859,
+      "rating": 5,
+      "reviews": 19,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Chalet Ilhabela Itaguassu",
+      "id": "777734760988611210",
+      "level": "Recomendada"
+    },
+    {
+      "price": 4001,
+      "rating": 5,
+      "reviews": 29,
+      "guestFavorite": true,
+      "bedrooms": 6,
+      "bathrooms": 7,
+      "beds": 15,
+      "name": "Lugar prémium: ¡a pie de playa!",
+      "id": "12623748",
+      "level": "Premium"
+    }
+  ],
+  "camboriu": [
+    {
+      "price": 1277,
+      "rating": 4.94,
+      "reviews": 17,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Dúplex con parrilla y 2 cocheras",
+      "id": "1410192519543547172",
+      "level": "Económica"
+    },
+    {
+      "price": 1368,
+      "rating": 4.89,
+      "reviews": 37,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "beds": 7,
+      "name": "Centro, a 50 m de la playa",
+      "id": "45710676",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1999,
+      "rating": 4.92,
+      "reviews": 132,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "3 dormitorios con parrilla",
+      "id": "52450856",
+      "level": "Premium"
+    }
+  ],
+  "rosa": [
+    {
+      "price": 1463,
+      "rating": 4.91,
+      "reviews": 34,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 4,
+      "beds": 8,
+      "name": "Casa arbolada a 600 m de la playa",
+      "id": "30395679",
+      "level": "Económica"
+    },
+    {
+      "price": 1615,
+      "rating": 4.96,
+      "reviews": 45,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "beds": 9,
+      "name": "Casa con pileta y aire en el Rosa",
+      "id": "49127533",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2080,
+      "rating": 4.94,
+      "reviews": 17,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "beds": 11,
+      "name": "Casa con pileta cerca de Surfland",
+      "id": "46788516",
+      "level": "Premium"
+    }
+  ],
+  "porto": [
+    {
+      "price": 864,
+      "rating": 4.97,
+      "reviews": 35,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Brisa playera II",
+      "id": "1505865072074794657",
+      "level": "Económica"
+    },
+    {
+      "price": 878,
+      "rating": 5,
+      "reviews": 28,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 7,
+      "name": "Dúplex a 150 m de la playa",
+      "id": "1319487573824132945",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2122,
+      "rating": 4.89,
+      "reviews": 63,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 10,
+      "name": "3 suites en Mont Hebron, Taperapuã",
+      "id": "33443354",
+      "level": "Premium"
+    }
+  ],
+  "ajuda": [
+    {
+      "price": 1178,
+      "rating": 5,
+      "reviews": 25,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 11,
+      "name": "Monte das Oliveiras",
+      "id": "1444339656973011421",
+      "level": "Económica"
+    },
+    {
+      "price": 2342,
+      "rating": 4.92,
+      "reviews": 86,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "3 suites con pileta, jacuzzi y sauna",
+      "id": "42807497",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2460,
+      "rating": 5,
+      "reviews": 18,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 6,
+      "name": "Pitinga Beach House",
+      "id": "835687601020286446",
+      "level": "Premium"
+    }
+  ],
+  "caraiva": [
+    {
+      "price": 2038,
+      "rating": 4.88,
+      "reviews": 84,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 8,
+      "name": "Casa Vermelha, excelente ubicación",
+      "id": "23741552",
+      "level": "Económica"
+    },
+    {
+      "price": 3107,
+      "rating": 4.9,
+      "reviews": 30,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Vila Três, a 2 min de la playa",
+      "id": "1046414339524191201",
+      "level": "Recomendada"
+    }
+  ],
+  "trancoso": [
+    {
+      "price": 2699,
+      "rating": 4.98,
+      "reviews": 50,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "beds": 8,
+      "name": "Casa Sirena",
+      "id": "53715013",
+      "level": "Económica"
+    },
+    {
+      "price": 2722,
+      "rating": 5,
+      "reviews": 19,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 6,
+      "name": "Casa Flower of Dendê",
+      "id": "21497828",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2824,
+      "rating": 4.96,
+      "reviews": 23,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Casa con pileta y jacuzzi",
+      "id": "53662610",
+      "level": "Premium"
+    }
+  ],
+  "itacare": [
+    {
+      "price": 1738,
+      "rating": 4.87,
+      "reviews": 15,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Casa sobre la Pasarela de la Villa",
+      "id": "1159690261345427732",
+      "level": "Económica"
+    },
+    {
+      "price": 2145,
+      "rating": 4.91,
+      "reviews": 45,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Casa DelMar, a 5 min de las playas",
+      "id": "510753440997037369",
+      "level": "Recomendada"
+    },
+    {
+      "price": 4463,
+      "rating": 4.91,
+      "reviews": 117,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 4.5,
+      "beds": 8,
+      "name": "Paraíso en la Tierra, Prainha",
+      "id": "12289486",
+      "level": "Premium"
+    }
+  ],
+  "morro": [
+    {
+      "price": 1256,
+      "rating": 4.9,
+      "reviews": 21,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "beds": 10,
+      "name": "Casa con pileta para 14",
+      "id": "40084419",
+      "level": "Económica"
+    },
+    {
+      "price": 2029,
+      "rating": 4.94,
+      "reviews": 78,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 5,
+      "name": "Casa Ribeiro",
+      "id": "756576132049249429",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3789,
+      "rating": 4.94,
+      "reviews": 88,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Casa AXÉ",
+      "id": "605871613419319090",
+      "level": "Premium"
+    }
+  ],
+  "salvador": [
+    {
+      "price": 478,
+      "rating": 4.9,
+      "reviews": 88,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 9,
+      "name": "Depto en el Farol da Barra con vista al mar",
+      "id": "986268922377382260",
+      "level": "Económica"
+    },
+    {
+      "price": 1036,
+      "rating": 4.98,
+      "reviews": 55,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Depto en Barra",
+      "id": "54222195",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1900,
+      "rating": 4.95,
+      "reviews": 78,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Frente al mar en Barra",
+      "id": "1297891385805919000",
+      "level": "Premium"
+    }
+  ],
+  "praiaforte": [
+    {
+      "price": 1702,
+      "rating": 5,
+      "reviews": 31,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa en planta baja, ubicación privilegiada",
+      "id": "53996012",
+      "level": "Económica"
+    },
+    {
+      "price": 2202,
+      "rating": 4.97,
+      "reviews": 39,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 7,
+      "name": "Vilarejo do Farol, depto 4 dormitorios",
+      "id": "613667583920726261",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2911,
+      "rating": 4.9,
+      "reviews": 49,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "beds": 6,
+      "name": "Casa en condominio a 200 m de playa y pueblo",
+      "id": "1140740203487943777",
+      "level": "Premium"
+    }
+  ],
+  "maceio": [
+    {
+      "price": 1125,
+      "rating": 4.95,
+      "reviews": 65,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "3 dormitorios en Pajuçara",
+      "id": "26573610",
+      "level": "Económica"
+    },
+    {
+      "price": 1976,
+      "rating": 4.89,
+      "reviews": 95,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 7,
+      "name": "Depto en la mejor zona de Maceió",
+      "id": "41743890",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3814,
+      "rating": 4.88,
+      "reviews": 56,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "beds": 8,
+      "name": "Frente a la playa de Ponta Verde",
+      "id": "942293516379808415",
+      "level": "Premium"
+    }
+  ],
+  "frances": [
+    {
+      "price": 734,
+      "rating": 5,
+      "reviews": 11,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 8,
+      "name": "Casa en Marechal, cerca del Francês",
+      "id": "1338448122700189808",
+      "level": "Económica"
+    },
+    {
+      "price": 1210,
+      "rating": 5,
+      "reviews": 10,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 6,
+      "name": "Marechal / Playa del Francês",
+      "id": "1364568100145715277",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1648,
+      "rating": 5,
+      "reviews": 31,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 4.5,
+      "beds": 7,
+      "name": "Lugar Perfecto, Barra de São Miguel",
+      "id": "17319028",
+      "level": "Premium"
+    }
+  ],
+  "maragogi": [
+    {
+      "price": 1163,
+      "rating": 4.94,
+      "reviews": 33,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 7,
+      "name": "Sunset Villas Milagres, Casa Aguapé",
+      "id": "665160964109220729",
+      "level": "Económica"
+    },
+    {
+      "price": 1512,
+      "rating": 4.96,
+      "reviews": 27,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Casa a 350 m del mar",
+      "id": "1332204554931847179",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2488,
+      "rating": 4.88,
+      "reviews": 80,
+      "guestFavorite": true,
+      "bedrooms": 5,
+      "bathrooms": 4.5,
+      "beds": 10,
+      "name": "Casa con pileta a 50 m del mar",
+      "id": "899958140782025229",
+      "level": "Premium"
+    }
+  ],
+  "milagres": [
+    {
+      "price": 1078,
+      "rating": 5,
+      "reviews": 11,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "A 150 m de la playa, pileta y parrilla",
+      "id": "1451561789110353954",
+      "level": "Económica"
+    },
+    {
+      "price": 1601,
+      "rating": 5,
+      "reviews": 23,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 8,
+      "name": "Casa en la Rota dos Milagres",
+      "id": "1453884037858850951",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2038,
+      "rating": 4.96,
+      "reviews": 25,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "beds": 6,
+      "name": "4 suites a 50 m de la playa con pileta",
+      "id": "801425485217111983",
+      "level": "Premium"
+    }
+  ],
+  "galinhas": [
+    {
+      "price": 984,
+      "rating": 4.98,
+      "reviews": 45,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Depto de lujo en Palm Village",
+      "id": "1087103961504546627",
+      "level": "Económica"
+    },
+    {
+      "price": 1386,
+      "rating": 5,
+      "reviews": 15,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 9,
+      "name": "Casa a 260 m de las piscinas naturales",
+      "id": "53458707",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2359,
+      "rating": 4.92,
+      "reviews": 26,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Palm Village Acqua",
+      "id": "47136276",
+      "level": "Premium"
+    }
+  ],
+  "carneiros": [
+    {
+      "price": 2392,
+      "rating": 4.92,
+      "reviews": 12,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 8,
+      "name": "Casa en Club Meridional",
+      "id": "54034024",
+      "level": "Económica"
+    },
+    {
+      "price": 2712,
+      "rating": 4.95,
+      "reviews": 73,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "beds": 7,
+      "name": "4 dormitorios con jardín y glorieta",
+      "id": "32863212",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3026,
+      "rating": 4.93,
+      "reviews": 27,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "beds": 7,
+      "name": "Casa frente al mar",
+      "id": "41762957",
+      "level": "Premium"
+    }
+  ],
+  "jpa": [
+    {
+      "price": 964,
+      "rating": 4.93,
+      "reviews": 42,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Depto frente al mar, 3 dormitorios",
+      "id": "821530275172051318",
+      "level": "Económica"
+    },
+    {
+      "price": 1181,
+      "rating": 4.99,
+      "reviews": 69,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 9,
+      "name": "Casa súper espaciosa en Miramar",
+      "id": "53831377",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1437,
+      "rating": 4.97,
+      "reviews": 31,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "3 dormitorios con aire, hasta 8",
+      "id": "1669941565059741941",
+      "level": "Premium"
+    }
+  ],
+  "pipa": [
+    {
+      "price": 665,
+      "rating": 4.91,
+      "reviews": 85,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 9,
+      "name": "Casa Cochila",
+      "id": "19998265",
+      "level": "Económica"
+    },
+    {
+      "price": 1185,
+      "rating": 4.91,
+      "reviews": 77,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Casa Teka, Praia da Pipa",
+      "id": "930508482882818688",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2782,
+      "rating": 4.98,
+      "reviews": 40,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 7,
+      "name": "Casa con aire y pileta",
+      "id": "51840192",
+      "level": "Premium"
+    }
+  ],
+  "natal": [
+    {
+      "price": 566,
+      "rating": 4.89,
+      "reviews": 123,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Alto dos Vilar",
+      "id": "581758311145287351",
+      "level": "Económica"
+    },
+    {
+      "price": 629,
+      "rating": 5,
+      "reviews": 16,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa espaciosa en Ponta Negra",
+      "id": "1565284266954535960",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1429,
+      "rating": 4.92,
+      "reviews": 49,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Casa con pileta y quincho",
+      "id": "1041113573321374589",
+      "level": "Premium"
+    }
+  ],
+  "gostoso": [
+    {
+      "price": 875,
+      "rating": 4.9,
+      "reviews": 29,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Casa Gostoso",
+      "id": "53510024",
+      "level": "Económica"
+    },
+    {
+      "price": 1304,
+      "rating": 4.95,
+      "reviews": 19,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Casa en São Miguel do Gostoso",
+      "id": "635986098423427614",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2228,
+      "rating": 5,
+      "reviews": 11,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Casa con pileta y aire",
+      "id": "1434481209905149254",
+      "level": "Premium"
+    }
+  ],
+  "jeri": [
+    {
+      "price": 1502,
+      "rating": 4.95,
+      "reviews": 20,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Villa Salmia, 3 suites",
+      "id": "1094183759913556330",
+      "level": "Económica"
+    },
+    {
+      "price": 1937,
+      "rating": 4.89,
+      "reviews": 72,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Casa Ankh",
+      "id": "30504565",
+      "level": "Recomendada"
+    },
+    {
+      "price": 5838,
+      "rating": 4.97,
+      "reviews": 30,
+      "guestFavorite": true,
+      "bedrooms": 5,
+      "bathrooms": 5.5,
+      "beds": 6,
+      "name": "Villa Niros, dentro de la villa",
+      "id": "20518071",
+      "level": "Premium"
+    }
+  ],
+  "canoa": [
+    {
+      "price": 408,
+      "rating": 4.9,
+      "reviews": 29,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 6,
+      "name": "Casa con pileta en Quixaba (a 10 km)",
+      "id": "48559553",
+      "level": "Económica"
+    },
+    {
+      "price": 507,
+      "rating": 4.76,
+      "reviews": 49,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa de los Gigantes",
+      "id": "4224408",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3648,
+      "rating": 4.95,
+      "reviews": 20,
+      "guestFavorite": true,
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "beds": 10,
+      "name": "SP Alojamiento, 5 dormitorios",
+      "id": "1581235198397082671",
+      "level": "Premium"
+    }
+  ],
+  "cumbuco": [
+    {
+      "price": 993,
+      "rating": 4.89,
+      "reviews": 19,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "beds": 8,
+      "name": "Casa Odara",
+      "id": "34644748",
+      "level": "Económica"
+    },
+    {
+      "price": 1127,
+      "rating": 4.97,
+      "reviews": 39,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 8,
+      "name": "Wai Wai, vista al mar y pie en la arena",
+      "id": "46449115",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1917,
+      "rating": 5,
+      "reviews": 83,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "beds": 6,
+      "name": "Wai Wai, planta baja con jardín",
+      "id": "807350155843446303",
+      "level": "Premium"
+    }
+  ],
+  "fortaleza": [
+    {
+      "price": 770,
+      "rating": 4.92,
+      "reviews": 74,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Praia do Futuro, a 200 m del mar",
+      "id": "33124646",
+      "level": "Económica"
+    },
+    {
+      "price": 1087,
+      "rating": 4.95,
+      "reviews": 76,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Frente al mar con piletas y sauna",
+      "id": "45908806",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1462,
+      "rating": 5,
+      "reviews": 11,
+      "guestFavorite": false,
+      "bedrooms": 5,
+      "bathrooms": 4,
+      "beds": 7,
+      "name": "Vista al mar en Praia do Futuro",
+      "id": "1381065442820995686",
+      "level": "Premium"
+    }
+  ],
+  "atins": [
+    {
+      "price": 1418,
+      "rating": 4.86,
+      "reviews": 14,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa sobre la playa, a 50 m del río",
+      "id": "1511588852883532221",
+      "level": "Económica"
+    },
+    {
+      "price": 1816,
+      "rating": 4.96,
+      "reviews": 23,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "beds": 9,
+      "name": "Condominio Fianzi, con acceso al río",
+      "id": "1362381496737939770",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3343,
+      "rating": 4.96,
+      "reviews": 24,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Casa Ara-Ni",
+      "id": "868562939429433500",
+      "level": "Premium"
+    }
+  ],
+  "cabofrio": [
+    {
+      "price": 824,
+      "rating": 4.95,
+      "reviews": 142,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Praia do Forte, excepcional",
+      "id": "52863314",
+      "level": "Económica"
+    },
+    {
+      "price": 906,
+      "rating": 4.93,
+      "reviews": 209,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Depto con pileta y parrilla cerca de Praia do Forte",
+      "id": "29545235",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1087,
+      "rating": 4.95,
+      "reviews": 175,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Pie en la arena con vista al mar, Praia do Forte",
+      "id": "42823307",
+      "level": "Premium"
+    }
+  ],
+  "saquarema": [
+    {
+      "price": 778,
+      "rating": 5,
+      "reviews": 12,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Dúplex La Moana en Itaúna",
+      "id": "1367020471217843334",
+      "level": "Económica"
+    },
+    {
+      "price": 878,
+      "rating": 4.97,
+      "reviews": 75,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 5,
+      "name": "Casa acogedora en Itaúna",
+      "id": "25019831",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1443,
+      "rating": 4.92,
+      "reviews": 24,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Casa a 350 m de Itaúna, 4 dormitorios",
+      "id": "1110082126733657537",
+      "level": "Premium"
+    }
+  ],
+  "barragrande": [
+    {
+      "price": 812,
+      "rating": 4.86,
+      "reviews": 14,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa amarilla",
+      "id": "1005070136992424931",
+      "level": "Económica"
+    },
+    {
+      "price": 1334,
+      "rating": 5,
+      "reviews": 17,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Pie en la arena en Ponta do Mutá",
+      "id": "1009366562362497805",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1534,
+      "rating": 5,
+      "reviews": 26,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Depto Mossê, centro de Barra Grande",
+      "id": "1317997262161089625",
+      "level": "Premium"
+    }
+  ],
+  "imbassai": [
+    {
+      "price": 704,
+      "rating": 4.99,
+      "reviews": 126,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 2.5,
+      "beds": 3,
+      "name": "2 suites con aire y pileta, a 600 m de la playa",
+      "id": "46939634",
+      "level": "Económica"
+    },
+    {
+      "price": 975,
+      "rating": 5,
+      "reviews": 11,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Reserva Imbassaí (Vila dos Lírios)",
+      "id": "876175653522427893",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1492,
+      "rating": 4.87,
+      "reviews": 15,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Casa en condominio con pileta",
+      "id": "47077959",
+      "level": "Premium"
+    }
+  ],
+  "icarai": [
+    {
+      "price": 842,
+      "rating": 4.91,
+      "reviews": 46,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Casa Violeta Icaraizinho",
+      "id": "1171895561060647156",
+      "level": "Económica"
+    },
+    {
+      "price": 1265,
+      "rating": 4.9,
+      "reviews": 41,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "Capulana 5",
+      "id": "53996997",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1453,
+      "rating": 4.95,
+      "reviews": 19,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casa Boa Onda",
+      "id": "653017697739025303",
+      "level": "Premium"
+    }
+  ],
+  "barrasm": [
+    {
+      "price": 862,
+      "rating": 4.93,
+      "reviews": 14,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Iloa, 2 habitaciones",
+      "id": "1614020280819346299",
+      "level": "Económica"
+    },
+    {
+      "price": 912,
+      "rating": 4.9,
+      "reviews": 30,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Casa a pasos del mar",
+      "id": "52189117",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1344,
+      "rating": 4.95,
+      "reviews": 19,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Casa Barra Beach",
+      "id": "1643834692936569305",
+      "level": "Premium"
+    }
+  ],
+  "mardelplata": [
+    {
+      "price": 1310,
+      "rating": 4.89,
+      "reviews": 28,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Depto de 3 habitaciones, espacioso y luminoso",
+      "id": "1568051633612731381",
+      "level": "Económica"
+    },
+    {
+      "price": 1465,
+      "rating": 4.91,
+      "reviews": 65,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 8,
+      "name": "Casa muy cerca del mar, con parrilla",
+      "id": "27237024",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1810,
+      "rating": 4.92,
+      "reviews": 144,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Semipiso con vista al mar y cochera",
+      "id": "667777262423129186",
+      "level": "Premium"
+    }
+  ],
+  "villagesell": [
+    {
+      "price": 1956,
+      "rating": 4.92,
+      "reviews": 25,
+      "guestFavorite": true,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 3,
+      "name": "La Mirage 2",
+      "id": "1314686459897951965",
+      "level": "Económica"
+    },
+    {
+      "price": 3494,
+      "rating": 4.9,
+      "reviews": 20,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Depto con vista al mar",
+      "id": "51425061",
+      "level": "Recomendada"
+    }
+  ],
+  "pinamar": [
+    {
+      "price": 1994,
+      "rating": 4.96,
+      "reviews": 28,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Depto en el centro con cochera",
+      "id": "766061595913351467",
+      "level": "Económica"
+    },
+    {
+      "price": 2320,
+      "rating": 4.96,
+      "reviews": 51,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 5,
+      "name": "Casa en Pinamar Norte",
+      "id": "571564919352501182",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2720,
+      "rating": 5,
+      "reviews": 17,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Casa en la zona del golf",
+      "id": "786256702472368434",
+      "level": "Premium"
+    }
+  ],
+  "puntadiablo": [
+    {
+      "price": 1583,
+      "rating": 4.82,
+      "reviews": 22,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "El Balcón del Diablo",
+      "id": "1142161383431070997",
+      "level": "Económica"
+    },
+    {
+      "price": 1768,
+      "rating": 4.85,
+      "reviews": 82,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Zakynthos, casa de playa moderna",
+      "id": "30569196",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1964,
+      "rating": 4.89,
+      "reviews": 122,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 4,
+      "name": "Finisterra 4, complejo frente al mar",
+      "id": "4852277",
+      "level": "Premium"
+    }
+  ],
+  "lapedrera": [
+    {
+      "price": 2449,
+      "rating": 4.9,
+      "reviews": 48,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 12,
+      "name": "La Casa del Mar, sobre la arena",
+      "id": "51543033",
+      "level": "Económica"
+    },
+    {
+      "price": 2568,
+      "rating": 4.85,
+      "reviews": 27,
+      "guestFavorite": false,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "beds": 5,
+      "name": "Casa de playa en segunda línea",
+      "id": "53564506",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3304,
+      "rating": 5,
+      "reviews": 33,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "La Hechicera, Tajamares",
+      "id": "678289531637153635",
+      "level": "Premium"
+    }
+  ],
+  "puntadeleste": [
+    {
+      "price": 2800,
+      "rating": 4.91,
+      "reviews": 11,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Sobre la playa con vista",
+      "id": "783272886567640121",
+      "level": "Económica"
+    },
+    {
+      "price": 4080,
+      "rating": 5,
+      "reviews": 17,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Piso 19 con vista",
+      "id": "27872869",
+      "level": "Recomendada"
+    },
+    {
+      "price": 4550,
+      "rating": 4.8,
+      "reviews": 20,
+      "guestFavorite": false,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Parada 26, Playa Brava",
+      "id": "17840005",
+      "level": "Premium"
+    }
+  ],
+  "cartagena": [
+    {
+      "price": 1248,
+      "rating": 4.91,
+      "reviews": 118,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 5,
+      "name": "Vista al mar cerca de la Torre del Reloj",
+      "id": "690663924744256926",
+      "level": "Económica"
+    },
+    {
+      "price": 1823,
+      "rating": 4.99,
+      "reviews": 116,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "3 dormitorios frente al mar",
+      "id": "918205143774335774",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1989,
+      "rating": 4.82,
+      "reviews": 317,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "Casa Limón",
+      "id": "52617134",
+      "level": "Premium"
+    }
+  ],
+  "santamarta": [
+    {
+      "price": 973,
+      "rating": 4.86,
+      "reviews": 289,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 11,
+      "name": "Frente al mar en El Rodadero",
+      "id": "42388875",
+      "level": "Económica"
+    },
+    {
+      "price": 990,
+      "rating": 4.92,
+      "reviews": 13,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 8,
+      "name": "Depto con vista al mar",
+      "id": "1260325304013387089",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1011,
+      "rating": 4.88,
+      "reviews": 317,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "A 50 m del mar, céntrico",
+      "id": "24567586",
+      "level": "Premium"
+    }
+  ],
+  "sanandres": [
+    {
+      "price": 1299,
+      "rating": 4.99,
+      "reviews": 174,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Depto entero de 3 habitaciones",
+      "id": "37246497",
+      "level": "Económica"
+    },
+    {
+      "price": 1518,
+      "rating": 4.88,
+      "reviews": 147,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Apartamento Fragata 207",
+      "id": "53068207",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2060,
+      "rating": 4.95,
+      "reviews": 101,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "Casa contemporánea nueva",
+      "id": "838253995007531903",
+      "level": "Premium"
+    }
+  ],
+  "puntacana": [
+    {
+      "price": 998,
+      "rating": 4.94,
+      "reviews": 33,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 3,
+      "name": "Depto nuevo con terraza, cerca de la playa",
+      "id": "1197956062972869868",
+      "level": "Económica"
+    },
+    {
+      "price": 1416,
+      "rating": 4.82,
+      "reviews": 60,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "3 dormitorios a pasos de la playa",
+      "id": "747832038772722230",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2100,
+      "rating": 4.96,
+      "reviews": 53,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Penthouse con vista al mar",
+      "id": "51412903",
+      "level": "Premium"
+    }
+  ],
+  "playadelcarmen": [
+    {
+      "price": 564,
+      "rating": 4.8,
+      "reviews": 223,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "A segundos de la playa y la 5ta Avenida, con pileta",
+      "id": "40310530",
+      "level": "Económica"
+    },
+    {
+      "price": 1653,
+      "rating": 4.8,
+      "reviews": 81,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Casa de 3 dormitorios con pileta",
+      "id": "28338831",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2153,
+      "rating": 4.86,
+      "reviews": 130,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "Depto a estrenar muy bien ubicado",
+      "id": "23503871",
+      "level": "Premium"
+    }
+  ],
+  "bocas": [
+    {
+      "price": 1672,
+      "rating": 4.84,
+      "reviews": 45,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Cabaña en la colina para surfistas",
+      "id": "32044245",
+      "level": "Económica"
+    },
+    {
+      "price": 2560,
+      "rating": 4.95,
+      "reviews": 22,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Casa de playa",
+      "id": "15498953",
+      "level": "Recomendada"
+    },
+    {
+      "price": 4067,
+      "rating": 4.86,
+      "reviews": 129,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 4,
+      "name": "Wiona, villa frente a la playa con pileta",
+      "id": "30406",
+      "level": "Premium"
+    }
+  ],
+  "tamarindo": [
+    {
+      "price": 976,
+      "rating": 4.84,
+      "reviews": 98,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Casa de 3 dormitorios en zona tranquila",
+      "id": "40744118",
+      "level": "Económica"
+    },
+    {
+      "price": 2360,
+      "rating": 4.83,
+      "reviews": 23,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Depto de playa de 3 dormitorios",
+      "id": "1273942181223441951",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2975,
+      "rating": 4.95,
+      "reviews": 93,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "beds": 4,
+      "name": "Depto moderno de 3 dormitorios",
+      "id": "771592519512111494",
+      "level": "Premium"
+    }
+  ],
+  "mancora": [
+    {
+      "price": 1497,
+      "rating": 4.8,
+      "reviews": 122,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 6,
+      "name": "Casita frente al mar",
+      "id": "20757905",
+      "level": "Económica"
+    },
+    {
+      "price": 1719,
+      "rating": 4.98,
+      "reviews": 47,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "beds": 5,
+      "name": "Casa 2 Vichayito del Mar",
+      "id": "1067336134143003186",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1788,
+      "rating": 4.93,
+      "reviews": 30,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 6,
+      "name": "Casa frente al mar",
+      "id": "1270929062920745919",
+      "level": "Premium"
+    }
+  ],
+  "renaca": [
+    {
+      "price": 976,
+      "rating": 4.95,
+      "reviews": 55,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Depto en Reñaca",
+      "id": "980527691893988869",
+      "level": "Económica"
+    },
+    {
+      "price": 1067,
+      "rating": 4.95,
+      "reviews": 37,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Depto con vista al mar",
+      "id": "792168910517991375",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1106,
+      "rating": 4.88,
+      "reviews": 26,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Vista infinita al océano",
+      "id": "1242313337560763313",
+      "level": "Premium"
+    }
+  ],
+  "iquique": [
+    {
+      "price": 667,
+      "rating": 4.84,
+      "reviews": 94,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "3 dormitorios a cuadras de Cavancha",
+      "id": "755331872418773795",
+      "level": "Económica"
+    },
+    {
+      "price": 744,
+      "rating": 4.85,
+      "reviews": 82,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Depto cerca de la playa",
+      "id": "22686601",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1432,
+      "rating": 4.82,
+      "reviews": 11,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Depto con vista al mar",
+      "id": "1541630968080594831",
+      "level": "Premium"
+    }
+  ],
+  "arica": [
+    {
+      "price": 480,
+      "rating": 4.94,
+      "reviews": 32,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Depto de 3 habitaciones con estacionamiento",
+      "id": "1578450687172178015",
+      "level": "Económica"
+    },
+    {
+      "price": 629,
+      "rating": 4.98,
+      "reviews": 42,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Depto en la playa",
+      "id": "1520687670568481457",
+      "level": "Recomendada"
+    },
+    {
+      "price": 780,
+      "rating": 4.93,
+      "reviews": 45,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 7,
+      "name": "Depto en playa Chinchorro",
+      "id": "1455977412526809060",
+      "level": "Premium"
+    }
+  ],
+  "montanita": [
+    {
+      "price": 866,
+      "rating": 4.88,
+      "reviews": 121,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Penthouse frente al mar en Manglaralto",
+      "id": "48676761",
+      "level": "Económica"
+    },
+    {
+      "price": 976,
+      "rating": 4.93,
+      "reviews": 42,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Depto al pie del mar",
+      "id": "45941433",
+      "level": "Recomendada"
+    },
+    {
+      "price": 984,
+      "rating": 4.97,
+      "reviews": 90,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Depto de 3 habitaciones en Montañita",
+      "id": "10477200",
+      "level": "Premium"
+    }
+  ],
+  "huanchaco": [
+    {
+      "price": 360,
+      "rating": 4.89,
+      "reviews": 44,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Depto a 100 m de la playa",
+      "id": "49979651",
+      "level": "Económica"
+    },
+    {
+      "price": 433,
+      "rating": 4.95,
+      "reviews": 20,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Depto minimalista cerca de la playa",
+      "id": "708167380607355320",
+      "level": "Recomendada"
+    },
+    {
+      "price": 915,
+      "rating": 4.84,
+      "reviews": 32,
+      "guestFavorite": true,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "beds": 6,
+      "name": "Depto grande en Huanchaco",
+      "id": "1470462242999306156",
+      "level": "Premium"
+    }
+  ],
+  "eltunco": [
+    {
+      "price": 1505,
+      "rating": 4.98,
+      "reviews": 58,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 5,
+      "name": "Villa con vista al mar cerca de El Tunco",
+      "id": "781165410651709097",
+      "level": "Económica"
+    },
+    {
+      "price": 1982,
+      "rating": 4.91,
+      "reviews": 70,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 5,
+      "name": "Casa en Surf City con vista al mar",
+      "id": "731358644769804759",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2054,
+      "rating": 4.93,
+      "reviews": 121,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "beds": 8,
+      "name": "Casa Sol y Mar con pileta",
+      "id": "53709992",
+      "level": "Premium"
+    }
+  ],
+  "sanjuandelsur": [
+    {
+      "price": 611,
+      "rating": 4.88,
+      "reviews": 56,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Depto equipado en la bahía",
+      "id": "513817366250675359",
+      "level": "Económica"
+    },
+    {
+      "price": 1306,
+      "rating": 4.86,
+      "reviews": 70,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "La mejor vista y ubicación",
+      "id": "13812559",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1380,
+      "rating": 4.98,
+      "reviews": 81,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "beds": 5,
+      "name": "La Niña, casa en el centro",
+      "id": "22496152",
+      "level": "Premium"
+    }
+  ],
+  "puertoescondido": [
+    {
+      "price": 1119,
+      "rating": 4.85,
+      "reviews": 39,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 3,
+      "name": "Casa Amanecer, Bacocho",
+      "id": "1544293722079009348",
+      "level": "Económica"
+    },
+    {
+      "price": 1214,
+      "rating": 5,
+      "reviews": 19,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 4,
+      "name": "Casa MarEscondido",
+      "id": "1668548191504447177",
+      "level": "Recomendada"
+    },
+    {
+      "price": 1639,
+      "rating": 4.97,
+      "reviews": 77,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Casa de Sueño Imposible",
+      "id": "52936192",
+      "level": "Premium"
+    }
+  ],
+  "sayulita": [
+    {
+      "price": 653,
+      "rating": 4.96,
+      "reviews": 79,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 3,
+      "name": "Casa Infinito, villa de 3 habitaciones",
+      "id": "1125548977848919718",
+      "level": "Económica"
+    },
+    {
+      "price": 1069,
+      "rating": 4.88,
+      "reviews": 93,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "beds": 4,
+      "name": "Hot Pink Paradise con pileta",
+      "id": "1024587379478116027",
+      "level": "Recomendada"
+    },
+    {
+      "price": 2083,
+      "rating": 4.92,
+      "reviews": 96,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 4,
+      "name": "Sub penthouse con pileta",
+      "id": "39619021",
+      "level": "Premium"
+    }
+  ],
+  "playavenao": [
+    {
+      "price": 1785,
+      "rating": 4.94,
+      "reviews": 69,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Azuero Lodge frente a la playa",
+      "id": "43884235",
+      "level": "Económica"
+    },
+    {
+      "price": 2185,
+      "rating": 4.88,
+      "reviews": 25,
+      "guestFavorite": false,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "beds": 5,
+      "name": "Colorful Tropical, Villa Marina",
+      "id": "714578003900425595",
+      "level": "Recomendada"
+    },
+    {
+      "price": 3327,
+      "rating": 4.94,
+      "reviews": 48,
+      "guestFavorite": true,
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "beds": 5,
+      "name": "Amplio y equipado",
+      "id": "50255546",
+      "level": "Premium"
+    }
+  ]
+}

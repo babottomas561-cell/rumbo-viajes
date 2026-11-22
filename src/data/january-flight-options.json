@@ -1,0 +1,654 @@
+{
+  "RIO": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 635,
+      "flightPrice": 635,
+      "day": 9
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 812,
+      "flightPrice": 529,
+      "day": 7
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 646,
+      "flightPrice": 546,
+      "day": 3
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 422,
+      "flightPrice": 212,
+      "day": 10
+    }
+  ],
+  "FLN": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 453,
+      "flightPrice": 453,
+      "day": 9
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 676,
+      "flightPrice": 393,
+      "day": 7
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 602,
+      "flightPrice": 502,
+      "day": 6
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 479,
+      "flightPrice": 269,
+      "day": 6
+    }
+  ],
+  "SSA": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1162,
+      "flightPrice": 1162,
+      "day": 9
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 917,
+      "flightPrice": 634,
+      "day": 6
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 837,
+      "flightPrice": 737,
+      "day": 7
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 444,
+      "flightPrice": 234,
+      "day": 10
+    }
+  ],
+  "MCZ": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1380,
+      "flightPrice": 1380,
+      "day": 12
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1153,
+      "flightPrice": 870,
+      "day": 1
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 494,
+      "flightPrice": 284,
+      "day": 9
+    }
+  ],
+  "CUR": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 2017,
+      "flightPrice": 2017,
+      "day": 6
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1248,
+      "flightPrice": 965,
+      "day": 9
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 1533,
+      "flightPrice": 1433,
+      "day": 6
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 1298,
+      "flightPrice": 1088,
+      "day": 12
+    }
+  ],
+  "SAO": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 639,
+      "flightPrice": 639,
+      "day": 10
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 720,
+      "flightPrice": 437,
+      "day": 1
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 363,
+      "flightPrice": 153,
+      "day": 5
+    }
+  ],
+  "BPS": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 933,
+      "flightPrice": 933,
+      "day": 9
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 895,
+      "flightPrice": 612,
+      "day": 5
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 801,
+      "flightPrice": 701,
+      "day": 7
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 453,
+      "flightPrice": 243,
+      "day": 11
+    }
+  ],
+  "IOS": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1204,
+      "flightPrice": 921,
+      "day": 7
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 675,
+      "flightPrice": 465,
+      "day": 1
+    }
+  ],
+  "REC": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1173,
+      "flightPrice": 1173,
+      "day": 12
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 986,
+      "flightPrice": 703,
+      "day": 4
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 1097,
+      "flightPrice": 997,
+      "day": 1
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 469,
+      "flightPrice": 259,
+      "day": 9
+    }
+  ],
+  "JPA": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1468,
+      "flightPrice": 1468,
+      "day": 5
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1181,
+      "flightPrice": 898,
+      "day": 5
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 573,
+      "flightPrice": 363,
+      "day": 1
+    }
+  ],
+  "NAT": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1232,
+      "flightPrice": 1232,
+      "day": 12
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1076,
+      "flightPrice": 793,
+      "day": 3
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 1107,
+      "flightPrice": 1007,
+      "day": 5
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 554,
+      "flightPrice": 344,
+      "day": 8
+    }
+  ],
+  "FOR": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1172,
+      "flightPrice": 1172,
+      "day": 12
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1034,
+      "flightPrice": 751,
+      "day": 6
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 492,
+      "flightPrice": 282,
+      "day": 11
+    }
+  ],
+  "SLZ": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1517,
+      "flightPrice": 1517,
+      "day": 4
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1108,
+      "flightPrice": 825,
+      "day": 5
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 593,
+      "flightPrice": 383,
+      "day": 1
+    }
+  ],
+  "MDQ": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 276,
+      "flightPrice": 276,
+      "day": 9
+    }
+  ],
+  "MVD": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 361,
+      "flightPrice": 361,
+      "day": 5
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 529,
+      "flightPrice": 246,
+      "day": 6
+    }
+  ],
+  "CTG": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1113,
+      "flightPrice": 1113,
+      "day": 9
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1091,
+      "flightPrice": 808,
+      "day": 15
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 932,
+      "flightPrice": 722,
+      "day": 7
+    }
+  ],
+  "SMR": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1324,
+      "flightPrice": 1324,
+      "day": 6
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1300,
+      "flightPrice": 1017,
+      "day": 9
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 1016,
+      "flightPrice": 806,
+      "day": 9
+    }
+  ],
+  "ADZ": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1289,
+      "flightPrice": 1006,
+      "day": 13
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 1147,
+      "flightPrice": 937,
+      "day": 4
+    }
+  ],
+  "PUJ": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1361,
+      "flightPrice": 1078,
+      "day": 11
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 1546,
+      "flightPrice": 1446,
+      "day": 10
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 1116,
+      "flightPrice": 906,
+      "day": 6
+    }
+  ],
+  "CUN": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1452,
+      "flightPrice": 1169,
+      "day": 6
+    },
+    {
+      "label": "Vía Foz en micro",
+      "origin": "IGU",
+      "extra": 210,
+      "price": 1580,
+      "flightPrice": 1370,
+      "day": 7
+    }
+  ],
+  "PTY": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1573,
+      "flightPrice": 1290,
+      "day": 8
+    },
+    {
+      "label": "Vía Córdoba",
+      "origin": "COR",
+      "extra": 100,
+      "price": 1288,
+      "flightPrice": 1188,
+      "day": 7
+    }
+  ],
+  "SJO": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1481,
+      "flightPrice": 1198,
+      "day": 5
+    }
+  ],
+  "PIU": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 899,
+      "flightPrice": 899,
+      "day": 6
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 992,
+      "flightPrice": 709,
+      "day": 5
+    }
+  ],
+  "SCL": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 398,
+      "flightPrice": 398,
+      "day": 5
+    }
+  ],
+  "GYE": [
+    {
+      "label": "Desde Tucumán",
+      "origin": "TUC",
+      "extra": 0,
+      "price": 1502,
+      "flightPrice": 1502,
+      "day": 10
+    },
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1273,
+      "flightPrice": 990,
+      "day": 6
+    }
+  ],
+  "TRU": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1021,
+      "flightPrice": 738,
+      "day": 7
+    }
+  ],
+  "SAL": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1634,
+      "flightPrice": 1351,
+      "day": 12
+    }
+  ],
+  "MGA": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1834,
+      "flightPrice": 1551,
+      "day": 4
+    }
+  ],
+  "PXM": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1924,
+      "flightPrice": 1641,
+      "day": 8
+    }
+  ],
+  "PVR": [
+    {
+      "label": "Vía Buenos Aires",
+      "origin": "BUE",
+      "extra": 283,
+      "price": 1882,
+      "flightPrice": 1599,
+      "day": 9
+    }
+  ]
+}

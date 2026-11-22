@@ -25,6 +25,8 @@ import destinationsRaw from "@/data/destinos.json";
 import experienceRaw from "@/data/destination-experience.json";
 import allInclusiveRaw from "@/data/all-inclusive.json";
 import historicalStaysRaw from "@/data/historical-stays.json";
+import proposalStaysRaw from "@/data/proposal-stays.json";
+import januaryFlightOptionsRaw from "@/data/january-flight-options.json";
 import { StaySearch } from "@/components/stay-search";
 import { LiveContext } from "@/components/live-context";
 import { HistoricalStays } from "@/components/historical-stays";
@@ -51,6 +53,8 @@ type Experience = { beach: number | null; nightlife: number | null; young: numbe
 type AllInclusive = Record<string, Array<[string, number, number, number]>>;
 type StayType = "house" | "all-inclusive";
 type HouseLevel = "cheapest" | "economic" | "recommended" | "premium";
+type ProposalStay = { price: number; rating: number; reviews: number; guestFavorite: boolean; bedrooms: number; bathrooms: number; beds: number; name: string; id: string; level: string };
+type FlightOption = { label: string; origin: string; extra: number; price: number; flightPrice: number; day: number };
 
 type Tab = "propuestas" | "alojamientos" | "anio" | "clima" | "auto" | "vivo";
 
@@ -59,6 +63,8 @@ const yearly = yearlyRaw as unknown as YearlyData;
 const experiences = experienceRaw as Record<string, Experience>;
 const allInclusive = allInclusiveRaw as unknown as AllInclusive;
 const historicalStayKeys = new Set(Object.keys(historicalStaysRaw));
+const proposalStays = proposalStaysRaw as Record<string, ProposalStay[]>;
+const januaryFlightOptions = januaryFlightOptionsRaw as Record<string, FlightOption[]>;
 const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 function usd(value: number) {
@@ -79,6 +85,13 @@ function sourceUrl(destination: Destination, month: number, travelers: number) {
   const start = `2027-${String(month).padStart(2, "0")}-10`;
   const end = `2027-${String(month).padStart(2, "0")}-17`;
   return `https://www.airbnb.com/s/${destination.q}/homes?checkin=${start}&checkout=${end}&adults=${travelers}`;
+}
+
+function roomUrl(id: string, month: number, nights: number, travelers: number) {
+  const checkIn = `2027-${String(month).padStart(2, "0")}-10`;
+  const checkOut = new Date(`${checkIn}T12:00:00Z`);
+  checkOut.setUTCDate(checkOut.getUTCDate() + nights);
+  return `https://www.airbnb.com.ar/rooms/${id}?check_in=${checkIn}&check_out=${checkOut.toISOString().slice(0, 10)}&adults=${travelers}`;
 }
 
 function proposalBackground(key: string, zone: string) {
@@ -216,6 +229,28 @@ export function TripPlanner() {
                   {item.experience?.warning && <div className="climate-warning">{item.experience.warning}</div>}
                   <div className="proposal-total"><span>{usd(item.perPerson)} por persona</span><strong>{usd(item.total)}</strong></div>
                   {item.experience?.how && <p className="proposal-how"><Plane />{item.experience.how}</p>}
+                  <details className="proposal-detail" open={index < 3}>
+                    <summary>Ver ficha completa: vuelos y alojamientos</summary>
+                    <div className="flight-option-grid">
+                      {(month === 1 ? januaryFlightOptions[item.destination.ap] ?? [] : [
+                        item.flight[0] != null ? { label: "Desde Tucumán", price: item.flight[0], origin: "TUC", day: 10 } : null,
+                        item.flight[1] != null ? { label: "Vía Buenos Aires", price: item.flight[1] + 283, origin: "BUE", day: 10 } : null,
+                      ].filter(Boolean) as Array<Pick<FlightOption, "label" | "price" | "origin" | "day">>).map((option, optionIndex) => (
+                        <a className={optionIndex === 0 ? "selected" : ""} href={`https://www.google.com/travel/flights?q=Flights%20from%20${option.origin}%20to%20${item.destination.ap}%20in%20${monthNames[month - 1]}%202027&curr=USD&hl=es-419`} target="_blank" rel="noreferrer" key={`${option.label}-${option.origin}`}>
+                          <span>{option.label}</span><strong>{usd(option.price)}</strong><small>por persona · salida ref. día {option.day}</small>
+                        </a>
+                      ))}
+                    </div>
+                    <div className="inline-stay-grid">
+                      {(proposalStays[item.key] ?? []).map((stay) => (
+                        <a href={roomUrl(stay.id, month, nights, travelers)} target="_blank" rel="noreferrer" key={stay.id}>
+                          <div className="inline-stay-photo" style={{ backgroundImage: `url(/fotos/${stay.id}.jpg), url(/casas/${item.key}.jpg)` }}><span>{stay.level}</span>{stay.guestFavorite && <b>Favorito</b>}</div>
+                          <div className="inline-stay-body"><strong>{stay.name}</strong><span>★ {stay.rating} · {stay.reviews} reseñas</span><span>{stay.bedrooms} dorm. · {stay.bathrooms} baños · {stay.beds} camas</span><div><b>{usd(stay.price * nights / 8)}</b><small>{nights} noches · {usd(stay.price * nights / 8 / travelers)} c/u</small></div></div>
+                        </a>
+                      ))}
+                    </div>
+                    <p className="detail-note">Vuelos y Airbnb son referencias del relevamiento original. Abrí cada opción para validar precio y disponibilidad actuales.</p>
+                  </details>
                   <div className="card-actions">
                     <button onClick={() => { setSelectedKey(item.key); setTab(historicalStayKeys.has(item.key) ? "alojamientos" : "vivo"); }}>{historicalStayKeys.has(item.key) ? "Ver alojamientos" : "Buscar en vivo"}</button>
                     <a href={sourceUrl(item.destination, month, travelers)} target="_blank" rel="noreferrer">Ver disponibilidad <ExternalLink /></a>
