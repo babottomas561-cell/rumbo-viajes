@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rumbo
 
-## Getting Started
+Primer vertical del nuevo buscador y planeador de viajes. Convive con la página y el actualizador históricos del directorio superior.
 
-First, run the development server:
+Producción: https://rumbo-viajes-three.vercel.app
+
+## Estado actual
+
+- Next.js 16 + TypeScript, preparado para Vercel.
+- Ranking de 78 destinos por costo total, presupuesto y clima.
+- Comparación de vuelos, casas y clima durante los 12 meses.
+- Filtros por región, pasajeros, noches, presupuesto y criterio.
+- Calculadora de viaje en auto con rutas OSRM, combustible oficial y lugares cercanos.
+- Formulario para destino, cualquier fecha, pasajeros y habitaciones.
+- API server-side `POST /api/search/stays`.
+- Contrato normalizado para Airbnb, Booking.com y Vrbo.
+- Adaptador real de StayingAPI; no se usan endpoints privados de Airbnb.
+- Supabase conectado con RLS, historial de búsquedas, auditoría de proveedores y ofertas con vencimiento.
+- Clima, cambio y feriados consultados desde fuentes externas con caché.
+- Sin una clave configurada, el buscador explica qué falta y no devuelve datos simulados.
+
+## Configuración
+
+1. Copiar `.env.example` a `.env.local`.
+2. Crear una clave sandbox/gratuita en https://stayingapi.com/signup.
+3. Completar `STAYINGAPI_KEY` sólo en el servidor.
+4. Vincular Supabase y ejecutar `supabase db push` antes de habilitar persistencia.
+
+Variables previstas:
+
+- `STAYINGAPI_KEY`: secreto para búsquedas de estadías.
+- `NEXT_PUBLIC_SUPABASE_URL`: URL pública del proyecto.
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: clave publicable, protegida con RLS.
+- `SUPABASE_SECRET_KEY`: sólo servidor; nunca se expone al navegador.
+
+## Verificación local realizada
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run typecheck
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+El proyecto está vinculado a `demotuc/rumbo-viajes` y desplegado en producción. Supabase está activo en `sa-east-1`, las migraciones están aplicadas y las búsquedas de alojamientos se persisten desde el servidor.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Próximos adaptadores
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Vuelos: Duffel y luego Amadeus.
+2. Peajes: HERE Routing.
+3. Lugares enriquecidos: Geoapify/OpenTripMap.
+4. Alertas y favoritos por usuario.

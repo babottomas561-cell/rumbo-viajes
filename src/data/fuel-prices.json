@@ -1,0 +1,1359 @@
+{
+  "generatedAt": "2026-11-22T16:36:27.077751+00:00",
+  "argentina": {
+    "currency": "ARS",
+    "unit": "liter",
+    "period": "2026-11",
+    "latestEffectiveDate": "2026-11-20 00:00:00",
+    "national": {
+      "diesel_grade_2": {
+        "average": 2433.18,
+        "median": 2405.0,
+        "min": 2254.0,
+        "max": 2740.0,
+        "samples": 194
+      },
+      "diesel_grade_3": {
+        "average": 2723.42,
+        "median": 2719.0,
+        "min": 2499.0,
+        "max": 2990.0,
+        "samples": 332
+      },
+      "premium": {
+        "average": 2508.28,
+        "median": 2509.0,
+        "min": 2265.0,
+        "max": 2875.0,
+        "samples": 282
+      },
+      "super": {
+        "average": 2230.46,
+        "median": 2229.0,
+        "min": 1870.0,
+        "max": 2525.0,
+        "samples": 290
+      }
+    },
+    "provinces": {
+      "Buenos Aires": {
+        "diesel_grade_2": {
+          "average": 2388.65,
+          "median": 2379.0,
+          "min": 2254.0,
+          "max": 2510.0,
+          "samples": 94
+        },
+        "diesel_grade_3": {
+          "average": 2705.36,
+          "median": 2719.0,
+          "min": 2517.0,
+          "max": 2859.0,
+          "samples": 128
+        },
+        "premium": {
+          "average": 2503.09,
+          "median": 2509.0,
+          "min": 2318.0,
+          "max": 2769.0,
+          "samples": 134
+        },
+        "super": {
+          "average": 2240.94,
+          "median": 2249.0,
+          "min": 2112.0,
+          "max": 2525.0,
+          "samples": 126
+        }
+      },
+      "Capital Federal": {
+        "diesel_grade_2": {
+          "average": 2370.36,
+          "median": 2369.0,
+          "min": 2348.0,
+          "max": 2379.0,
+          "samples": 28
+        },
+        "diesel_grade_3": {
+          "average": 2688.44,
+          "median": 2689.0,
+          "min": 2629.0,
+          "max": 2719.0,
+          "samples": 90
+        },
+        "premium": {
+          "average": 2492.34,
+          "median": 2489.0,
+          "min": 2429.0,
+          "max": 2519.0,
+          "samples": 76
+        },
+        "super": {
+          "average": 2197.3,
+          "median": 2199.0,
+          "min": 2161.0,
+          "max": 2239.0,
+          "samples": 80
+        }
+      },
+      "Chaco": {
+        "diesel_grade_2": {
+          "average": 2405.0,
+          "median": 2405.0,
+          "min": 2405.0,
+          "max": 2405.0,
+          "samples": 2
+        },
+        "diesel_grade_3": {
+          "average": 2739.0,
+          "median": 2739.0,
+          "min": 2739.0,
+          "max": 2739.0,
+          "samples": 2
+        },
+        "premium": {
+          "average": 2469.0,
+          "median": 2469.0,
+          "min": 2469.0,
+          "max": 2469.0,
+          "samples": 2
+        },
+        "super": {
+          "average": 2139.0,
+          "median": 2139.0,
+          "min": 2139.0,
+          "max": 2139.0,
+          "samples": 2
+        }
+      },
+      "Chubut": {
+        "diesel_grade_2": {
+          "average": 2485.0,
+          "median": 2485.0,
+          "min": 2485.0,
+          "max": 2485.0,
+          "samples": 2
+        },
+        "diesel_grade_3": {
+          "average": 2765.0,
+          "median": 2765.0,
+          "min": 2765.0,
+          "max": 2765.0,
+          "samples": 2
+        },
+        "premium": {
+          "average": 2406.0,
+          "median": 2406.0,
+          "min": 2406.0,
+          "max": 2406.0,
+          "samples": 2
+        },
+        "super": {
+          "average": 2073.0,
+          "median": 2073.0,
+          "min": 2073.0,
+          "max": 2073.0,
+          "samples": 2
+        }
+      },
+      "Cordoba": {
+        "diesel_grade_2": {
+          "average": 2522.58,
+          "median": 2529.0,
+          "min": 2458.0,
+          "max": 2559.0,
+          "samples": 24
+        },
+        "diesel_grade_3": {
+          "average": 2737.8,
+          "median": 2779.0,
+          "min": 2499.0,
+          "max": 2799.0,
+          "samples": 30
+        },
+        "premium": {
+          "average": 2480.36,
+          "median": 2499.0,
+          "min": 2265.0,
+          "max": 2549.0,
+          "samples": 22
+        },
+        "super": {
+          "average": 2246.86,
+          "median": 2254.0,
+          "min": 2179.0,
+          "max": 2279.0,
+          "samples": 28
+        }
+      },
+      "Corrientes": {
+        "diesel_grade_2": {
+          "average": 2454.33,
+          "median": 2469.0,
+          "min": 2405.0,
+          "max": 2489.0,
+          "samples": 6
+        },
+        "diesel_grade_3": {
+          "average": 2657.0,
+          "median": 2657.0,
+          "min": 2575.0,
+          "max": 2739.0,
+          "samples": 4
+        },
+        "premium": {
+          "average": 2394.0,
+          "median": 2394.0,
+          "min": 2319.0,
+          "max": 2469.0,
+          "samples": 4
+        },
+        "super": {
+          "average": 2174.0,
+          "median": 2174.0,
+          "min": 2129.0,
+          "max": 2219.0,
+          "samples": 4
+        }
+      },
+      "Entre Rios": {
+        "diesel_grade_2": {
+          "average": 2574.4,
+          "median": 2539.0,
+          "min": 2394.0,
+          "max": 2740.0,
+          "samples": 10
+        },
+        "diesel_grade_3": {
+          "average": 2857.17,
+          "median": 2817.5,
+          "min": 2759.0,
+          "max": 2990.0,
+          "samples": 12
+        },
+        "premium": {
+          "average": 2788.67,
+          "median": 2875.0,
+          "min": 2616.0,
+          "max": 2875.0,
+          "samples": 6
+        },
+        "super": {
+          "average": 2295.75,
+          "median": 2329.5,
+          "min": 2154.0,
+          "max": 2370.0,
+          "samples": 8
+        }
+      },
+      "La Pampa": {
+        "diesel_grade_2": {
+          "average": 2490.0,
+          "median": 2490.0,
+          "min": 2490.0,
+          "max": 2490.0,
+          "samples": 2
+        },
+        "diesel_grade_3": {
+          "average": 2830.0,
+          "median": 2830.0,
+          "min": 2830.0,
+          "max": 2830.0,
+          "samples": 2
+        },
+        "super": {
+          "average": 1925.0,
+          "median": 1925.0,
+          "min": 1870.0,
+          "max": 1980.0,
+          "samples": 4
+        }
+      },
+      "Mendoza": {
+        "diesel_grade_2": {
+          "average": 2393.0,
+          "median": 2393.0,
+          "min": 2393.0,
+          "max": 2393.0,
+          "samples": 2
+        },
+        "diesel_grade_3": {
+          "average": 2658.5,
+          "median": 2658.5,
+          "min": 2598.0,
+          "max": 2719.0,
+          "samples": 4
+        },
+        "premium": {
+          "average": 2483.0,
+          "median": 2483.0,
+          "min": 2427.0,
+          "max": 2539.0,
+          "samples": 4
+        },
+        "super": {
+          "average": 2167.0,
+          "median": 2167.0,
+          "min": 2167.0,
+          "max": 2167.0,
+          "samples": 2
+        }
+      },
+      "Misiones": {
+        "diesel_grade_2": {
+          "average": 2559.0,
+          "median": 2559.0,
+          "min": 2559.0,
+          "max": 2559.0,
+          "samples": 4
+        },
+        "diesel_grade_3": {
+          "average": 2869.0,
+          "median": 2869.0,
+          "min": 2869.0,
+          "max": 2869.0,
+          "samples": 10
+        },
+        "premium": {
+          "average": 2689.0,
+          "median": 2689.0,
+          "min": 2689.0,
+          "max": 2689.0,
+          "samples": 10
+        },
+        "super": {
+          "average": 2371.0,
+          "median": 2359.0,
+          "min": 2359.0,
+          "max": 2389.0,
+          "samples": 10
+        }
+      },
+      "Neuquen": {
+        "diesel_grade_3": {
+          "average": 2939.0,
+          "median": 2939.0,
+          "min": 2939.0,
+          "max": 2939.0,
+          "samples": 2
+        }
+      },
+      "Rio Negro": {
+        "premium": {
+          "average": 2349.0,
+          "median": 2349.0,
+          "min": 2349.0,
+          "max": 2349.0,
+          "samples": 2
+        }
+      },
+      "San Luis": {
+        "diesel_grade_3": {
+          "average": 2729.0,
+          "median": 2729.0,
+          "min": 2729.0,
+          "max": 2729.0,
+          "samples": 2
+        },
+        "premium": {
+          "average": 2519.0,
+          "median": 2519.0,
+          "min": 2519.0,
+          "max": 2519.0,
+          "samples": 2
+        },
+        "super": {
+          "average": 2259.0,
+          "median": 2259.0,
+          "min": 2259.0,
+          "max": 2259.0,
+          "samples": 2
+        }
+      },
+      "Santa Fe": {
+        "diesel_grade_2": {
+          "average": 2475.58,
+          "median": 2511.5,
+          "min": 2373.0,
+          "max": 2529.0,
+          "samples": 12
+        },
+        "diesel_grade_3": {
+          "average": 2742.94,
+          "median": 2769.0,
+          "min": 2518.0,
+          "max": 2799.0,
+          "samples": 34
+        },
+        "premium": {
+          "average": 2468.8,
+          "median": 2498.0,
+          "min": 2344.0,
+          "max": 2529.0,
+          "samples": 10
+        },
+        "super": {
+          "average": 2240.17,
+          "median": 2249.0,
+          "min": 2167.0,
+          "max": 2278.0,
+          "samples": 12
+        }
+      },
+      "Santiago Del Estero": {
+        "diesel_grade_3": {
+          "average": 2710.0,
+          "median": 2710.0,
+          "min": 2710.0,
+          "max": 2710.0,
+          "samples": 2
+        },
+        "super": {
+          "average": 2259.0,
+          "median": 2259.0,
+          "min": 2259.0,
+          "max": 2259.0,
+          "samples": 2
+        }
+      },
+      "Tucuman": {
+        "diesel_grade_2": {
+          "average": 2579.0,
+          "median": 2579.0,
+          "min": 2579.0,
+          "max": 2579.0,
+          "samples": 8
+        },
+        "diesel_grade_3": {
+          "average": 2859.0,
+          "median": 2859.0,
+          "min": 2859.0,
+          "max": 2859.0,
+          "samples": 8
+        },
+        "premium": {
+          "average": 2579.0,
+          "median": 2579.0,
+          "min": 2579.0,
+          "max": 2579.0,
+          "samples": 8
+        },
+        "super": {
+          "average": 2329.0,
+          "median": 2329.0,
+          "min": 2329.0,
+          "max": 2329.0,
+          "samples": 8
+        }
+      }
+    },
+    "source": {
+      "name": "Secretaría de Energía de Argentina",
+      "url": "https://datos.energia.gob.ar/dataset/1c181390-5045-475e-94dc-410429be4b17/resource/80ac25de-a44a-4445-9215-090cf55cfda5/download/precios-en-surtidor-resolucin-3142016.csv"
+    }
+  },
+  "brazil": {
+    "currency": "BRL",
+    "unit": "liter",
+    "period": {
+      "start": "2026-11-08",
+      "end": "2026-11-14"
+    },
+    "national": {
+      "ethanol": {
+        "average": 4.25,
+        "min": 3.19,
+        "max": 6.6,
+        "samples": 3850
+      },
+      "additive": {
+        "average": 6.66,
+        "min": 5.49,
+        "max": 8.99,
+        "samples": 3448
+      },
+      "regular": {
+        "average": 6.48,
+        "min": 5.29,
+        "max": 8.99,
+        "samples": 4504
+      },
+      "diesel": {
+        "average": 7.0,
+        "min": 6.07,
+        "max": 8.89,
+        "samples": 1856
+      },
+      "diesel_s10": {
+        "average": 7.29,
+        "min": 5.89,
+        "max": 9.19,
+        "samples": 3107
+      }
+    },
+    "states": {
+      "ACRE": {
+        "ethanol": {
+          "average": 4.9,
+          "min": 4.38,
+          "max": 6.6,
+          "samples": 11
+        },
+        "additive": {
+          "average": 7.42,
+          "min": 6.89,
+          "max": 8.39,
+          "samples": 14
+        },
+        "regular": {
+          "average": 7.43,
+          "min": 6.89,
+          "max": 8.26,
+          "samples": 14
+        },
+        "diesel": {
+          "average": 7.91,
+          "min": 7.54,
+          "max": 8.75,
+          "samples": 10
+        },
+        "diesel_s10": {
+          "average": 8.17,
+          "min": 7.79,
+          "max": 8.85,
+          "samples": 8
+        }
+      },
+      "ALAGOAS": {
+        "ethanol": {
+          "average": 4.89,
+          "min": 4.58,
+          "max": 5.98,
+          "samples": 49
+        },
+        "additive": {
+          "average": 6.84,
+          "min": 6.08,
+          "max": 8.04,
+          "samples": 40
+        },
+        "regular": {
+          "average": 6.55,
+          "min": 6.08,
+          "max": 7.67,
+          "samples": 59
+        },
+        "diesel": {
+          "average": 7.64,
+          "min": 7.59,
+          "max": 7.99,
+          "samples": 6
+        },
+        "diesel_s10": {
+          "average": 7.3,
+          "min": 7.18,
+          "max": 8.09,
+          "samples": 30
+        }
+      },
+      "AMAPA": {
+        "ethanol": {
+          "average": 5.59,
+          "min": 5.59,
+          "max": 5.59,
+          "samples": 1
+        },
+        "additive": {
+          "average": 6.66,
+          "min": 6.63,
+          "max": 6.85,
+          "samples": 3
+        },
+        "regular": {
+          "average": 6.37,
+          "min": 6.27,
+          "max": 6.95,
+          "samples": 22
+        },
+        "diesel_s10": {
+          "average": 7.26,
+          "min": 7.12,
+          "max": 7.7,
+          "samples": 10
+        }
+      },
+      "AMAZONAS": {
+        "ethanol": {
+          "average": 4.96,
+          "min": 4.39,
+          "max": 5.29,
+          "samples": 37
+        },
+        "additive": {
+          "average": 7.0,
+          "min": 6.49,
+          "max": 8.99,
+          "samples": 43
+        },
+        "regular": {
+          "average": 6.94,
+          "min": 6.29,
+          "max": 8.99,
+          "samples": 53
+        },
+        "diesel": {
+          "average": 7.07,
+          "min": 6.99,
+          "max": 7.89,
+          "samples": 13
+        },
+        "diesel_s10": {
+          "average": 7.09,
+          "min": 6.79,
+          "max": 8.99,
+          "samples": 37
+        }
+      },
+      "BAHIA": {
+        "ethanol": {
+          "average": 4.61,
+          "min": 4.08,
+          "max": 5.59,
+          "samples": 214
+        },
+        "additive": {
+          "average": 6.8,
+          "min": 6.13,
+          "max": 7.49,
+          "samples": 168
+        },
+        "regular": {
+          "average": 6.64,
+          "min": 6.13,
+          "max": 7.39,
+          "samples": 237
+        },
+        "diesel": {
+          "average": 7.51,
+          "min": 6.7,
+          "max": 8.89,
+          "samples": 149
+        },
+        "diesel_s10": {
+          "average": 7.59,
+          "min": 6.79,
+          "max": 8.99,
+          "samples": 178
+        }
+      },
+      "CEARA": {
+        "ethanol": {
+          "average": 4.95,
+          "min": 4.69,
+          "max": 6.19,
+          "samples": 126
+        },
+        "additive": {
+          "average": 7.07,
+          "min": 5.89,
+          "max": 7.99,
+          "samples": 123
+        },
+        "regular": {
+          "average": 6.91,
+          "min": 5.89,
+          "max": 7.29,
+          "samples": 142
+        },
+        "diesel": {
+          "average": 7.7,
+          "min": 6.79,
+          "max": 8.3,
+          "samples": 19
+        },
+        "diesel_s10": {
+          "average": 7.29,
+          "min": 6.84,
+          "max": 8.4,
+          "samples": 112
+        }
+      },
+      "DISTRITO FEDERAL": {
+        "ethanol": {
+          "average": 4.5,
+          "min": 4.37,
+          "max": 4.64,
+          "samples": 30
+        },
+        "additive": {
+          "average": 6.67,
+          "min": 6.48,
+          "max": 7.02,
+          "samples": 41
+        },
+        "regular": {
+          "average": 6.55,
+          "min": 6.37,
+          "max": 6.69,
+          "samples": 50
+        },
+        "diesel": {
+          "average": 7.21,
+          "min": 6.59,
+          "max": 7.56,
+          "samples": 16
+        },
+        "diesel_s10": {
+          "average": 7.35,
+          "min": 6.99,
+          "max": 7.59,
+          "samples": 21
+        }
+      },
+      "ESPIRITO SANTO": {
+        "ethanol": {
+          "average": 4.88,
+          "min": 4.35,
+          "max": 5.99,
+          "samples": 63
+        },
+        "additive": {
+          "average": 6.62,
+          "min": 6.05,
+          "max": 7.49,
+          "samples": 69
+        },
+        "regular": {
+          "average": 6.43,
+          "min": 6.05,
+          "max": 7.19,
+          "samples": 80
+        },
+        "diesel": {
+          "average": 6.69,
+          "min": 6.09,
+          "max": 7.39,
+          "samples": 22
+        },
+        "diesel_s10": {
+          "average": 6.97,
+          "min": 6.19,
+          "max": 7.49,
+          "samples": 44
+        }
+      },
+      "GOIAS": {
+        "ethanol": {
+          "average": 4.37,
+          "min": 3.39,
+          "max": 4.89,
+          "samples": 171
+        },
+        "additive": {
+          "average": 6.8,
+          "min": 5.59,
+          "max": 7.54,
+          "samples": 107
+        },
+        "regular": {
+          "average": 6.59,
+          "min": 5.29,
+          "max": 6.99,
+          "samples": 172
+        },
+        "diesel": {
+          "average": 6.89,
+          "min": 6.27,
+          "max": 7.95,
+          "samples": 100
+        },
+        "diesel_s10": {
+          "average": 7.2,
+          "min": 6.49,
+          "max": 7.99,
+          "samples": 134
+        }
+      },
+      "MARANHAO": {
+        "ethanol": {
+          "average": 4.85,
+          "min": 4.28,
+          "max": 5.89,
+          "samples": 59
+        },
+        "additive": {
+          "average": 6.53,
+          "min": 6.15,
+          "max": 7.54,
+          "samples": 64
+        },
+        "regular": {
+          "average": 6.4,
+          "min": 5.99,
+          "max": 7.54,
+          "samples": 104
+        },
+        "diesel": {
+          "average": 7.29,
+          "min": 6.07,
+          "max": 8.39,
+          "samples": 53
+        },
+        "diesel_s10": {
+          "average": 7.41,
+          "min": 6.65,
+          "max": 8.39,
+          "samples": 94
+        }
+      },
+      "MATO GROSSO": {
+        "ethanol": {
+          "average": 4.16,
+          "min": 3.55,
+          "max": 4.29,
+          "samples": 83
+        },
+        "additive": {
+          "average": 6.93,
+          "min": 6.39,
+          "max": 7.49,
+          "samples": 49
+        },
+        "regular": {
+          "average": 6.74,
+          "min": 5.73,
+          "max": 7.07,
+          "samples": 84
+        },
+        "diesel": {
+          "average": 7.22,
+          "min": 6.75,
+          "max": 7.89,
+          "samples": 50
+        },
+        "diesel_s10": {
+          "average": 7.52,
+          "min": 6.97,
+          "max": 8.25,
+          "samples": 51
+        }
+      },
+      "MATO GROSSO DO SUL": {
+        "ethanol": {
+          "average": 4.06,
+          "min": 3.85,
+          "max": 4.97,
+          "samples": 39
+        },
+        "additive": {
+          "average": 6.59,
+          "min": 6.11,
+          "max": 7.49,
+          "samples": 45
+        },
+        "regular": {
+          "average": 6.4,
+          "min": 6.07,
+          "max": 7.29,
+          "samples": 58
+        },
+        "diesel": {
+          "average": 6.84,
+          "min": 6.47,
+          "max": 7.59,
+          "samples": 35
+        },
+        "diesel_s10": {
+          "average": 7.32,
+          "min": 6.99,
+          "max": 7.99,
+          "samples": 31
+        }
+      },
+      "MINAS GERAIS": {
+        "ethanol": {
+          "average": 4.36,
+          "min": 3.57,
+          "max": 5.12,
+          "samples": 444
+        },
+        "additive": {
+          "average": 6.61,
+          "min": 5.64,
+          "max": 7.22,
+          "samples": 308
+        },
+        "regular": {
+          "average": 6.36,
+          "min": 5.64,
+          "max": 7.04,
+          "samples": 471
+        },
+        "diesel": {
+          "average": 6.74,
+          "min": 6.29,
+          "max": 7.59,
+          "samples": 220
+        },
+        "diesel_s10": {
+          "average": 7.04,
+          "min": 6.36,
+          "max": 7.89,
+          "samples": 301
+        }
+      },
+      "PARA": {
+        "ethanol": {
+          "average": 4.57,
+          "min": 3.95,
+          "max": 5.82,
+          "samples": 51
+        },
+        "additive": {
+          "average": 6.79,
+          "min": 5.89,
+          "max": 7.89,
+          "samples": 63
+        },
+        "regular": {
+          "average": 6.53,
+          "min": 5.75,
+          "max": 7.7,
+          "samples": 104
+        },
+        "diesel": {
+          "average": 7.41,
+          "min": 6.65,
+          "max": 8.75,
+          "samples": 38
+        },
+        "diesel_s10": {
+          "average": 7.48,
+          "min": 6.65,
+          "max": 8.8,
+          "samples": 72
+        }
+      },
+      "PARAIBA": {
+        "ethanol": {
+          "average": 4.47,
+          "min": 4.25,
+          "max": 5.59,
+          "samples": 56
+        },
+        "additive": {
+          "average": 6.5,
+          "min": 6.17,
+          "max": 6.77,
+          "samples": 45
+        },
+        "regular": {
+          "average": 6.27,
+          "min": 6.17,
+          "max": 6.59,
+          "samples": 66
+        },
+        "diesel": {
+          "average": 7.03,
+          "min": 6.65,
+          "max": 7.65,
+          "samples": 29
+        },
+        "diesel_s10": {
+          "average": 7.24,
+          "min": 6.95,
+          "max": 7.79,
+          "samples": 50
+        }
+      },
+      "PARANA": {
+        "ethanol": {
+          "average": 4.27,
+          "min": 3.19,
+          "max": 4.99,
+          "samples": 285
+        },
+        "additive": {
+          "average": 6.74,
+          "min": 5.49,
+          "max": 7.46,
+          "samples": 224
+        },
+        "regular": {
+          "average": 6.54,
+          "min": 5.47,
+          "max": 7.38,
+          "samples": 287
+        },
+        "diesel": {
+          "average": 6.77,
+          "min": 6.19,
+          "max": 7.99,
+          "samples": 128
+        },
+        "diesel_s10": {
+          "average": 7.31,
+          "min": 6.59,
+          "max": 8.79,
+          "samples": 192
+        }
+      },
+      "PERNAMBUCO": {
+        "ethanol": {
+          "average": 4.75,
+          "min": 4.33,
+          "max": 6.59,
+          "samples": 161
+        },
+        "additive": {
+          "average": 6.93,
+          "min": 5.94,
+          "max": 7.59,
+          "samples": 139
+        },
+        "regular": {
+          "average": 6.75,
+          "min": 5.93,
+          "max": 7.99,
+          "samples": 188
+        },
+        "diesel": {
+          "average": 7.44,
+          "min": 6.83,
+          "max": 7.49,
+          "samples": 10
+        },
+        "diesel_s10": {
+          "average": 7.12,
+          "min": 6.79,
+          "max": 8.24,
+          "samples": 164
+        }
+      },
+      "PIAUI": {
+        "ethanol": {
+          "average": 4.82,
+          "min": 4.49,
+          "max": 5.45,
+          "samples": 43
+        },
+        "additive": {
+          "average": 6.77,
+          "min": 6.05,
+          "max": 7.29,
+          "samples": 47
+        },
+        "regular": {
+          "average": 6.61,
+          "min": 6.05,
+          "max": 6.9,
+          "samples": 58
+        },
+        "diesel": {
+          "average": 7.47,
+          "min": 7.19,
+          "max": 7.99,
+          "samples": 23
+        },
+        "diesel_s10": {
+          "average": 7.67,
+          "min": 7.21,
+          "max": 8.59,
+          "samples": 40
+        }
+      },
+      "RIO DE JANEIRO": {
+        "ethanol": {
+          "average": 4.86,
+          "min": 4.09,
+          "max": 5.79,
+          "samples": 288
+        },
+        "additive": {
+          "average": 6.82,
+          "min": 6.15,
+          "max": 7.59,
+          "samples": 295
+        },
+        "regular": {
+          "average": 6.61,
+          "min": 5.99,
+          "max": 7.39,
+          "samples": 328
+        },
+        "diesel": {
+          "average": 6.97,
+          "min": 6.29,
+          "max": 7.89,
+          "samples": 121
+        },
+        "diesel_s10": {
+          "average": 7.13,
+          "min": 5.89,
+          "max": 7.99,
+          "samples": 229
+        }
+      },
+      "RIO GRANDE DO NORTE": {
+        "ethanol": {
+          "average": 4.82,
+          "min": 4.49,
+          "max": 6.25,
+          "samples": 31
+        },
+        "additive": {
+          "average": 6.56,
+          "min": 6.19,
+          "max": 7.29,
+          "samples": 28
+        },
+        "regular": {
+          "average": 6.46,
+          "min": 6.19,
+          "max": 7.07,
+          "samples": 36
+        },
+        "diesel": {
+          "average": 7.3,
+          "min": 6.89,
+          "max": 7.89,
+          "samples": 16
+        },
+        "diesel_s10": {
+          "average": 7.36,
+          "min": 6.99,
+          "max": 8.19,
+          "samples": 30
+        }
+      },
+      "RIO GRANDE DO SUL": {
+        "ethanol": {
+          "average": 4.63,
+          "min": 3.99,
+          "max": 5.93,
+          "samples": 157
+        },
+        "additive": {
+          "average": 6.33,
+          "min": 5.69,
+          "max": 7.66,
+          "samples": 306
+        },
+        "regular": {
+          "average": 6.13,
+          "min": 5.69,
+          "max": 7.54,
+          "samples": 324
+        },
+        "diesel": {
+          "average": 7.01,
+          "min": 6.39,
+          "max": 7.84,
+          "samples": 189
+        },
+        "diesel_s10": {
+          "average": 7.11,
+          "min": 6.49,
+          "max": 7.91,
+          "samples": 211
+        }
+      },
+      "RONDONIA": {
+        "ethanol": {
+          "average": 5.09,
+          "min": 4.79,
+          "max": 5.99,
+          "samples": 33
+        },
+        "additive": {
+          "average": 7.53,
+          "min": 7.2,
+          "max": 8.39,
+          "samples": 47
+        },
+        "regular": {
+          "average": 7.43,
+          "min": 6.99,
+          "max": 8.29,
+          "samples": 53
+        },
+        "diesel": {
+          "average": 7.28,
+          "min": 6.74,
+          "max": 7.88,
+          "samples": 39
+        },
+        "diesel_s10": {
+          "average": 7.48,
+          "min": 6.87,
+          "max": 8.29,
+          "samples": 45
+        }
+      },
+      "RORAIMA": {
+        "ethanol": {
+          "average": 5.38,
+          "min": 5.37,
+          "max": 5.4,
+          "samples": 8
+        },
+        "additive": {
+          "average": 7.62,
+          "min": 7.59,
+          "max": 7.69,
+          "samples": 14
+        },
+        "regular": {
+          "average": 7.57,
+          "min": 7.57,
+          "max": 7.57,
+          "samples": 15
+        },
+        "diesel": {
+          "average": 7.5,
+          "min": 7.45,
+          "max": 7.55,
+          "samples": 13
+        },
+        "diesel_s10": {
+          "average": 7.63,
+          "min": 7.6,
+          "max": 7.65,
+          "samples": 11
+        }
+      },
+      "SANTA CATARINA": {
+        "ethanol": {
+          "average": 4.49,
+          "min": 3.86,
+          "max": 6.36,
+          "samples": 114
+        },
+        "additive": {
+          "average": 6.43,
+          "min": 5.75,
+          "max": 7.19,
+          "samples": 158
+        },
+        "regular": {
+          "average": 6.29,
+          "min": 5.69,
+          "max": 6.99,
+          "samples": 170
+        },
+        "diesel": {
+          "average": 6.92,
+          "min": 6.39,
+          "max": 7.85,
+          "samples": 62
+        },
+        "diesel_s10": {
+          "average": 7.2,
+          "min": 6.69,
+          "max": 7.99,
+          "samples": 112
+        }
+      },
+      "SAO PAULO": {
+        "ethanol": {
+          "average": 4.05,
+          "min": 3.47,
+          "max": 5.99,
+          "samples": 1242
+        },
+        "additive": {
+          "average": 6.68,
+          "min": 5.59,
+          "max": 8.99,
+          "samples": 950
+        },
+        "regular": {
+          "average": 6.36,
+          "min": 5.39,
+          "max": 8.49,
+          "samples": 1252
+        },
+        "diesel": {
+          "average": 7.02,
+          "min": 6.14,
+          "max": 8.69,
+          "samples": 454
+        },
+        "diesel_s10": {
+          "average": 7.31,
+          "min": 6.64,
+          "max": 9.19,
+          "samples": 850
+        }
+      },
+      "SERGIPE": {
+        "ethanol": {
+          "average": 5.18,
+          "min": 5.1,
+          "max": 5.5,
+          "samples": 16
+        },
+        "additive": {
+          "average": 7.02,
+          "min": 6.9,
+          "max": 7.34,
+          "samples": 27
+        },
+        "regular": {
+          "average": 6.94,
+          "min": 6.9,
+          "max": 6.99,
+          "samples": 31
+        },
+        "diesel": {
+          "average": 7.32,
+          "min": 7.19,
+          "max": 7.66,
+          "samples": 10
+        },
+        "diesel_s10": {
+          "average": 7.34,
+          "min": 7.29,
+          "max": 7.59,
+          "samples": 14
+        }
+      },
+      "TOCANTINS": {
+        "ethanol": {
+          "average": 4.95,
+          "min": 4.4,
+          "max": 5.83,
+          "samples": 38
+        },
+        "additive": {
+          "average": 7.0,
+          "min": 5.98,
+          "max": 7.99,
+          "samples": 31
+        },
+        "regular": {
+          "average": 6.86,
+          "min": 5.98,
+          "max": 7.19,
+          "samples": 46
+        },
+        "diesel": {
+          "average": 7.15,
+          "min": 6.79,
+          "max": 7.69,
+          "samples": 31
+        },
+        "diesel_s10": {
+          "average": 7.33,
+          "min": 6.79,
+          "max": 7.99,
+          "samples": 36
+        }
+      }
+    },
+    "source": {
+      "name": "Agência Nacional do Petróleo (ANP)",
+      "url": "https://www.gov.br/anp/pt-br/assuntos/precos-e-defesa-da-concorrencia/precos/arquivos-lpc/2026/resumo_semanal_lpc_2026_11_08-2026_11_14.xlsx"
+    }
+  }
+}
