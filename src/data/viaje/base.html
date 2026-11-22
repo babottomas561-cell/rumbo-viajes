@@ -114,6 +114,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .tleg.gnd{border-color:#c2410c;color:#9a3412}.tleg.tr{border-color:#5b6b73;color:#374151}
 .leaflet-bottom.leaflet-left .tripbox{max-height:45vh;overflow:auto}
 @media (max-width:700px){.tripbox{width:auto;font-size:13px}}@media (max-width:700px){.lpopw{display:none}}.tripout .lpopc{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.more{display:block;margin:18px auto;padding:12px 22px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px var(--f-body,Inter,system-ui,sans-serif);cursor:pointer}.more:hover{border-color:var(--accent,#0a7c86)}
 .tripout{width:auto;max-width:none;margin-top:10px;box-shadow:none}
 .tripbox{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 4px 18px rgba(0,0,0,.18);width:290px;max-width:calc(100vw - 60px);font:13px/1.35 var(--f-body,Inter,system-ui,sans-serif)}
 .tripbox .tbig{display:flex;gap:14px;margin:6px 0 2px;font:700 17px var(--f-mono)}.tripbox .tbig small{display:block;font:400 11px var(--f-body,Inter,sans-serif);color:var(--muted)}
@@ -1471,7 +1472,7 @@ function syncQuick(){const $=id=>document.getElementById(id);if(!$("qbar"))retur
   [["qdep","dep",v=>v==="best"?"best":Number(v)],["qaloj","aloj",v=>v],["qlvl","lvl",Number],["qsort","sort",v=>v]].forEach(([e,k,c])=>$(e).addEventListener("change",ev=>{S[k]=c(ev.target.value);go();}));
   let t;["q","q2"].forEach(e=>$(e).addEventListener("input",ev=>{clearTimeout(t);t=setTimeout(()=>{S.q=ev.target.value;render();},180);}));
   document.addEventListener("click",e=>{const q=e.target.closest("[data-q]");if(q&&!q.closest("#qbar")){S.q=q.dataset.q;go();}});
-  document.addEventListener("click",e=>{const b=e.target.closest("[data-goc]");if(!b)return;const k=b.dataset.goc;S.lv="cards";render();if(!document.getElementById("card-"+k)){S.q="";go();}setTimeout(()=>{const c=document.getElementById("card-"+k);if(c){c.scrollIntoView({behavior:"smooth",block:"start"});c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),1600);}},60);});
+  document.addEventListener("click",e=>{const b=e.target.closest("[data-goc]");if(!b)return;const k=b.dataset.goc;S.lv="cards";WANTK=k;render();if(!document.getElementById("card-"+k)){S.q="";go();}setTimeout(()=>{const c=document.getElementById("card-"+k);if(c){c.scrollIntoView({behavior:"smooth",block:"start"});c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),1600);}},60);});
 })();
 
 // ---- Mapa de Floripa (costa de OpenStreetMap, simplificada) ----
@@ -1622,6 +1623,8 @@ function flightRows(r){const l=r.leg;
   const tramo=(CS.hub?{bue:["Auto TUC ↔ Bs. As. y estacionamiento",hubCar("bue")],cor:["Auto TUC ↔ Córdoba y estacionamiento",hubCar("cor")],foz:["Auto TUC ↔ Foz, Carta Verde y estacionamiento",hubCar("foz")]}:{bue:["TUC ↔ EZE en JetSMART",TUC_BUE],cor:["Micro TUC ↔ Córdoba (estimado)",BUS_COR],foz:["Micro TUC ↔ Puerto Iguazú (estimado)",BUS_FOZ]})[r.flk];
   return `<span>${tramo[0]}</span><span>${fmt(tramo[1])}</span><span>Vuelo ${l.o} ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;}
 
+let SHOWN=24,WANTK=null;
+document.addEventListener("click",e=>{if(e.target.id==="cardmore"){SHOWN+=24;const y=scrollY;render();scrollTo(0,y);}});
 function render(){PAX=S.pax;DAYS=S.nights+1;try{fillPay();}catch(_){}syncQuick();try{if(typeof renderAnio==='function'&&document.getElementById('yrt')&&document.getElementById('yrt').innerHTML)setTimeout(renderAnio,0);}catch(e){}document.querySelectorAll(".v-pax").forEach(e=>e.textContent=PAX);document.querySelectorAll(".v-nights").forEach(e=>e.textContent=NIGHTS());document.querySelectorAll(".v-days").forEach(e=>e.textContent=DAYS);
   const {base,out,all,noflight,rows}=build();
   renderMap(base,out);{const fm=document.getElementById("fmap");if(fm)fm.innerHTML=floripaMap(out);}renderFit(rows);renderCar(rows);
@@ -1631,7 +1634,9 @@ function render(){PAX=S.pax;DAYS=S.nights+1;try{fillPay();}catch(_){}syncQuick()
   if(!out.length){list.innerHTML=`<div class="empty">Ninguna propuesta entra con estos filtros${S.q?` para “${S.q}”`:""}. ${S.q?`<button type="button" class="linkbtn" data-q="">Ver todos los destinos</button> o p`:"P"}robá otra fecha, subí el presupuesto o elegí “La más barata”.</div>`;return;}
   GM=1;if(S.lv==="prices"){list.innerHTML=(norm(S.q)==="floripa"?floripaMap(out,true):"")+priceTable(out);TIN=6;return;}
   const fmTop=norm(S.q)==="floripa"?floripaMap(out,true):"";
-  list.innerHTML=fmTop+out.map((r,i)=>{TIN=Math.max(1,r.leg.d||6);GM=r.leg.m||1;
+  // Se dibujan de a 24 fichas (son pesadas): "Ver más" agrega otras 24; ir a una ficha puntual la incluye
+  const wi=WANTK?out.findIndex(r=>r.k===WANTK):-1;const nShow=Math.max(SHOWN,wi+1);WANTK=null;
+  list.innerHTML=fmTop+out.slice(0,nShow).map((r,i)=>{TIN=Math.max(1,r.leg.d||6);GM=r.leg.m||1;
     const best=bestKey(r.rt);const nt=NINOTXT[r.zone];
     const bars=CRIT.map(c=>`<span>${r.ai&&c.k==="stay"?"Calidad del hotel":c.l}</span><span class="bar"><i style="transform:scaleX(${(r.sc[c.k]/10).toFixed(2)})"></i></span><span class="v">${r.sc[c.k].toFixed(1)}</span>`).join("");
     const rbox=[...RKEYS,"car"].filter(k=>k==="car"?(isFinite(r.rt.car.p)||!r.ai):(S.mes===1||isFinite(r.rt[k].p))).map(k=>{const l=r.rt[k];const ok=isFinite(l.p);const fi=ok?finfo(k,l,r.ap):"";
@@ -1666,7 +1671,7 @@ function render(){PAX=S.pax;DAYS=S.nights+1;try{fillPay();}catch(_){}syncQuick()
           <div class="links">${legLinks(r)}</div>
         </div>
         <div class="stays">${stays}</div>
-      </div></article>`;}).join("");
+      </div></article>`;}).join("")+(out.length>nShow?`<button type="button" class="more" id="cardmore">Ver ${Math.min(24,out.length-nShow)} más (quedan ${out.length-nShow})</button>`:"");
 }
 
 // Cuántas propuestas entran en USD 1.000 con la configuración actual (ignora el tope de presupuesto)
@@ -1922,7 +1927,7 @@ function placePop(){const pop=document.getElementById("mappop"),box=document.get
   const g=svg.querySelector(`.bdot[data-k="${POPK}"] circle`);if(!g){return;}const a=g.getBoundingClientRect(),b=box.getBoundingClientRect();
   const pw=pop.offsetWidth||300,ph=pop.offsetHeight||340;let x=a.left-b.left+a.width/2+14,y=a.top-b.top-ph/2;
   if(x+pw>b.width-8)x=a.left-b.left-pw-14;x=Math.max(8,x);y=Math.max(8,Math.min(y,b.height-ph-8));pop.style.left=x+"px";pop.style.top=y+"px";}
-function goCard(k){closePop();const t=document.querySelector('[data-tab="propuestas"]');if(t)t.click();setTimeout(()=>{const c=document.getElementById("card-"+k);if(c){c.scrollIntoView({behavior:"smooth",block:"start"});c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),1600);}},60);}
+function goCard(k){closePop();if(!document.getElementById("card-"+k)){WANTK=k;render();}const t=document.querySelector('[data-tab="propuestas"]');if(t)t.click();setTimeout(()=>{const c=document.getElementById("card-"+k);if(c){c.scrollIntoView({behavior:"smooth",block:"start"});c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),1600);}},60);}
 (function(){const svg=document.getElementById("map"),box=document.getElementById("mapbox");
   const toUser=(cx,cy)=>{const pt=svg.createSVGPoint();pt.x=cx;pt.y=cy;return pt.matrixTransform(svg.getScreenCTM().inverse());};
   box.querySelector(".mapctl").addEventListener("click",e=>{const b=e.target.closest("[data-z]");if(!b)return;const z=b.dataset.z;
@@ -2307,7 +2312,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-rpick]");i
   const k=b.dataset.rpick,v=b.dataset.rk;if(!v||RPICK[k]===v)delete RPICK[k];else RPICK[k]=v;saveRPick();if(b.closest(".lpop"))window.__reopen=k;
   const art=b.closest("article.card"),top=art?art.getBoundingClientRect().top:0;render();followCard(k,top);});
 // Al elegir vuelo, auto o casa la lista se reordena: llevar la vista a la ficha y resaltarla
-function followCard(k,top){const c=document.getElementById("card-"+k);if(!c)return;window.scrollBy(0,c.getBoundingClientRect().top-top);c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),900);}
+function followCard(k,top){let c=document.getElementById("card-"+k);if(!c){WANTK=k;render();c=document.getElementById("card-"+k);}if(!c)return;window.scrollBy(0,c.getBoundingClientRect().top-top);c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),900);}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-pick],[data-unpick]");if(!b)return;e.preventDefault();e.stopPropagation();
   const k=b.dataset.pick||b.dataset.unpick;if(b.dataset.unpick!=null||PICK[k]===b.dataset.hid)delete PICK[k];else PICK[k]=b.dataset.hid;savePick();
   const art=b.closest("article.card"),id=art&&art.id,top=art?art.getBoundingClientRect().top:0;
