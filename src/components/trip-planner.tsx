@@ -8,6 +8,7 @@ import {
   Gauge,
   History,
   Hotel,
+  BedDouble,
   MapPin,
   Plane,
   RefreshCw,
@@ -23,6 +24,7 @@ import yearlyRaw from "@/data/anio.json";
 import destinationsRaw from "@/data/destinos.json";
 import { StaySearch } from "@/components/stay-search";
 import { LiveContext } from "@/components/live-context";
+import { HistoricalStays } from "@/components/historical-stays";
 
 type Destination = {
   name: string;
@@ -43,7 +45,7 @@ type YearlyData = {
   upd: string;
 };
 
-type Tab = "propuestas" | "anio" | "clima" | "auto" | "vivo";
+type Tab = "propuestas" | "alojamientos" | "anio" | "clima" | "auto" | "vivo";
 
 const destinations = destinationsRaw as unknown as Record<string, Destination>;
 const yearly = yearlyRaw as unknown as YearlyData;
@@ -67,6 +69,19 @@ function sourceUrl(destination: Destination, month: number, travelers: number) {
   const start = `2027-${String(month).padStart(2, "0")}-10`;
   const end = `2027-${String(month).padStart(2, "0")}-17`;
   return `https://www.airbnb.com/s/${destination.q}/homes?checkin=${start}&checkout=${end}&adults=${travelers}`;
+}
+
+function proposalBackground(key: string, zone: string) {
+  const fallbackByZone: Record<string, string> = {
+    "Costa argentina": "buzios",
+    Uruguay: "rosa",
+    Caribe: "salvador",
+    "Pacífico norte": "jeri",
+    Perú: "atins",
+    Chile: "floripa",
+  };
+  const fallback = fallbackByZone[zone] ?? "floripa";
+  return `linear-gradient(180deg, rgba(9,30,21,.04) 30%, rgba(9,30,21,.86)), url(/casas/${key}.jpg), url(/casas/${fallback}.jpg)`;
 }
 
 export function TripPlanner() {
@@ -121,6 +136,7 @@ export function TripPlanner() {
 
       <div className="planner-tabs" role="tablist" aria-label="Secciones del planeador">
         <button className={tab === "propuestas" ? "active" : ""} onClick={() => setTab("propuestas")} role="tab" aria-selected={tab === "propuestas"}><SlidersHorizontal />Propuestas</button>
+        <button className={tab === "alojamientos" ? "active" : ""} onClick={() => setTab("alojamientos")} role="tab" aria-selected={tab === "alojamientos"}><BedDouble />Alojamientos</button>
         <button className={tab === "anio" ? "active" : ""} onClick={() => setTab("anio")} role="tab" aria-selected={tab === "anio"}><CalendarRange />Todo el año</button>
         <button className={tab === "clima" ? "active" : ""} onClick={() => setTab("clima")} role="tab" aria-selected={tab === "clima"}><Sun />Clima</button>
         <button className={tab === "auto" ? "active" : ""} onClick={() => setTab("auto")} role="tab" aria-selected={tab === "auto"}><Car />En auto</button>
@@ -143,7 +159,7 @@ export function TripPlanner() {
           <div className="proposal-grid">
             {proposals.slice(0, 12).map((item, index) => (
               <article className="proposal-card" key={item.key}>
-                <div className="proposal-image" style={{ backgroundImage: `linear-gradient(180deg, transparent 35%, rgba(9,30,21,.78)), url(/casas/${item.key}.jpg)` }}>
+                <div className="proposal-image" style={{ backgroundImage: proposalBackground(item.key, item.destination.zone) }}>
                   <span className="rank">#{index + 1}</span><span className="score">{item.score}/100</span>
                   <div><p>{item.destination.zone}</p><h3>{item.destination.name}</h3></div>
                 </div>
@@ -195,6 +211,7 @@ export function TripPlanner() {
       )}
 
       {tab === "auto" && <RoadTripCalculator />}
+      {tab === "alojamientos" && <HistoricalStays />}
       {tab === "vivo" && <StaySearch embedded />}
     </section>
   );
@@ -286,6 +303,7 @@ function RoadTripCalculator() {
           <div className="route-reference-head"><div><span>RUTA CALCULADA</span><strong>Tucumán → {routeInfo.destination.name}</strong></div><div><strong>{routeInfo.route.distanceKm.toLocaleString("es-AR")} km</strong><span>{routeInfo.route.durationHours} h estimadas</span></div><a href={routeInfo.route.directionsUrl} target="_blank" rel="noreferrer">Abrir navegación <ExternalLink /></a></div>
           <div className="nearby-places">
             {routeInfo.places.slice(0, 9).map((place) => <a href={place.mapUrl} target="_blank" rel="noreferrer" key={place.id}><span>{place.category === "parking" ? "Estacionamiento" : place.category === "food" ? "Comer" : "Actividad"}</span><strong>{place.name}</strong></a>)}
+            {routeInfo.places.length === 0 && <p className="places-empty">La ruta está lista. El servicio público de lugares no respondió a tiempo; podés abrir la navegación y consultar el mapa.</p>}
           </div>
           <small>Ruta: {routeInfo.route.source}. Lugares: OpenStreetMap. {routeInfo.tolls.message ?? "Proveedor de peajes preparado."}</small>
         </div>
