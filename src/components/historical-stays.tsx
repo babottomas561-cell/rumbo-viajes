@@ -29,8 +29,9 @@ function distanceLabel(meters: number | null) {
   return `A ${(meters / 1000).toFixed(1).replace(".", ",")} km del mar`;
 }
 
-export function HistoricalStays() {
-  const [destinationKey, setDestinationKey] = useState(availableKeys.includes("floripa") ? "floripa" : availableKeys[0]);
+export function HistoricalStays({ initialDestination }: { initialDestination?: string }) {
+  const fallback = availableKeys.includes("floripa") ? "floripa" : availableKeys[0];
+  const [destinationKey, setDestinationKey] = useState(availableKeys.includes(initialDestination ?? "") ? initialDestination! : fallback);
   const [guests, setGuests] = useState(6);
   const [bedrooms, setBedrooms] = useState(2);
   const [maxPrice, setMaxPrice] = useState(4000);

@@ -22,6 +22,8 @@ import { useMemo, useState } from "react";
 
 import yearlyRaw from "@/data/anio.json";
 import destinationsRaw from "@/data/destinos.json";
+import experienceRaw from "@/data/destination-experience.json";
+import allInclusiveRaw from "@/data/all-inclusive.json";
 import { StaySearch } from "@/components/stay-search";
 import { LiveContext } from "@/components/live-context";
 import { HistoricalStays } from "@/components/historical-stays";
@@ -44,11 +46,17 @@ type YearlyData = {
   al: Array<{ texto: string }>;
   upd: string;
 };
+type Experience = { beach: number | null; nightlife: number | null; young: number | null; vibe: string; how: string; warning: string | null };
+type AllInclusive = Record<string, Array<[string, number, number, number]>>;
+type StayType = "house" | "all-inclusive";
+type HouseLevel = "cheapest" | "economic" | "recommended" | "premium";
 
 type Tab = "propuestas" | "alojamientos" | "anio" | "clima" | "auto" | "vivo";
 
 const destinations = destinationsRaw as unknown as Record<string, Destination>;
 const yearly = yearlyRaw as unknown as YearlyData;
+const experiences = experienceRaw as Record<string, Experience>;
+const allInclusive = allInclusiveRaw as unknown as AllInclusive;
 const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 function usd(value: number) {
@@ -91,8 +99,14 @@ export function TripPlanner() {
   const [travelers, setTravelers] = useState(4);
   const [nights, setNights] = useState(7);
   const [budget, setBudget] = useState(5000);
+  const [maxPerPerson, setMaxPerPerson] = useState(1800);
   const [zone, setZone] = useState("Todas");
-  const [sort, setSort] = useState<"score" | "price" | "sun">("score");
+  const [sort, setSort] = useState<"score" | "price" | "sun" | "nightlife" | "beach">("score");
+  const [stayType, setStayType] = useState<StayType>("house");
+  const [houseLevel, setHouseLevel] = useState<HouseLevel>("recommended");
+  const [minNightlife, setMinNightlife] = useState(0);
+  const [minBeach, setMinBeach] = useState(0);
+  const [climateMode, setClimateMode] = useState<"all" | "dry" | "avoid-risk">("all");
   const [selectedKey, setSelectedKey] = useState("floripa");
 
   const proposals = useMemo(() => {
@@ -104,19 +118,32 @@ export function TripPlanner() {
         const climate = yearly.cl[key]?.[String(month)];
         if (!flight || !house || !climate) return null;
         const flightEach = flight[0] ?? flight[1] ?? 0;
-        const weeklyHouse = house[1] * (nights / 7);
-        const total = flightEach * travelers + weeklyHouse;
+        const experience = experiences[key];
+        const hotel = allInclusive[key]?.[0];
+        if (stayType === "all-inclusive" && !hotel) return null;
+        const levelFactor: Record<HouseLevel, number> = { cheapest: .75, economic: .9, recommended: 1, premium: 1.25 };
+        const accommodation = stayType === "all-inclusive"
+          ? hotel[1] * nights * travelers
+          : house[1] * (nights / 7) * levelFactor[houseLevel];
+        const total = flightEach * travelers + accommodation;
+        const perPerson = total / travelers;
         const [maxTemp, rain, rainyDays, seaTemp] = climate;
         const priceFit = Math.max(0, 100 - (total / budget) * 55);
         const weatherFit = Math.max(0, 100 - rain / 4 - rainyDays * 1.3 + Math.max(0, seaTemp - 22) * 3);
-        const score = Math.round(priceFit * 0.55 + weatherFit * 0.45);
-        return { key, destination, flight, house, climate, total, flightEach, weeklyHouse, score, maxTemp, rain, rainyDays, seaTemp };
+        const lifestyleFit = ((experience?.beach ?? 5) + (experience?.nightlife ?? 5) + (experience?.young ?? 5)) / 3 * 10;
+        const score = Math.round(priceFit * 0.4 + weatherFit * 0.3 + lifestyleFit * 0.3);
+        return { key, destination, flight, house, climate, experience, hotel, total, perPerson, flightEach, accommodation, score, maxTemp, rain, rainyDays, seaTemp };
       })
       .filter((item): item is NonNullable<typeof item> => Boolean(item))
       .filter((item) => zone === "Todas" || item.destination.zone === zone)
       .filter((item) => !needle || normalize(`${item.destination.name} ${item.destination.zone}`).includes(needle))
-      .sort((a, b) => sort === "price" ? a.total - b.total : sort === "sun" ? a.rain - b.rain : b.score - a.score);
-  }, [budget, month, nights, query, sort, travelers, zone]);
+      .filter((item) => item.perPerson <= maxPerPerson)
+      .filter((item) => (item.experience?.nightlife ?? 0) >= minNightlife)
+      .filter((item) => (item.experience?.beach ?? 0) >= minBeach)
+      .filter((item) => climateMode !== "dry" || (item.rain <= 150 && item.rainyDays <= 12))
+      .filter((item) => climateMode !== "avoid-risk" || !item.experience?.warning)
+      .sort((a, b) => sort === "price" ? a.total - b.total : sort === "sun" ? a.rain - b.rain : sort === "nightlife" ? (b.experience?.nightlife ?? 0) - (a.experience?.nightlife ?? 0) : sort === "beach" ? (b.experience?.beach ?? 0) - (a.experience?.beach ?? 0) : b.score - a.score);
+  }, [budget, climateMode, houseLevel, maxPerPerson, minBeach, minNightlife, month, nights, query, sort, stayType, travelers, zone]);
 
   const selected = destinations[selectedKey] ?? destinations.floripa;
   const selectedClimate = yearly.cl[selectedKey];
@@ -152,8 +179,20 @@ export function TripPlanner() {
             <label><span>Noches</span><input type="number" min="2" max="30" value={nights} onChange={(event) => setNights(Number(event.target.value))} /></label>
             <label><span>Presupuesto total</span><div className="control-input"><WalletCards /><input type="number" min="500" step="250" value={budget} onChange={(event) => setBudget(Number(event.target.value))} /></div></label>
             <label><span>Región</span><select value={zone} onChange={(event) => setZone(event.target.value)}>{zones.map((item) => <option key={item}>{item}</option>)}</select></label>
-            <label><span>Ordenar por</span><select value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}><option value="score">Mejor equilibrio</option><option value="price">Menor costo</option><option value="sun">Menos lluvia</option></select></label>
+            <label><span>Alojamiento</span><select value={stayType} onChange={(event) => setStayType(event.target.value as StayType)}><option value="house">Casa / departamento</option><option value="all-inclusive">All inclusive</option></select></label>
           </div>
+
+          <details className="advanced-filters" open>
+            <summary><SlidersHorizontal /> Afinar propuestas</summary>
+            <div className="advanced-filter-grid">
+              {stayType === "house" && <label><span>Nivel de casa</span><select value={houseLevel} onChange={(event) => setHouseLevel(event.target.value as HouseLevel)}><option value="cheapest">La más barata</option><option value="economic">Económica</option><option value="recommended">Recomendada</option><option value="premium">Premium</option></select></label>}
+              <label><span>Máximo por persona</span><select value={maxPerPerson} onChange={(event) => setMaxPerPerson(Number(event.target.value))}>{[800, 1000, 1250, 1500, 1800, 2200, 2800, 4000].map((value) => <option key={value} value={value}>{usd(value)}</option>)}</select></label>
+              <label><span>Vida nocturna mínima</span><select value={minNightlife} onChange={(event) => setMinNightlife(Number(event.target.value))}>{[0, 6, 7, 8, 9].map((value) => <option key={value} value={value}>{value === 0 ? "Cualquiera" : `${value}/10 o más`}</option>)}</select></label>
+              <label><span>Playa mínima</span><select value={minBeach} onChange={(event) => setMinBeach(Number(event.target.value))}>{[0, 6, 7, 8, 9].map((value) => <option key={value} value={value}>{value === 0 ? "Cualquiera" : `${value}/10 o más`}</option>)}</select></label>
+              <label><span>Clima</span><select value={climateMode} onChange={(event) => setClimateMode(event.target.value as typeof climateMode)}><option value="all">Todos los destinos</option><option value="dry">Priorizar menos lluvia</option><option value="avoid-risk">Evitar alertas climáticas</option></select></label>
+              <label><span>Ordenar por</span><select value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}><option value="score">Mejor equilibrio</option><option value="price">Menor costo</option><option value="sun">Menos lluvia</option><option value="nightlife">Más vida nocturna</option><option value="beach">Mejor playa</option></select></label>
+            </div>
+          </details>
 
           <div className="result-summary"><strong>{proposals.length} destinos comparables</strong><span>Vuelo + {nights} noches para {travelers} personas. Los importes son referencia histórica, no cotización.</span></div>
           <div className="proposal-grid">
@@ -165,14 +204,18 @@ export function TripPlanner() {
                 </div>
                 <div className="proposal-body">
                   <div className="quality"><Gauge /><strong>{qualityLabel(item.score)}</strong><span>{item.maxTemp}° máxima · mar {item.seaTemp}°</span></div>
+                  <div className="experience-chips"><span>Playa {item.experience?.beach ?? "—"}/10</span><span>Noche {item.experience?.nightlife ?? "—"}/10</span><span>Jóvenes {item.experience?.young ?? "—"}/10</span></div>
+                  {item.experience?.vibe && <p className="proposal-vibe">{item.experience.vibe}</p>}
                   <div className="cost-lines">
                     <span><Plane />Vuelo por persona <strong>{usd(item.flightEach)}</strong></span>
-                    <span><Hotel />Casa estimada <strong>{usd(item.weeklyHouse)}</strong></span>
+                    <span><Hotel />{stayType === "all-inclusive" ? item.hotel?.[0] : "Casa estimada"} <strong>{usd(item.accommodation)}</strong></span>
                     <span><CloudRain />Lluvia mensual <strong>{item.rain} mm</strong></span>
                   </div>
-                  <div className="proposal-total"><span>Total estimado</span><strong>{usd(item.total)}</strong></div>
+                  {item.experience?.warning && <div className="climate-warning">{item.experience.warning}</div>}
+                  <div className="proposal-total"><span>{usd(item.perPerson)} por persona</span><strong>{usd(item.total)}</strong></div>
+                  {item.experience?.how && <p className="proposal-how"><Plane />{item.experience.how}</p>}
                   <div className="card-actions">
-                    <button onClick={() => { setSelectedKey(item.key); setTab("anio"); }}>Comparar meses</button>
+                    <button onClick={() => { setSelectedKey(item.key); setTab("alojamientos"); }}>Ver alojamientos</button>
                     <a href={sourceUrl(item.destination, month, travelers)} target="_blank" rel="noreferrer">Ver disponibilidad <ExternalLink /></a>
                   </div>
                 </div>
@@ -211,7 +254,7 @@ export function TripPlanner() {
       )}
 
       {tab === "auto" && <RoadTripCalculator />}
-      {tab === "alojamientos" && <HistoricalStays />}
+      {tab === "alojamientos" && <HistoricalStays key={selectedKey} initialDestination={selectedKey} />}
       {tab === "vivo" && <StaySearch embedded />}
     </section>
   );

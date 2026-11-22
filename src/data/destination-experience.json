@@ -1,0 +1,626 @@
+{
+  "rio": {
+    "beach": 8,
+    "nightlife": 10,
+    "young": 10,
+    "vibe": "Ipanema y Arpoador de día, Lapa y la Zona Sur de noche. La ciudad con más movida de todas; hay que cuidarse en la calle.",
+    "how": "Vuelo a GIG/SDU, Uber a Ipanema o Copacabana.",
+    "warning": null
+  },
+  "buzios": {
+    "beach": 9,
+    "nightlife": 8,
+    "young": 9,
+    "vibe": "Rua das Pedras llena de argentinos, beach clubs en Geribá. Clásico y seguro, aunque de los más caros.",
+    "how": "Vuelo a Río y micro o transfer de 2 h 30.",
+    "warning": null
+  },
+  "arraialcabo": {
+    "beach": 10,
+    "nightlife": 5,
+    "young": 6,
+    "vibe": "Agua turquesa de verdad (Prainhas do Pontal, Praia do Forno). Noche tranquila; Cabo Frio y Búzios quedan a 40 min.",
+    "how": "Vuelo a Río y micro de 3 h.",
+    "warning": null
+  },
+  "ilhagrande": {
+    "beach": 10,
+    "nightlife": 6,
+    "young": 8,
+    "vibe": "Isla sin autos, Lopes Mendes y trekking. Abraão tiene bares y mochileros; fiestas chicas pero buen ambiente.",
+    "how": "Vuelo a Río, van hasta Conceição de Jacareí y lancha: ~3 h.",
+    "warning": "En la isla casi no hay casas para 6 con buena nota: para Ilha Grande conviene pousada."
+  },
+  "paraty": {
+    "beach": 7,
+    "nightlife": 6,
+    "young": 6,
+    "vibe": "Pueblo colonial, paseos en barco por islas y cachaça. Más lindo que fiestero.",
+    "how": "Vuelo a Río y micro de 4 h.",
+    "warning": null
+  },
+  "floripa": {
+    "beach": 8,
+    "nightlife": 9,
+    "young": 10,
+    "vibe": "El centro de la noche de Floripa: bares y boliches alrededor de la laguna, a 5 min de Joaquina y Mole. La mejor base para salir.",
+    "how": "Vuelo a Florianópolis (JetSMART directo desde EZE) y 20 min en Uber.",
+    "warning": null
+  },
+  "jurere": {
+    "beach": 7,
+    "nightlife": 9,
+    "young": 10,
+    "vibe": "Beach clubs caros y fiestas grandes: P12 con shows en enero (Simone Mendes el 6, Jorge & Mateus el 8, Alok el 9). Mar calmo. Es la zona más cara de la isla.",
+    "how": "Vuelo a Florianópolis y 40 min en Uber.",
+    "warning": null
+  },
+  "canasvieiras": {
+    "beach": 7,
+    "nightlife": 8,
+    "young": 9,
+    "vibe": "La playa más argentina de Floripa: mar calmo, bares y movimiento de noche en la avenida. Barata y cerca de Jurerê.",
+    "how": "Vuelo a Florianópolis y 40 min en Uber.",
+    "warning": null
+  },
+  "daniela": {
+    "beach": 7,
+    "nightlife": 6,
+    "young": 6,
+    "vibe": "Agua calma y casi sin edificios, pegada a Jurerê: dormís tranquilo y estás a 5 min de los beach clubs.",
+    "how": "Vuelo a Florianópolis y 45 min en Uber.",
+    "warning": null
+  },
+  "brava": {
+    "beach": 8,
+    "nightlife": 7,
+    "young": 8,
+    "vibe": "Playa de olas con buena onda joven; al lado Lagoinha y Ponta das Canas con agua calma. A 15 min de Jurerê y Canasvieiras para salir.",
+    "how": "Vuelo a Florianópolis y 50 min en Uber.",
+    "warning": null
+  },
+  "ingleses": {
+    "beach": 8,
+    "nightlife": 7,
+    "young": 8,
+    "vibe": "Playa larga y familiar con dunas; Santinho al lado es de surf. Mucho argentino y precios moderados.",
+    "how": "Vuelo a Florianópolis y 50 min en Uber.",
+    "warning": null
+  },
+  "barralagoa": {
+    "beach": 8,
+    "nightlife": 8,
+    "young": 9,
+    "vibe": "Pueblo de pescadores con el canal; al lado Praia Mole, la playa joven de Floripa (surf, barracas, parapente). La Lagoa para salir de noche queda a 10 min.",
+    "how": "Vuelo a Florianópolis y 35 min en Uber.",
+    "warning": null
+  },
+  "campeche": {
+    "beach": 9,
+    "nightlife": 6,
+    "young": 8,
+    "vibe": "Agua turquesa y excursión a la isla do Campeche; Joaquina con dunas y surf a 10 min. Noche floja: se sale en la Lagoa.",
+    "how": "Vuelo a Florianópolis y 15 min en Uber.",
+    "warning": null
+  },
+  "armacao": {
+    "beach": 9,
+    "nightlife": 4,
+    "young": 6,
+    "vibe": "El sur salvaje de la isla: Matadeiro, trekking a Lagoinha do Leste y pescado en Pântano do Sul. Muy tranquilo de noche; la Lagoa queda a 35 min.",
+    "how": "Vuelo a Florianópolis y 25 min en Uber.",
+    "warning": null
+  },
+  "bombinhas": {
+    "beach": 9,
+    "nightlife": 5,
+    "young": 6,
+    "vibe": "Agua cristalina para snorkel y playas chicas entre morros. Tranquilo de noche; Camboriú queda a 45 min.",
+    "how": "Vuelo a Florianópolis y 1 h 15 en auto.",
+    "warning": null
+  },
+  "garopaba": {
+    "beach": 8,
+    "nightlife": 6,
+    "young": 7,
+    "vibe": "Surf, dunas y avistaje de ballenas fuera de temporada. Pueblo con bares, a 20 min de Praia do Rosa.",
+    "how": "Vuelo a Florianópolis y 1 h 15 en auto.",
+    "warning": null
+  },
+  "guarda": {
+    "beach": 9,
+    "nightlife": 5,
+    "young": 8,
+    "vibe": "Río que desemboca en el mar, surf y onda hippie y joven. Se cruza el río a pie o en bote; pocas casas grandes.",
+    "how": "Vuelo a Florianópolis y 50 min en auto.",
+    "warning": null
+  },
+  "guarajuba": {
+    "beach": 8,
+    "nightlife": 3,
+    "young": 4,
+    "vibe": "Piscinas naturales y arena blanca en un condominio tranquilo. Para descansar: la noche está en Salvador o Praia do Forte.",
+    "how": "Vuelo a Salvador y 1 h en auto.",
+    "warning": null
+  },
+  "japaratinga": {
+    "beach": 9,
+    "nightlife": 3,
+    "young": 4,
+    "vibe": "Piscinas naturales de agua turquesa entre Maragogi y Milagres, más barato que ambos. Muy tranquilo.",
+    "how": "Vuelo a Maceió y 2 h en auto.",
+    "warning": null
+  },
+  "curazao": {
+    "beach": 9,
+    "nightlife": 7,
+    "young": 7,
+    "vibe": "Agua turquesa sin sargazo, playas chicas (Grote Knip, Cas Abao), snorkel con tortugas y Willemstad de colores. Noche en Mambo Beach y Jan Thiel. Aerolíneas Argentinas vuela directo desde enero de 2027.",
+    "how": "Vuelo a Curazao (vía Bogotá o Panamá; Aerolíneas directo desde Ezeiza). Pasaporte.",
+    "warning": null
+  },
+  "maresias": {
+    "beach": 8,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "La playa de los jóvenes de São Paulo: surf de día y boliches grandes de noche en enero. Cara los fines de semana.",
+    "how": "Vuelo a São Paulo y 3 h por la Rio-Santos.",
+    "warning": null
+  },
+  "ubatuba": {
+    "beach": 9,
+    "nightlife": 5,
+    "young": 6,
+    "vibe": "Decenas de playas verdes con mata atlántica; Itamambuca para surf. Ambiente relajado.",
+    "how": "Vuelo a São Paulo y 3 h 30 en auto.",
+    "warning": null
+  },
+  "ilhabela": {
+    "beach": 9,
+    "nightlife": 5,
+    "young": 5,
+    "vibe": "Isla con cascadas, playas sin edificios y lancha a Castelhanos. Ojo con los borrachudos (mosquitos).",
+    "how": "Vuelo a São Paulo, 3 h hasta São Sebastião y balsa.",
+    "warning": null
+  },
+  "camboriu": {
+    "beach": 6,
+    "nightlife": 10,
+    "young": 10,
+    "vibe": "La noche más fuerte del sur: boliches y fiestas electrónicas grandes. La playa urbana es lo más flojo.",
+    "how": "Vuelo a Florianópolis y micro de 1 h 30.",
+    "warning": null
+  },
+  "rosa": {
+    "beach": 9,
+    "nightlife": 6,
+    "young": 7,
+    "vibe": "Surf, morros verdes y bares chicos. Ambiente joven pero relajado.",
+    "how": "Vuelo a Florianópolis y 1 h 30 en auto.",
+    "warning": null
+  },
+  "porto": {
+    "beach": 7,
+    "nightlife": 10,
+    "young": 10,
+    "vibe": "La capital de la joda en Bahía: Axé Moi y Tôa Tôa en la Orla Norte, lual y circuito de barracas. Lleno de grupos de jóvenes en enero.",
+    "how": "Vuelo a Porto Seguro, Uber 10 min a Taperapuã.",
+    "warning": null
+  },
+  "ajuda": {
+    "beach": 8,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "Fiestas en la playa de Parracho y de noche en Porto Seguro, cruzando en balsa. Mucho joven.",
+    "how": "Vuelo a Porto Seguro y balsa de 10 min.",
+    "warning": null
+  },
+  "caraiva": {
+    "beach": 9,
+    "nightlife": 7,
+    "young": 8,
+    "vibe": "Pueblo de calles de arena sin autos, río y mar. De noche, forró hasta tarde en el Pelé y el Ouriço.",
+    "how": "Vuelo a Porto Seguro, 2 h 30 en auto y canoa para cruzar el río.",
+    "warning": "Solo aparecen 2 casas para 6 con buena nota; el resto son pousadas."
+  },
+  "trancoso": {
+    "beach": 9,
+    "nightlife": 7,
+    "young": 6,
+    "vibe": "El Quadrado y playas enormes. Onda chic, con salidas caras.",
+    "how": "Vuelo a Porto Seguro y 1 h en auto.",
+    "warning": null
+  },
+  "itacare": {
+    "beach": 9,
+    "nightlife": 7,
+    "young": 8,
+    "vibe": "Surf, selva y playas escondidas. La Rua Pituba se llena de noche y hay buen forró.",
+    "how": "Vuelo a Ilhéus y 1 h por la ruta.",
+    "warning": null
+  },
+  "morro": {
+    "beach": 9,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "Isla sin autos, Segunda Praia con fiestas todas las noches y mucho argentino. Lo más parecido a Búzios en el norte.",
+    "how": "Vuelo a Salvador y catamarán de 2 h.",
+    "warning": null
+  },
+  "salvador": {
+    "beach": 7,
+    "nightlife": 8,
+    "young": 7,
+    "vibe": "Ciudad con mucha música en vivo y Pelourinho. Barra y Rio Vermelho son los barrios de salida.",
+    "how": "Vuelo a Salvador, Uber 30 min.",
+    "warning": null
+  },
+  "praiaforte": {
+    "beach": 8,
+    "nightlife": 5,
+    "young": 6,
+    "vibe": "Piletas naturales, Projeto Tamar y una calle peatonal con bares lindos. Más tranquilo; Imbassaí queda al lado.",
+    "how": "Vuelo a Salvador y 1 h en auto por la Linha Verde.",
+    "warning": null
+  },
+  "maceio": {
+    "beach": 9,
+    "nightlife": 6,
+    "young": 6,
+    "vibe": "Agua verde y piscinas naturales en plena ciudad. Noche correcta en Jatiúca, sin gran movida.",
+    "how": "Vuelo a Maceió, Uber 20 min.",
+    "warning": null
+  },
+  "frances": {
+    "beach": 8,
+    "nightlife": 6,
+    "young": 7,
+    "vibe": "Playa de arrecife con barracas y bares, surf de un lado y pileta natural del otro. Maceió queda a 25 min para salir.",
+    "how": "Vuelo a Maceió y 25 min en auto.",
+    "warning": null
+  },
+  "maragogi": {
+    "beach": 10,
+    "nightlife": 3,
+    "young": 4,
+    "vibe": "El “Caribe brasileño”: galés y piscinas naturales increíbles. Muy tranquilo de noche.",
+    "how": "Vuelo a Maceió o Recife y 2 h en auto.",
+    "warning": null
+  },
+  "milagres": {
+    "beach": 10,
+    "nightlife": 3,
+    "young": 4,
+    "vibe": "La Rota Ecológica: playas vacías de agua transparente y pousadas de diseño. Para descansar, no para salir.",
+    "how": "Vuelo a Maceió y 1 h 45 en auto.",
+    "warning": null
+  },
+  "galinhas": {
+    "beach": 9,
+    "nightlife": 6,
+    "young": 6,
+    "vibe": "Piscinas naturales y buggy a Muro Alto. Pueblo lindo con bares, más familiero que fiestero.",
+    "how": "Vuelo a Recife y 1 h en auto.",
+    "warning": null
+  },
+  "carneiros": {
+    "beach": 10,
+    "nightlife": 3,
+    "young": 4,
+    "vibe": "La iglesita sobre la playa y piletas naturales con cocoteros. Muy linda y muy tranquila; Porto de Galinhas queda a 40 min.",
+    "how": "Vuelo a Recife y 1 h 30 en auto.",
+    "warning": null
+  },
+  "jpa": {
+    "beach": 7,
+    "nightlife": 6,
+    "young": 6,
+    "vibe": "Ciudad tranquila y barata, con piscinas naturales de Picãozinho, atardecer en el Jacaré y bares en Tambaú.",
+    "how": "Vuelo a João Pessoa, Uber 20 min.",
+    "warning": null
+  },
+  "pipa": {
+    "beach": 9,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "Acantilados, delfines y la noche más joven del nordeste: bares en la calle principal y fiestas en la playa.",
+    "how": "Vuelo a Natal y 1 h 30 en transfer.",
+    "warning": null
+  },
+  "natal": {
+    "beach": 7,
+    "nightlife": 6,
+    "young": 6,
+    "vibe": "Base barata para salir en buggy por las dunas de Genipabu. Noche normal.",
+    "how": "Vuelo a Natal, Uber 20 min.",
+    "warning": null
+  },
+  "gostoso": {
+    "beach": 8,
+    "nightlife": 5,
+    "young": 7,
+    "vibe": "Pueblo de kite con viento constante, playas largas y un par de bares con música en vivo. Relajado y joven.",
+    "how": "Vuelo a Natal y 2 h en auto.",
+    "warning": null
+  },
+  "jeri": {
+    "beach": 10,
+    "nightlife": 8,
+    "young": 9,
+    "vibe": "Dunas, lagunas, kite y atardecer en la duna. Forró y fiestas en la calle principal casi todas las noches.",
+    "how": "Vuelo a Fortaleza y 4–5 h en transfer con 4x4.",
+    "warning": null
+  },
+  "canoa": {
+    "beach": 8,
+    "nightlife": 8,
+    "young": 8,
+    "vibe": "Acantilados rojos y la calle Broadway llena de bares. Barato y con onda mochilera.",
+    "how": "Vuelo a Fortaleza y 2 h 30 en micro.",
+    "warning": "Hay pocas casas grandes bien puntuadas: la económica queda a 10 km del centro."
+  },
+  "cumbuco": {
+    "beach": 7,
+    "nightlife": 5,
+    "young": 7,
+    "vibe": "Kite, buggy por las dunas y lagunas a 40 min de Fortaleza. Para salir fuerte, a Fortaleza.",
+    "how": "Vuelo a Fortaleza y 40 min en auto.",
+    "warning": null
+  },
+  "fortaleza": {
+    "beach": 6,
+    "nightlife": 8,
+    "young": 7,
+    "vibe": "Ciudad grande: Beach Park, el Pirata Bar los lunes, la Beira-Mar y Praia do Futuro. Buena base para excursiones.",
+    "how": "Vuelo a Fortaleza, Uber 15 min.",
+    "warning": null
+  },
+  "atins": {
+    "beach": 8,
+    "nightlife": 4,
+    "young": 6,
+    "vibe": "Pueblo de arena en la puerta de los Lençóis: dunas, río Preguiças y kite. Muy tranquilo de noche.",
+    "how": "Vuelo a São Luís, 4 h a Barreirinhas y lancha o 4x4 a Atins.",
+    "warning": "En enero las lagunas de los Lençóis suelen estar bajas: se llenan con las lluvias de marzo a junio."
+  },
+  "cabofrio": {
+    "beach": 8,
+    "nightlife": 8,
+    "young": 8,
+    "vibe": "Agua turquesa en Praia do Forte y Peró, y en enero se llena de pibes de Río y São Paulo. La noche está en la Passarela y los bares del canal. Mucho más barato que Búzios, que queda a 30 min.",
+    "how": "Vuelo a Río y micro de 2 h 30 a Cabo Frio.",
+    "warning": null
+  },
+  "saquarema": {
+    "beach": 8,
+    "nightlife": 6,
+    "young": 8,
+    "vibe": "La capital del surf en Río: Itaúna, escuelas de surf y bares de playa con gente joven. De noche es más tranquila; Cabo Frio queda a 1 h.",
+    "how": "Vuelo a Río y micro de 2 h.",
+    "warning": null
+  },
+  "barragrande": {
+    "beach": 9,
+    "nightlife": 6,
+    "young": 7,
+    "vibe": "Pueblo de arena en la península de Maraú: piletas naturales en Taipu de Fora, lagunas y bares que se llenan en enero. Lindo y relajado, menos fiesta que Morro.",
+    "how": "Vuelo a Ilhéus y 3 h en auto, o desde Salvador en lancha rápida.",
+    "warning": null
+  },
+  "imbassai": {
+    "beach": 8,
+    "nightlife": 4,
+    "young": 5,
+    "vibe": "Un río que corre al lado del mar y playa ancha casi vacía. De noche, poco: Praia do Forte queda a 15 min y Salvador a 1 h.",
+    "how": "Vuelo a Salvador y 1 h en auto.",
+    "warning": null
+  },
+  "icarai": {
+    "beach": 8,
+    "nightlife": 4,
+    "young": 6,
+    "vibe": "Pueblo de kite y surf con dunas y cocoteros, con gente joven de todo el mundo. La noche son barcitos, no boliches.",
+    "how": "Vuelo a Fortaleza y 3 h en auto.",
+    "warning": null
+  },
+  "barrasm": {
+    "beach": 9,
+    "nightlife": 4,
+    "young": 5,
+    "vibe": "Laguna de agua calma, arrecifes y la Praia do Gunga al lado. Para salir de noche hay que ir a Maceió, a 40 min.",
+    "how": "Vuelo a Maceió y 40 min en auto.",
+    "warning": null
+  },
+  "mardelplata": {
+    "beach": 5,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "La ciudad del verano argentino: Playa Grande, Varese y los paradores; de noche, la calle Alem y boliches como Sobremonte hasta la mañana. Agua fría y playas llenas.",
+    "how": "Vuelo directo Tucumán–Mar del Plata y Uber al depto.",
+    "warning": null
+  },
+  "villagesell": {
+    "beach": 6,
+    "nightlife": 10,
+    "young": 10,
+    "vibe": "En enero es el punto de los pibes de todo el país: la avenida 3, bares, paradores y boliches a full todas las noches.",
+    "how": "Vuelo a Mar del Plata y micro de 1 h 40 a Gesell.",
+    "warning": "En Airbnb hay pocas casas para 6 y caras; en Gesell mucho se alquila por inmobiliaria o Facebook, más barato."
+  },
+  "pinamar": {
+    "beach": 7,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "Paradores con música en la playa como Ufo Point, La Frontera con las 4x4 y la noche de Pinamar y Cariló. Más cheto y más caro que Gesell.",
+    "how": "Vuelo a Mar del Plata y micro de 2 h a Pinamar.",
+    "warning": null
+  },
+  "puntadiablo": {
+    "beach": 8,
+    "nightlife": 7,
+    "young": 9,
+    "vibe": "Pueblo de pescadores lleno de gente joven argentina y uruguaya: playa de la Viuda, surf, fogones y bares en la bajada. Rústico y de lo más barato de Uruguay.",
+    "how": "Vuelo a Montevideo y micro de 4 h 30 (COT o Rutas del Sol, ~USD 25 por tramo).",
+    "warning": null
+  },
+  "lapedrera": {
+    "beach": 8,
+    "nightlife": 6,
+    "young": 8,
+    "vibe": "Balneario sobre la barranca con mucha juventud uruguaya, fogones al atardecer y La Paloma a 10 min para salir de noche.",
+    "how": "Vuelo a Montevideo y micro de 3 h 30.",
+    "warning": null
+  },
+  "puntadeleste": {
+    "beach": 8,
+    "nightlife": 10,
+    "young": 9,
+    "vibe": "La noche más fuerte de Sudamérica en enero: La Barra, Bikini, Manantiales y fiestas en paradores. Pero carísima: casas, comida y entradas.",
+    "how": "Vuelo a Montevideo y micro de 2 h, o vuelo directo a Punta del Este (USD 457–673 desde Tucumán).",
+    "warning": null
+  },
+  "cartagena": {
+    "beach": 8,
+    "nightlife": 10,
+    "young": 10,
+    "vibe": "Getsemaní de noche, salsa en Café Havana y la ciudad amurallada; de día, Islas del Rosario y Playa Blanca.",
+    "how": "Vuelo a Cartagena: desde Foz vía São Paulo es lo más barato. Pasaporte.",
+    "warning": null
+  },
+  "santamarta": {
+    "beach": 8,
+    "nightlife": 8,
+    "young": 9,
+    "vibe": "El Rodadero, Taganga con fiestas mochileras, el parque Tayrona y Palomino a 2 h. Más barato que Cartagena para vivir.",
+    "how": "Vuelo a Santa Marta, o a Cartagena y bus de 4 h.",
+    "warning": null
+  },
+  "sanandres": {
+    "beach": 9,
+    "nightlife": 7,
+    "young": 7,
+    "vibe": "Mar de siete colores, Johnny Cay y Coco Loco; de noche, bares y discos en el centro.",
+    "how": "Vuelo vía Bogotá o Medellín. Al llegar se paga la tarjeta de turismo (~USD 35, ya sumada).",
+    "warning": null
+  },
+  "puntacana": {
+    "beach": 9,
+    "nightlife": 8,
+    "young": 7,
+    "vibe": "Playas de postal en Bávaro, Coco Bongo e Imagine, la disco en una cueva. Mucho all inclusive y parejas: para un grupo conviene depto en Bávaro.",
+    "how": "Vuelo a Punta Cana (desde Foz vía São Paulo). Pasaporte.",
+    "warning": null
+  },
+  "playadelcarmen": {
+    "beach": 8,
+    "nightlife": 10,
+    "young": 10,
+    "vibe": "La Quinta Avenida, Coco Bongo y beach clubs; cenotes y Tulum a 1 h. La que más fiesta tiene de todas, y de las más caras para llegar.",
+    "how": "Vuelo a Cancún y bus ADO de 1 h a Playa del Carmen. Pasaporte.",
+    "warning": null
+  },
+  "bocas": {
+    "beach": 9,
+    "nightlife": 8,
+    "young": 9,
+    "vibe": "Islas en el Caribe de Panamá llenas de mochileros: Filthy Friday, bares sobre el agua, surf y playas de estrellas de mar. Lo más parecido a una fiesta de islas en Centroamérica.",
+    "how": "Vuelo a Ciudad de Panamá y vuelo doméstico a Bocas (~USD 150 ida y vuelta, ya sumado en traslados). Pasaporte.",
+    "warning": null
+  },
+  "tamarindo": {
+    "beach": 8,
+    "nightlife": 8,
+    "young": 8,
+    "vibe": "Pueblo de surf en el Pacífico de Costa Rica con bares de playa y fiestas todas las noches. Costa Rica es cara para comer y salir.",
+    "how": "Vuelo a San José y shuttle de 5 h (~USD 80 ida y vuelta, sumado), o vuelo a Liberia. Pasaporte.",
+    "warning": null
+  },
+  "mancora": {
+    "beach": 7,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "El balneario de fiesta del Pacífico: Loki, fiestas en la playa, surf todo el año y Vichayito para descansar.",
+    "how": "Vuelo a Piura (o a Lima y vuelo a Piura por ~USD 124) y 3 h en auto hasta Máncora.",
+    "warning": "Con El Niño fuerte la costa norte de Perú puede tener lluvias intensas e inundaciones en enero (Niño costero). Es la opción con más riesgo de clima."
+  },
+  "renaca": {
+    "beach": 5,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "El verano chileno a pleno: Reñaca llena de gente joven de día, boliches en la duna y Viña y Valparaíso de noche. El agua es fría (16–18 °C).",
+    "how": "Vuelo a Santiago y bus de 1 h 30 a Viña (~USD 25 ida y vuelta, sumado). Alcanza con DNI.",
+    "warning": null
+  },
+  "iquique": {
+    "beach": 7,
+    "nightlife": 8,
+    "young": 8,
+    "vibe": "Playa Cavancha con agua más templada (~20 °C), parapente desde los cerros, zona franca y la noche de la península.",
+    "how": "Vuelo a Santiago y vuelo a Iquique (~USD 100 ida y vuelta, sumado en traslados), o directo desde Tucumán por USD 598. DNI.",
+    "warning": null
+  },
+  "arica": {
+    "beach": 7,
+    "nightlife": 6,
+    "young": 7,
+    "vibe": "La ciudad de la eterna primavera: el agua más cálida de Chile, surf en El Gringo y playa Chinchorro. Más tranquila de noche que Iquique.",
+    "how": "Vuelo a Santiago y vuelo a Arica (~USD 130 ida y vuelta, sumado en traslados). DNI.",
+    "warning": null
+  },
+  "montanita": {
+    "beach": 7,
+    "nightlife": 10,
+    "young": 10,
+    "vibe": "La capital de la fiesta mochilera del Pacífico: la calle de los cócteles, fiestas todas las noches, surf y Olón al lado para descansar.",
+    "how": "Vuelo a Guayaquil y bus de 3 h (~USD 20 ida y vuelta, sumado).",
+    "warning": "Con El Niño fuerte la costa de Ecuador suele tener lluvias intensas en enero. Riesgo alto de clima."
+  },
+  "huanchaco": {
+    "beach": 6,
+    "nightlife": 6,
+    "young": 7,
+    "vibe": "Pueblo surfero con caballitos de totora, ceviche barato y bares de playa; Trujillo al lado para salir.",
+    "how": "Vuelo a Trujillo (vía Lima) y taxi de 20 min. DNI.",
+    "warning": "Con El Niño fuerte la costa norte de Perú puede tener lluvias intensas en enero."
+  },
+  "eltunco": {
+    "beach": 7,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "Pueblo de surf con las fiestas más fuertes de El Salvador los fines de semana; El Zonte y Surf City al lado.",
+    "how": "Vuelo a San Salvador y 45 min en auto. Pasaporte.",
+    "warning": null
+  },
+  "sanjuandelsur": {
+    "beach": 8,
+    "nightlife": 9,
+    "young": 9,
+    "vibe": "La Sunday Funday, la pool party itinerante más famosa de Centroamérica, y playas de surf como Maderas y Remanso.",
+    "how": "Vuelo a Managua y shuttle de 2 h 30 (~USD 60 ida y vuelta, sumado). Pasaporte.",
+    "warning": null
+  },
+  "puertoescondido": {
+    "beach": 8,
+    "nightlife": 10,
+    "young": 10,
+    "vibe": "Zicatela con olas enormes, La Punta con fiestas y mezcal todas las noches; Mazunte y Zipolite a 1 h.",
+    "how": "Vuelo a Puerto Escondido vía Ciudad de México. Pasaporte.",
+    "warning": null
+  },
+  "sayulita": {
+    "beach": 8,
+    "nightlife": 8,
+    "young": 9,
+    "vibe": "Pueblo de surf con bares y fiestas en la plaza; Puerto Vallarta a 45 min para los boliches grandes.",
+    "how": "Vuelo a Puerto Vallarta y 45 min en auto. Pasaporte.",
+    "warning": null
+  },
+  "playavenao": {
+    "beach": 8,
+    "nightlife": 7,
+    "young": 8,
+    "vibe": "Playa de surf del Pacífico panameño con hostels de fiesta, Pedasí cerca e Isla Iguana para snorkel.",
+    "how": "Vuelo a Ciudad de Panamá y 5–6 h en bus o auto (~USD 60 ida y vuelta, sumado). Pasaporte.",
+    "warning": null
+  }
+}
