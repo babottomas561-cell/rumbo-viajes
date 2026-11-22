@@ -114,6 +114,9 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .lpop .ph img{width:270px;height:170px;object-fit:cover;flex:0 0 100%;scroll-snap-align:start;border-radius:10px;background:#ccc}
 .lpop h4{margin:0 0 2px;font:700 16px var(--f-display)}.lpop .z{color:#557079;font-size:12px}.lpop .t{font:700 15px var(--f-mono);margin:6px 0 2px}
 .lpop .row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.lpop .row span{background:#e0f1f2;color:#0a7c86;border-radius:999px;padding:1px 8px;font-size:11.5px}
+.lpop .hw{margin:8px 0 4px;display:grid;gap:3px}.lpop .hw>b{font-size:12px}
+.lpop .hwr{display:grid!important;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin:0!important;padding:4px 8px!important;background:#f3f7f7!important;color:#0e2a33!important;border:1px solid #d5e2e4!important;font:500 12px var(--f-body)!important;text-align:left}
+.lpop .hwr span:nth-child(2){color:#557079;font-size:11px}.lpop .hwr b{font-family:var(--f-mono)}.lpop .hwr.on{background:#f2c230!important;border-color:#f2c230!important}
 .lpop button{margin-top:6px;width:100%;padding:7px;border:0;border-radius:8px;background:#0a7c86;color:#fff;font:600 13px var(--f-body);cursor:pointer}.lpop .cr{font-size:10px;color:#557079;margin-top:4px}
 .leaflet-popup-content{margin:10px}
 @keyframes flash{0%{box-shadow:0 0 0 3px var(--sun)}100%{box-shadow:0 0 0 3px transparent}}.card.flash{animation:flash 1.8s ease-out}
@@ -1582,13 +1585,25 @@ function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,nt=NINOTXT[
     <div class="t">${fmt(r.total)} por persona</div><div class="z">${RLAB[r.flk]||""}${r.total<=S.target?" · entra en "+fmt(S.target):" · "+fmt(r.total-S.target)+" arriba"}</div>
     <div class="row"><span>Playa ${r.s[0]}/10</span><span>Noche ${r.s[1]}/10</span><span>Movida ${r.s[2]}/10</span></div>
     <p style="margin:4px 0">${r.vibe||""}</p>${nt?`<div class="z">${nt[1]}</div>`:""}
+    <div class="hw"><b>Cómo llegar</b>${[...RKEYS,"car"].filter(x=>r.rt&&r.rt[x]&&isFinite(r.rt[x].p)).sort((x,y)=>r.rt[x].p-r.rt[y].p).map(x=>{const l=r.rt[x];const tot=/⏱ ([^<]*) en total/.exec(finfo(x,l,r.ap)||"");const hh=x==="car"?`~${l.cc.hrs} h manejando`:tot?tot[1]:"";
+      return `<button type="button" class="hwr ${x===r.flk?"on":""}" data-rpick="${r.k}" data-rk="${x}"><span>${x==="car"?"En auto":RLAB[x]}</span><span>${hh}</span><b>${Math.round(l.p+(x==="car"?r.tr:0)).toLocaleString("es-AR")}</b></button>`;}).join("")}</div>
     <button type="button" onclick="goCard('${r.k}')">Ver la ficha completa</button><div class="cr">Fotos: Wikimedia Commons (deslizá)</div></div>`;}
+let LTRIP=null;
+// Dibuja el recorrido de la forma de llegar elegida: avión (línea llena), micro o auto (punteado)
+function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMAP);LTRIP.clearLayers();
+  const T=ORGEO.TUC.slice(0,2),k=r.flk,G=x=>(ORGEO[x]||APGEO[x]||[]).slice(0,2),air={color:"#0a7c86",weight:3},bus={color:"#a86b12",weight:3,dashArray:"6 6"};
+  const seg=(a,b,st)=>{if(a.length===2&&b.length===2)L.polyline([a,b],st).addTo(LTRIP);};
+  const hubs={bue:["BUE",air],cor:["COR",bus],foz:["IGU",bus],sla:["SLA",bus],igr:["IGU",air]};
+  if(k==="car")seg(T,ll,bus);else if(k==="tuc")seg(T,ll,air);else if(k==="rio"){seg(T,G("RIO"),air);seg(G("RIO"),ll,air);}
+  else if(hubs[k]){const [h,st]=hubs[k];seg(T,G(h),st);seg(G(h),ll,air);}
+  L.circleMarker(T,{radius:6,color:"#0e2a33",fillOpacity:1}).bindTooltip("Tucumán").addTo(LTRIP);}
 function drawLMap(fit){if(!LMAP)return;LLAYER.clearLayers();const pts=[];const best=LROWS.length?Math.min(...LROWS.map(r=>r.total)):0;
   LROWS.forEach(r=>{const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,ll=PLL[k];if(!ll||!isFinite(r.total))return;pts.push(ll);
     const cls=r.total===best?"top":r.total<=S.target?"ok":"over";
-    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}">${Math.round(r.total).toLocaleString("es-AR")}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total})
-      .bindPopup(()=>lpop(r),{maxWidth:300}).addTo(LLAYER);});
-  if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});}
+    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}">${Math.round(r.total).toLocaleString("es-AR")}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k})
+      .bindPopup(()=>lpop(r),{maxWidth:300}).on('popupopen',()=>drawTrip(r,ll)).on('popupclose',()=>LTRIP&&LTRIP.clearLayers()).addTo(LLAYER);});
+  if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
+  if(window.__reopen){const k=window.__reopen;window.__reopen=null;LLAYER.eachLayer(m=>{if(m.options.k===k){if(LLAYER.zoomToShowLayer)LLAYER.zoomToShowLayer(m,()=>m.openPopup());else m.openPopup();}});}}
 document.addEventListener("click",e=>{if(e.target.closest('[data-tab="mapa"]'))setTimeout(()=>{initLMap();if(LMAP){LMAP.invalidateSize();drawLMap(false);}},60);});
 function renderMap(base,out){MAPARGS=[base,out];LROWS=out;if(LMAP)drawLMap(false);else setTimeout(initLMap,0);
   const V=VIEWS[S.view];P=V.P;const svg=document.getElementById("map");const z=MZ[S.view];const [vx,vy,vw,vh]=clampZ();
@@ -1975,7 +1990,7 @@ function renderAnioDet(k,m){const r=yRows().find(x=>x.d.k===k);const box=documen
 document.addEventListener("click",e=>{const b=e.target.closest("[data-yprop]");if(!b)return;S.mes=+b.dataset.ym;S.q="";S.zone="all";try{setSeg("zone","all");}catch(_){}render();if(window.__syncQuick)__syncQuick();if(window.__syncChips)__syncChips();},true);
 // Elegir una casa en la tarjeta: el total de esa propuesta se recalcula con esa casa
 document.addEventListener("click",e=>{const b=e.target.closest("[data-rpick]");if(!b)return;e.preventDefault();e.stopPropagation();
-  const k=b.dataset.rpick,v=b.dataset.rk;if(!v||RPICK[k]===v)delete RPICK[k];else RPICK[k]=v;saveRPick();
+  const k=b.dataset.rpick,v=b.dataset.rk;if(!v||RPICK[k]===v)delete RPICK[k];else RPICK[k]=v;saveRPick();if(b.closest(".lpop"))window.__reopen=k;
   const art=b.closest("article.card"),top=art?art.getBoundingClientRect().top:0;render();followCard(k,top);});
 // Al elegir vuelo, auto o casa la lista se reordena: llevar la vista a la ficha y resaltarla
 function followCard(k,top){const c=document.getElementById("card-"+k);if(!c)return;window.scrollBy(0,c.getBoundingClientRect().top-top);c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),900);}
