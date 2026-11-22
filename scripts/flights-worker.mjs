@@ -31,12 +31,14 @@ function parse(labels) {
     const sl = a.match(/Sale de (.+?) el (.+?) a las (.+?) y llega a (.+?) el (.+?) a las (.+?)\.\.?\s/);
     const du = a.match(/Duración total: (.+?)\./);
     const st = a.match(/con (\d+) escalas?/);
+    // Escalas: "Escala (1 de 2) de 2 h 10 min en Aeropuerto ... (GRU)"
+    const lay = [...a.matchAll(/Escala(?: \(\d+ de \d+\))? de (.+?) en (.+?)\./g)].map((m) => `${m[1]} en ${m[2]}`);
     if (!p || !sl) continue;
     const airline = al?.[1] ?? "?", key = airline + sl[3] + sl[6];
     if (seen.has(key)) continue;
     seen.add(key);
     const fx = (s) => (/[ap]\.m$/.test(s) ? s + "." : s);
-    out.push({ price: parseInt(p[1].replace(/[.,]/g, ""), 10), stops: st ? +st[1] : 0, airline, dep: fx(sl[3]), arr: fx(sl[6]), dur: du?.[1] ?? "" });
+    out.push({ price: parseInt(p[1].replace(/[.,]/g, ""), 10), stops: st ? +st[1] : 0, airline, dep: fx(sl[3]), arr: fx(sl[6]), dur: du?.[1] ?? "", from: sl[1], to: sl[4], nd: sl[5] !== sl[2] ? 1 : 0, lay });
   }
   return out.sort((x, y) => x.price - y.price).slice(0, 8);
 }
@@ -109,6 +111,13 @@ for (let i = 0; i < rows.length; i += 500)
   await sb("flight_quotes?on_conflict=origin,dest,depart_on,return_on,airline,dep_time,fetched_at", { method: "POST", headers: { Prefer: "resolution=ignore-duplicates,return=minimal" }, body: JSON.stringify(rows.slice(i, i + 500)) });
 
 const ok = results.filter((r) => r.opts.length);
+// Detalle por ruta (aeropuerto de salida y llegada, horarios, escalas) para la página: app_snapshots 'fdet'
+{
+  const [fs] = await sb("app_snapshots?key=eq.fdet&select=data");
+  const fdet = fs?.data || {};
+  for (const { o, ap, m, opts } of ok) fdet[`${o}-${ap}-${m}`] = opts.map((x) => [x.price, x.stops, x.airline, x.dep, x.arr, x.nd, x.dur, x.lay, x.from, x.to]);
+  await sb("app_snapshots?on_conflict=key", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "fdet", data: fdet, updated_at: fetched_at }) });
+}
 const [snap] = await sb("app_snapshots?key=eq.anio&select=data");
 if (snap && ok.length) {
   const anio = snap.data;

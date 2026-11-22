@@ -23,6 +23,13 @@ export async function GET() {
   // Valores oficiales del cálculo en auto (los actualiza scripts/car_prices.py todos los días)
   const { data: cp } = db ? await db.from("app_snapshots").select("data").eq("key", "carprices").maybeSingle() : { data: null };
   html = html.replace("const CARLIVE=null;", "const CARLIVE=" + JSON.stringify(cp?.data ?? null).replace(/</g, "\\u003c") + ";");
+  // Detalle de vuelos del robot (aeropuertos, horarios, escalas) del mes de enero: pisa FD
+  const { data: fdx } = db ? await db.from("app_snapshots").select("data").eq("key", "fdet").maybeSingle() : { data: null };
+  if (fdx?.data) {
+    const live: Record<string, { o: unknown[] }> = {};
+    for (const [k, o] of Object.entries(fdx.data as Record<string, unknown[]>)) if (k.endsWith("-1")) live[k.slice(0, -2)] = { o };
+    html = html.replace("const FD={", "const FDLIVE=" + JSON.stringify(live).replace(/</g, "\\u003c") + ";const FD={");
+  }
   // La plantilla es un artefacto (sin <head>): se agrega lo necesario para que el celular la muestre a su ancho real
   if (!/name="viewport"/.test(html)) html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` + html;
   return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=300, stale-while-revalidate=3600" } });

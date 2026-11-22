@@ -117,7 +117,9 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .tripbox{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 4px 18px rgba(0,0,0,.18);width:290px;max-width:calc(100vw - 60px);font:13px/1.35 var(--f-body,Inter,system-ui,sans-serif)}
 .tripbox .tbig{display:flex;gap:14px;margin:6px 0 2px;font:700 17px var(--f-mono)}.tripbox .tbig small{display:block;font:400 11px var(--f-body,Inter,sans-serif);color:var(--muted)}
 .tripbox ol{margin:6px 0;padding:0;list-style:none;display:grid;gap:4px}.tripbox li{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:12px;border-top:1px solid var(--line);padding-top:4px}
-.tripbox li span:nth-child(n+2){font-family:var(--f-mono);white-space:nowrap}.tripbox .tsub{font-size:12px;color:var(--muted)}.tripbox>small{color:var(--muted);font-size:11px}
+.tripbox li span:nth-child(n+2){font-family:var(--f-mono);white-space:nowrap}.tripbox li em{display:block;font-style:normal;color:var(--muted);font-size:11px}.tripbox li em.w{color:#b45309;font-weight:600}.laytip{font:600 11px var(--f-mono);padding:2px 6px}
+.carstops{margin-top:12px;padding:10px 12px;border:1px solid var(--line,#ddd);border-radius:10px}.carstops h4{margin:0 0 6px;font-size:14px}.carstops ol{margin:0;padding-left:18px;font-size:13px}.carstops .w{color:var(--warn);font-weight:600;font-size:13px}
+.tripbox .tsub{font-size:12px;color:var(--muted)}.tripbox>small{color:var(--muted);font-size:11px}
 .lclim{display:flex;flex-wrap:wrap;gap:4px 10px;margin:6px 0;padding:6px 8px;border-radius:8px;background:color-mix(in srgb,#3b8ea5 10%,transparent);font-size:12px}.lclim b{flex-basis:100%}.lclim small{flex-basis:100%;color:var(--muted)}
 .lmchips{display:inline-flex;flex-wrap:wrap;gap:6px}.lmchips .chip{font-size:12px}
 .lmleg{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}.lmleg .lpin{transform:none;margin-right:5px}
@@ -681,6 +683,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
       <div class="ctl"><label class="lbl" for="carcap">Plazas por vehículo (contando al que maneja)</label><select id="carcap" class="carsel"><option value="4">4</option><option value="5" selected>5</option><option value="7">7 (camioneta o SUV de 3 filas)</option><option value="9">9 (combi)</option></select></div>
       <div class="ctl"><label class="lbl" for="carpay">Cuántos pagan los gastos del auto</label><select id="carpay" class="carsel"></select><span class="hint" id="carpayhint"></span></div>
       <div class="ctl"><span class="lbl">Ritmo de manejo</span><div class="seg" id="carnoches" role="group" aria-label="Horas de manejo por día"><button type="button" data-v="10" aria-pressed="true">Tranquilo (10 h por día)</button><button type="button" data-v="13" aria-pressed="false">Largo (13 h por día)</button></div></div>
+      <div class="ctl"><span class="lbl">Noches en ruta (por tramo)</span><div class="seg" id="carrn" role="group" aria-label="Noches en ruta"><button type="button" data-v="auto" aria-pressed="true">Según ritmo</button><button type="button" data-v="0" aria-pressed="false">De un tirón</button><button type="button" data-v="1" aria-pressed="false">1 noche</button><button type="button" data-v="2" aria-pressed="false">2 noches</button><button type="button" data-v="3" aria-pressed="false">3 noches</button></div></div>
       <label class="chk"><input type="checkbox" id="cardesg" checked> Sumar desgaste del auto (service, cubiertas)</label>
       <details class="carparams" id="carparams"><summary>Todos los valores del cálculo <span id="carpchg"></span></summary>
         <div id="carpgrid"></div>
@@ -1587,9 +1590,9 @@ function legLinks(r){const l=r.leg;if(!isFinite(l.p))return "";
   if(r.flk==="car")return `<a class="btn" href="https://www.google.com/maps/dir/Tucum%C3%A1n/${encodeURIComponent(r.name)}" target="_blank" rel="noopener">Ver la ruta en Google Maps</a>`;
   return `<a class="btn" href="${GFL(l.o,r.ap,l.d,l.r)}" target="_blank" rel="noopener">Ver vuelos ${l.o} → ${r.ap}</a>`;}
 // Aerolínea, escalas y horas de viaje de cada forma de salir (datos de Google Flights)
-function fd0(o,ap){const f=FD[o+"-"+ap];return f&&f.o&&f.o[0];}
+function fd0(o,ap){const L=typeof FDLIVE!=="undefined"?FDLIVE:null;const f=(L&&L[o+"-"+ap])||FD[o+"-"+ap];return f&&f.o&&f.o[0];}
 function stx(n){return n==null?"":n===0?"directo":n+" escala"+(n>1?"s":"");}
-function fd0(o,ap){const f=FD[o+"-"+ap];return f&&f.o&&f.o[0];}
+function fd0(o,ap){const L=typeof FDLIVE!=="undefined"?FDLIVE:null;const f=(L&&L[o+"-"+ap])||FD[o+"-"+ap];return f&&f.o&&f.o[0];}
 function stx(n){return n==null?"":n===0?"directo":n+" escala"+(n>1?"s":"");}
 const hrs=t=>{if(!t)return null;const h=/(\d+) h/.exec(t),m=/(\d+) min/.exec(t);return (h?+h[1]:0)+(m?+m[1]/60:0);};
 const hfmt=x=>{const h=Math.floor(x),m=Math.round((x-h)*60);return m?`${h} h ${String(m).padStart(2,"0")}`:`${h} h`;};
@@ -1737,19 +1740,30 @@ function climOf(r){const k=r.parts?r.parts[0][0]:r.combo&&r.comboParts?r.comboPa
   let ep=0;try{if(m===1&&GEO[k])ep=ngVal({parts:[[k,1]]},"ep").v;}catch(_){}
   return {m,tmax:c[0],mm:c[1],dias:c[2],mar:c[3],ep,esp:Math.max(0,Math.round(c[1]+ep))};}
 const rainCls=mm=>mm<90?"top":mm<180?"ok":"over";
+// Aeropuertos de escala (nombre que da Google Flights → [lat, lon, nombre corto])
+const LAYAP=[["Guarulhos",-23.43,-46.47,"São Paulo-Guarulhos"],["Congonhas",-23.63,-46.66,"São Paulo-Congonhas"],["Campinas",-23.01,-47.13,"Campinas-Viracopos"],["São Paulo",-23.43,-46.47,"São Paulo"],
+ ["Aeroparque",-34.56,-58.42,"Aeroparque"],["Ezeiza",-34.82,-58.54,"Ezeiza"],["Buenos Aires",-34.7,-58.5,"Buenos Aires"],["Galeão",-22.81,-43.25,"Río-Galeão"],["El Dorado",4.7,-74.15,"Bogotá"],["Jorge Chávez",-12.02,-77.11,"Lima"],
+ ["Arturo Merino",-33.39,-70.79,"Santiago de Chile"],["Tocumen",9.07,-79.38,"Panamá"],["Brasilia",-15.87,-47.92,"Brasilia"],["Salvador",-12.91,-38.33,"Salvador"],["Ciudad de México",19.44,-99.07,"Ciudad de México"],
+ ["Medellín",6.17,-75.43,"Medellín"],["José María Córdova",6.17,-75.43,"Medellín"],["Hercílio Luz",-27.67,-48.55,"Florianópolis"],["Belo Horizonte",-19.63,-43.97,"Belo Horizonte"],["Cali",3.54,-76.38,"Cali"],["Alfonso Bonilla",3.54,-76.38,"Cali"],
+ ["Punta Cana",18.57,-68.36,"Punta Cana"],["Córdoba",-31.31,-64.21,"Córdoba"],["Porto Alegre",-29.99,-51.17,"Porto Alegre"],["Santo Domingo",18.43,-69.67,"Santo Domingo"],["San José",9.99,-84.2,"San José"],
+ ["Navegantes",-26.88,-48.65,"Navegantes"],["Curitiba",-25.53,-49.18,"Curitiba"],["Miami",25.79,-80.29,"Miami"],["Foz do Iguaçu",-25.6,-54.49,"Foz do Iguaçu"],["Reina Beatrix",12.5,-70.01,"Aruba"],["Toronto",43.68,-79.63,"Toronto"]];
+function layInfo(t){const m=/^(.*?) en (.*)$/.exec(t||"");if(!m)return null;const a=LAYAP.find(x=>m[2].includes(x[0]));const h=hrs(m[1]);
+  return {dur:m[1],h,name:a?a[3]:m[2],ll:a?[a[1],a[2]]:null,warn:h==null?"":h<1?"conexión justa: menos de 1 h":h>=10?"escala muy larga: conviene hotel o salir a pasear":h>=6?"escala larga":""};}
+// Detalle del vuelo más barato de cada tramo (horarios, duración, escalas)
+function fdet(o,ap){const f=fd0(o,ap);if(!f)return null;return {al:f[2],st:f[1],dep:f[3],arr:f[4],nd:f[5],dur:f[6],lay:(f[7]||[]).map(layInfo).filter(Boolean),from:f[8]||"",to:f[9]||""};}
 // Tramos del viaje según la forma de llegar elegida: {a,b: [lat,lon], m: avión|micro|auto|cruce|traslado, t: texto, h: horas por tramo, c: costo ida y vuelta por persona}
 function tripLegs(r,ll){const k=r.flk,l=r.rt&&r.rt[k];if(!l)return [];const ap=r.ap,T=ORGEO.TUC.slice(0,2),G=x=>(ORGEO[x]||APGEO[x]||[]).slice(0,2),A=APGEO[ap];
-  const air=(a,b,t,h,c,st)=>({a,b,m:"avión",t,h,c,st}),gnd=(a,b,m,t,h,c)=>({a,b,m,t,h,c});const L=[];
+  const air=(a,b,t,h,c,st,o2)=>({a,b,m:"avión",t,h,c,st,fd:o2?fdet(o2[0],o2[1]):null}),gnd=(a,b,m,t,h,c)=>({a,b,m,t,h,c});const L=[];
   const f0=o=>{const f=fd0(o,ap);return f?{al:f[2],st:f[1]}:{};};
   if(k==="car"){const c=l.cc;L.push({a:T,b:ll,m:"auto",t:`Tucumán → ${r.name} en auto (${c.km.toLocaleString("es-AR")} km, ${c.legDays} ${c.legDays>1?"días":"día"})`,h:c.hrs,c:l.p+r.tr,car:1});return L;}
-  if(k==="tuc"){const f=f0("TUC");L.push(air(T,A,`Vuelo Tucumán → ${CITY[ap]}${f.al?" · "+f.al:""}`,fdur("TUC",ap),l.p,f.st));}
-  else if(k==="rio"){L.push(air(T,G("RIO"),"Vuelo Tucumán → Río",fdur("TUC","RIO"),l.leg1));L.push(air(G("RIO"),A,`Vuelo Río → ${CITY[ap]}`,fdur("RIO",ap),l.leg2));}
-  else if(k==="igr"){L.push(air(T,G("IGU"),"Vuelo Tucumán → Puerto Iguazú",fdur("TUC","IGR"),l.leg1));L.push(gnd(G("IGU"),G("IGU"),"cruce","Remís y cruce a Foz",1,IGR_X));const f=f0("IGU");L.push(air(G("IGU"),A,`Vuelo Foz → ${CITY[ap]}${f.al?" · "+f.al:""}`,fdur("IGU",ap),l.air,f.st));}
+  if(k==="tuc"){const f=f0("TUC");L.push(air(T,A,`Vuelo Tucumán → ${CITY[ap]}${f.al?" · "+f.al:""}`,fdur("TUC",ap),l.p,f.st,["TUC",ap]));}
+  else if(k==="rio"){L.push(air(T,G("RIO"),"Vuelo Tucumán → Río",fdur("TUC","RIO"),l.leg1,null,["TUC","RIO"]));L.push(air(G("RIO"),A,`Vuelo Río → ${CITY[ap]}`,fdur("RIO",ap),l.leg2,null,["RIO",ap]));}
+  else if(k==="igr"){L.push(air(T,G("IGU"),"Vuelo Tucumán → Puerto Iguazú",fdur("TUC","IGR"),l.leg1,null,["TUC","IGR"]));L.push(gnd(G("IGU"),G("IGU"),"cruce","Remís y cruce a Foz",1,IGR_X));const f=f0("IGU");L.push(air(G("IGU"),A,`Vuelo Foz → ${CITY[ap]}${f.al?" · "+f.al:""}`,fdur("IGU",ap),l.air,f.st,["IGU",ap]));}
   else{const H={bue:["BUE",CS.hub?"auto":"avión",CS.hub?13:fdur("TUC","BUE"),CS.hub?"Auto Tucumán → Buenos Aires":"Vuelo Tucumán → Ezeiza"],cor:["COR",CS.hub?"auto":"micro",CS.hub?6:9,CS.hub?"Auto Tucumán → Córdoba":"Micro Tucumán → Córdoba"],
       foz:["IGU",CS.hub?"auto":"micro",CS.hub?16:BUS_FOZ_H,CS.hub?"Auto Tucumán → Foz":"Micro Tucumán → Puerto Iguazú"],sla:["SLA",CS.hub?"auto":"micro",4.5,CS.hub?"Auto Tucumán → Salta":"Micro Tucumán → Salta"]}[k];
-    if(!H)return [];const [h,mo,hh,tx]=H;L.push(gnd(T,G(h),mo,tx,hh,hubCost(k)));if(k==="foz")L.push(gnd(G("IGU"),G("IGU"),"cruce","Cruce a Foz do Iguaçu",1,0));
+    if(!H)return [];const [h,mo,hh,tx]=H;const g0=gnd(T,G(h),mo,tx,hh,hubCost(k));if(k==="bue"&&!CS.hub){g0.fd=fdet("TUC","BUE");g0.m="avión";}L.push(g0);if(k==="bue"&&!CS.hub)L.push(gnd([-34.56,-58.42],[-34.82,-58.54],"traslado","Cambio de aeropuerto: Aeroparque → Ezeiza (si el vuelo internacional sale de Ezeiza; remís o bus Tienda León)",1.25,20));if(k==="foz")L.push(gnd(G("IGU"),G("IGU"),"cruce","Cruce a Foz do Iguaçu",1,0));
     const fa=k==="sla"?(ANIO.fl[ap]&&ANIO.fl[ap][1]):null,f=f0(h);
-    L.push(air(G(h),A,`Vuelo ${ORGEO[h][2]} → ${CITY[ap]}${k==="sla"?(fa&&fa[9]?" · "+fa[9]:""):(f.al?" · "+f.al:"")}`,k==="sla"?(fa&&fa[10]?hrs(fa[10]):null):fdur(h==="IGU"?"IGU":h,ap),l.air,k==="sla"?(fa?fa[8]:null):f.st));}
+    L.push(air(G(h),A,`Vuelo ${ORGEO[h][2]} → ${CITY[ap]}${k==="sla"?(fa&&fa[9]?" · "+fa[9]:""):(f.al?" · "+f.al:"")}`,k==="sla"?(fa&&fa[10]?hrs(fa[10]):null):fdur(h==="IGU"?"IGU":h,ap),l.air,k==="sla"?(fa?fa[8]:null):f.st,k==="sla"?null:[h,ap]));}
   // aeropuerto → playa
   const km=A?Math.round(Math.hypot((A[0]-ll[0])*111,(A[1]-ll[1])*111*Math.cos(ll[0]*Math.PI/180))*1.3):0;
   L.push(gnd(A,ll,"traslado",`Traslado aeropuerto → ${r.name} (~${km} km)`,km<15?.5:Math.round(km/55*2+1)/2,r.tr));
@@ -1765,11 +1779,13 @@ function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMA
   const IC={"avión":"✈","micro":"🚌","auto":"🚗","traslado":"🚐","cruce":"⇄"};
   const legs=tripLegs(r,ll);const pts=[];
   const lab=(g)=>`${IC[g.m]} ${g.h!=null?hfmt(g.h):"? h"}${g.c?` · ${fmt(g.c)}`:""}`;
-  legs.forEach((g,i)=>{if(g.m==="cruce")return;const line=g.m==="avión"?arcPts(g.a,g.b):[g.a,g.b];pts.push(g.a,g.b);
+  legs.forEach((g,i)=>{if(g.m==="cruce")return;const via=g.fd?g.fd.lay.filter(x=>x.ll).map(x=>x.ll):[];const chain=[g.a,...via,g.b];
+    const line=g.m==="avión"?chain.slice(1).flatMap((b,j)=>arcPts(chain[j],b,.12).slice(j?1:0)):[g.a,g.b];pts.push(...chain);
+    if(g.fd)g.fd.lay.forEach(x=>{if(!x.ll)return;L.circleMarker(x.ll,{radius:6,color:x.warn?"#b45309":"#0a7c86",weight:2,fillColor:"#fff",fillOpacity:1}).bindTooltip(`Escala en ${x.name}: ${x.dur}${x.warn?" · "+x.warn:""}`,{permanent:true,direction:"right",className:"laytip"}).addTo(LTRIP);});
     const pl=L.polyline(line,ST[g.m]).addTo(LTRIP);
     const mid=line[Math.floor(line.length/2)]||g.b;
     L.marker(mid,{icon:L.divIcon({className:"",html:`<span class="tleg ${g.m==="avión"?"air":g.m==="traslado"?"tr":"gnd"}">${lab(g)}</span>`,iconSize:null}),interactive:false}).addTo(LTRIP);
-    if(g.car){const key=r.k;const draw=co=>{if(LTRIP.__k!==r.k)return;LTRIP.removeLayer(pl);L.polyline(co,ST.auto).addTo(LTRIP);};
+    if(g.car){const key=r.k;try{const cc=carCost(r.k);routeStops(r.k,cc.legDays-1,cc.km).filter(x=>!x.last).forEach(x=>L.marker(x.ll,{icon:L.divIcon({className:"tleg",html:"🛏 "+x.name,iconSize:null})}).addTo(LTRIP));}catch(_){}const draw=co=>{if(LTRIP.__k!==r.k)return;LTRIP.removeLayer(pl);L.polyline(co,ST.auto).addTo(LTRIP);};
       if(OSRMC[key])draw(OSRMC[key]);else fetch(`https://router.project-osrm.org/route/v1/driving/${g.a[1]},${g.a[0]};${g.b[1]},${g.b[0]}?overview=simplified&geometries=geojson`).then(x=>x.json()).then(j=>{const co=j.routes[0].geometry.coordinates.map(([lo,la])=>[la,lo]);OSRMC[key]=co;draw(co);}).catch(()=>{});}});
   LTRIP.__k=r.k;
   // puntos de cada parada
@@ -1782,7 +1798,7 @@ function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMA
   el.innerHTML=`<b>${r.k==="car"||r.flk==="car"?"En auto":RLAB[r.flk]} · Tucumán → ${r.name}</b>
     <div class="tbig"><span>⏱ ${miss?"~":""}${hfmt(tot)}<small> puerta a puerta, por tramo</small></span><span>${fmt(cost)}<small> ida y vuelta c/u</small></span></div>
     ${esc?`<div class="tsub">${esc} escala${esc>1?"s":""} en los vuelos</div>`:""}
-    <ol>${legs.map(g=>`<li><span>${IC[g.m]} ${g.t}${g.st!=null&&g.m==="avión"?` · ${stx(g.st)}`:""}</span><span>${g.h!=null?hfmt(g.h):"s/d"}</span><span>${g.c?fmt(g.c):"—"}</span></li>`).join("")}</ol>
+    <ol>${legs.map(g=>`<li><span>${IC[g.m]} ${g.t}${g.st!=null&&g.m==="avión"?` · ${stx(g.st)}`:""}${g.fd?`<em>Sale ${g.fd.dep}${g.fd.from?" de "+g.fd.from:""} · llega ${g.fd.arr}${g.fd.to?" a "+g.fd.to:""}${g.fd.nd?" (día siguiente)":""} · ${g.fd.dur}</em>${g.fd.lay.map(x=>`<em class="${x.warn?"w":""}">↳ Escala ${x.dur} en ${x.name}${x.warn?" — "+x.warn:""}</em>`).join("")}`:""}</span><span>${g.h!=null?hfmt(g.h):"s/d"}</span><span>${g.c?fmt(g.c):"—"}</span></li>`).join("")}</ol>
     <small>Horas: cada tramo de ida (la vuelta es igual). Costos: ida y vuelta por persona.</small>`;
   try{LMAP.fitBounds(L.latLngBounds(pts).pad(.15),{maxZoom:7,paddingTopLeft:[20,20],paddingBottomRight:innerWidth<700?[20,200]:[320,20]});}catch(_){}}
 function hideTrip(){if(LTRIP)LTRIP.clearLayers();if(TRIPBOX)TRIPBOX.getContainer().hidden=true;}
@@ -2081,12 +2097,25 @@ const CARLIVE=null;
 // Valores oficiales en vivo: reemplazan los de referencia y su fuente
 if(CARLIVE&&CARLIVE.vals)CARP.forEach(g=>g[1].forEach(x=>{const L=CARLIVE.vals[x[0]];if(L&&+L.v>0){x[4]=+L.v;x[5]=L.fuente+" · "+L.fecha.split("-").reverse().join("/");x[6]=L.url;x[7]=1;}}));
 const CS0=Object.fromEntries(CARP.flatMap(g=>g[1]).map(x=>[x[0],x[4]]));
-const CS={cap:5,pay:0,veh:"auto",n:2,desg:true,hub:false,dest:"floripa",...CS0};
+const CS={cap:5,pay:0,veh:"auto",n:2,desg:true,hub:false,dest:"floripa",rn:"auto",...CS0};
 try{const sv=JSON.parse(localStorage.getItem("car27")||"{}");for(const k in sv)if(k in CS0&&+sv[k]>0)CS[k]=+sv[k];}catch(_){}
 const saveCar=()=>{try{const o={};for(const k in CS0)if(CS[k]!==CS0[k])o[k]=CS[k];localStorage.setItem("car27",JSON.stringify(o));}catch(_){}};
 const kml=()=>CS.cap>=9?CS.kmlCombi:CS.cap>=7||CS.veh!=="auto"?CS.kmlCam:CS.kmlAuto;
 const pAR=()=>(CS.veh==="auto"?CS.naftaAR:CS.gasoilAR)/CS.usd, pBR=()=>(CS.veh==="auto"?CS.gasBR:CS.dieBR)/CS.brl;
-const legNights=km=>Math.max(0,Math.ceil(km/CS.speed/CS.hd-0.25)-1);
+const legNights=km=>CS.rn!=="auto"&&CS.rn!=null?+CS.rn:Math.max(0,Math.ceil(km/CS.speed/CS.hd-0.25)-1);
+// Ciudades buenas para dormir en la ruta (hotel, comida, seguridad)
+const STOPS=[["Santiago del Estero",-27.79,-64.26],["Termas de Río Hondo",-27.5,-64.86],["Resistencia",-27.45,-58.99],["Corrientes",-27.47,-58.83],["Posadas",-27.37,-55.9],["Puerto Iguazú",-25.6,-54.57],["Foz do Iguaçu",-25.52,-54.58],["Oberá",-27.49,-55.12],["Santo Tomé",-28.55,-56.04],["Paso de los Libres",-29.71,-57.09],["Uruguaiana",-29.75,-57.09],["Cascavel",-24.96,-53.46],["Guarapuava",-25.39,-51.46],["Ponta Grossa",-25.09,-50.16],["Curitiba",-25.43,-49.27],["Joinville",-26.3,-48.85],["Chapecó",-27.1,-52.62],["Lages",-27.82,-50.33],["Passo Fundo",-28.26,-52.41],["Santa Maria",-29.68,-53.8],["Santo Ângelo",-28.3,-54.26],["Porto Alegre",-30.03,-51.23],["Caxias do Sul",-29.17,-51.18],["Maringá",-23.42,-51.94],["Londrina",-23.31,-51.16],["Ourinhos",-22.98,-49.87],["Campinas",-22.9,-47.06],["São Paulo",-23.55,-46.63],["Registro",-24.49,-47.84],["Taubaté",-23.03,-45.56],["Resende",-22.47,-44.45],["Presidente Prudente",-22.12,-51.39],["Campo Grande",-20.46,-54.62],["Ribeirão Preto",-21.18,-47.81],["Uberlândia",-18.92,-48.28],["Belo Horizonte",-19.92,-43.94],["Vitória",-20.32,-40.34],["Governador Valadares",-18.85,-41.95],["Teófilo Otoni",-17.86,-41.5],["Vitória da Conquista",-14.86,-40.84],["Feira de Santana",-12.27,-38.97],["Brasília",-15.79,-47.88],["Goiânia",-16.68,-49.25],["Concordia",-31.39,-58.02],["Salto",-31.38,-57.96],["Paysandú",-32.32,-58.08],["Colón",-32.22,-58.14],["Rosario",-32.95,-60.65],["Santa Fe",-31.63,-60.7],["Reconquista",-29.15,-59.65],["Rafaela",-31.25,-61.49],["Córdoba",-31.42,-64.18],["Río Cuarto",-33.12,-64.35],["Montevideo",-34.9,-56.16],["Punta del Este",-34.96,-54.95],["Chuí",-33.69,-53.46],["Pelotas",-31.77,-52.34],["Florianópolis",-27.6,-48.55]];
+const TUCLL=[-26.83,-65.22];
+function hav(a,b){const r=Math.PI/180,dl=(b[0]-a[0])*r,dn=(b[1]-a[1])*r,x=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dn/2)**2;return 12742*Math.asin(Math.sqrt(x));}
+// Recomienda dónde dormir: corta la ruta (geometría OSRM si ya está, si no línea recta) en n+1 partes iguales y busca la ciudad más cercana a cada corte
+const OSRMP={};
+function routeStops(k,n,km){if(!n||!GEO[k])return [];
+  if(!OSRMC[k]&&!OSRMP[k]){OSRMP[k]=1;fetch(`https://router.project-osrm.org/route/v1/driving/${TUCLL[1]},${TUCLL[0]};${GEO[k][1]},${GEO[k][0]}?overview=simplified&geometries=geojson`).then(x=>x.json()).then(j=>{OSRMC[k]=j.routes[0].geometry.coordinates.map(([a,b])=>[b,a]);render();}).catch(()=>{});}const line=OSRMC[k]&&OSRMC[k].length>2?OSRMC[k]:[TUCLL,GEO[k]];
+  const seg=[0];for(let i=1;i<line.length;i++)seg.push(seg[i-1]+hav(line[i-1],line[i]));const tot=seg[seg.length-1]||1;
+  const at=f=>{const d=f*tot;let i=seg.findIndex(x=>x>=d);if(i<1)i=1;const t=(d-seg[i-1])/((seg[i]-seg[i-1])||1);return [line[i-1][0]+(line[i][0]-line[i-1][0])*t,line[i-1][1]+(line[i][1]-line[i-1][1])*t];};
+  const out=[];let prev=0;for(let j=1;j<=n;j++){const p=at(j/(n+1));const c=STOPS.map(x=>[x,hav(p,[x[1],x[2]])]).sort((a,b)=>a[1]-b[1])[0];
+    const kmAt=Math.round(km*j/(n+1));out.push({name:c[0][0],ll:[c[0][1],c[0][2]],off:Math.round(c[1]),km:kmAt,dayKm:kmAt-prev,h:(kmAt-prev)/CS.speed});prev=kmAt;}
+  out.push({name:"destino",km,dayKm:km-prev,h:(km-prev)/CS.speed,last:true});return out;}
 // Los gastos del vehículo (nafta, peajes, Carta Verde, desgaste) se multiplican por la cantidad de vehículos y se dividen entre los que pagan.
 const carPay=()=>Math.min(PAX,CS.pay||PAX),carPer=()=>carPay()/CS.n,carFits=()=>CS.n*CS.cap>=PAX;
 function carCost(k){const [ka,kb,ku,tollARS]=CARKM[k];const intl=kb+ku>0,local=intl?CS.local:CS.localAR,per=carPer();
@@ -2128,6 +2157,10 @@ function renderCar(rows){const el=document.getElementById("carout");if(!el)retur
     <table class="carcmp" style="margin-top:10px"><thead><tr><th>Manejar hasta el aeropuerto</th><th>Micro o avión</th><th>En auto</th><th>Dif.</th></tr></thead><tbody>${hubs}</tbody></table>
     <p class="hint">“Micro o avión” es lo que suma hoy la página: JetSMART TUC↔EZE USD 283, micro a Córdoba USD 100, micro a Foz USD 210. En auto: nafta, peajes, 10 días de estacionamiento${CS.desg?", desgaste":""}, hotel y comida si el tramo no se hace en un día y, a Foz, Carta Verde.</p>
     <label class="chk" style="margin-top:6px"><input type="checkbox" id="carhub" ${CS.hub?"checked":""}> Usar el auto para llegar a Bs. As., Córdoba y Foz en el ranking</label>`;
+  {const legN=c.legDays-1,st=routeStops(CS.dest,legN,c.km);const maxH=Math.max(...(st.length?st.map(x=>x.h):[c.km/CS.speed]));
+   const box=document.createElement("div");box.className="carstops";
+   box.innerHTML=`<h4>Dónde dormir en la ruta (ida, ${legN?legN+" "+(legN>1?"noches":"noche"):"de un tirón"})</h4>${legN?`<ol>${st.map((x,i)=>`<li><b>Día ${i+1}:</b> ${Math.round(x.dayKm).toLocaleString("es-AR")} km, ~${hfmt(x.h)} de manejo → ${x.last?"llegada a "+nm(CS.dest):`dormir en <b>${x.name}</b> (km ${x.km.toLocaleString("es-AR")}${x.off>40?`, a ${x.off} km de la ruta`:""}) · hotel ~USD ${CS.hotel} por persona`}</li>`).join("")}</ol>`:`<p>${Math.round(c.km).toLocaleString("es-AR")} km sin dormir en la ruta: ~${hfmt(c.km/CS.speed)} de manejo.</p>`}${maxH>14?`<p class="w">Ojo: ${hfmt(maxH)} de manejo en un día es mucho. Turnarse al volante cada 2–3 h, o sumar una noche.</p>`:maxH>11?`<p class="w">Día largo (${hfmt(maxH)}): conviene tener 2 o más choferes.</p>`:""}<p class="hint">Las ciudades se eligen cortando la ruta real en partes iguales; la vuelta es igual al revés.</p>`;
+   el.appendChild(box);}
   const V=document.getElementById("carverdict");
   if(V){const br=cmp.filter(x=>["floripa","camboriu","rosa","floricambo"].includes(x.r.k)),ar=cmp.filter(x=>["mardelplata","villagesell","pinamar"].includes(x.r.k)),uy=cmp.filter(x=>["puntadeleste","lapedrera","puntadiablo"].includes(x.r.k));
     const rng=a=>{if(!a.length)return "";const ds=a.map(x=>-x.d),lo=Math.min(...ds),hi=Math.max(...ds);return lo>=0?`ahorra ${money(lo)}${hi!==lo?"–"+money(hi).slice(4):""}`:hi<=0?`sale ${money(-hi)}${hi!==lo?"–"+money(-lo).slice(4):""} más caro`:`da casi lo mismo (${lo<0?"+":"−"}${money(Math.abs(lo)).slice(4)} a ${hi<0?"+":"−"}${money(Math.abs(hi)).slice(4)})`;};
@@ -2147,14 +2180,15 @@ function carParamsUI(){const g=document.getElementById("carpgrid");if(!g)return;
   const n=Object.keys(CS0).filter(k=>CS[k]!==CS0[k]).length;document.getElementById("carpchg").textContent=n?`· ${n} ${n>1?"cambiados":"cambiado"}`:"· todos oficiales";}
 document.getElementById("carpgrid").addEventListener("change",e=>{const i=e.target.closest("input[data-k]");if(!i)return;const v=parseFloat(i.value);if(v>=0&&isFinite(v)){CS[i.dataset.k]=v;if(i.dataset.k==="hd")setSeg("carnoches",v);saveCar();carParamsUI();try{setSeg("carnoches",CS.hd);}catch(_){}render();}});
 document.getElementById("carpgrid").addEventListener("click",e=>{const b=e.target.closest(".cpone");if(!b)return;e.preventDefault();CS[b.dataset.k]=CS0[b.dataset.k];saveCar();carParamsUI();render();});
-document.getElementById("carreset").addEventListener("click",()=>{Object.assign(CS,CS0);setSeg("carnoches",CS.hd);saveCar();carParamsUI();render();});
+try{setSeg("carrn",CS.rn);setSeg("carnoches",CS.hd);}catch(_){}
+document.getElementById("carreset").addEventListener("click",()=>{Object.assign(CS,CS0,{rn:"auto"});setSeg("carrn","auto");setSeg("carnoches",CS.hd);saveCar();carParamsUI();render();});
 if(CARLIVE&&CARLIVE.at){const h=document.getElementById("carlivehint");if(h)h.textContent+=` Dólar, real y combustibles se actualizan solos todos los días desde sus fuentes oficiales (último: ${new Date(CARLIVE.at).toLocaleString("es-AR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}).`;}
 carParamsUI();
 document.getElementById("cardesg").addEventListener("change",e=>{CS.desg=e.target.checked;render();});
 function fillPay(){const sel=document.getElementById("carpay");if(!sel)return;const v=carPay();sel.innerHTML=Array.from({length:PAX},(_,i)=>i+1).reverse().map(n=>`<option value="${n}" ${n===v?"selected":""}>${n===PAX?`Todos (${PAX})`:n}</option>`).join("");}
 document.getElementById("carcap").addEventListener("change",e=>{CS.cap=+e.target.value;render();});
 document.getElementById("carpay").addEventListener("change",e=>{CS.pay=+e.target.value===PAX?0:+e.target.value;render();});
-[["carveh","veh",v=>v],["carn","n",Number],["carnoches","hd",Number]].forEach(([id,key,cast])=>document.getElementById(id).addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;CS[key]=cast(b.dataset.v);setSeg(id,CS[key]);if(key==="hd"){saveCar();carParamsUI();}render();}));
+[["carveh","veh",v=>v],["carn","n",Number],["carnoches","hd",Number],["carrn","rn",v=>v==="auto"?"auto":Number(v)]].forEach(([id,key,cast])=>document.getElementById(id).addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;CS[key]=cast(b.dataset.v);setSeg(id,CS[key]);if(key==="hd"){saveCar();carParamsUI();}render();}));
 
 
 // ===== Todo el año (2027): vuelo + casa + clima por mes =====
