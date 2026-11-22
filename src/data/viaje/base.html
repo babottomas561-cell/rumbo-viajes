@@ -585,7 +585,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
   </div>
   <div class="lmapwrap"><div id="lmap" aria-label="Mapa con la ubicación exacta de cada playa"></div>
     <p class="hint">Mapa real (OpenStreetMap): cada etiqueta es una playa con el total por persona según lo elegido arriba. Tocala para ver fotos, descripción, clima y precio. Fotos de Wikimedia Commons.</p></div>
-  <div class="mapwrap" hidden>
+  <div class="mapwrap" hidden style="display:none">
     <div class="mapbox" id="mapbox"><svg id="map" viewBox="0 0 690 625" role="img" aria-label="Mapa interactivo con playas, aeropuertos de llegada y ciudades de salida"></svg><div class="mapctl"><button type="button" data-z="in" aria-label="Acercar">+</button><button type="button" data-z="out" aria-label="Alejar">−</button><button type="button" data-z="reset">Ver todo</button></div><div class="mappop" id="mappop" hidden></div><div class="mapnote" id="mapnote" hidden>Para acercar: Ctrl + rueda, pellizcá o usá +</div></div>
     <div class="aplist" id="aplist"></div>
   </div>
@@ -1693,7 +1693,7 @@ function initLMBar(){const z=document.getElementById("lm-zone");if(!z||z.dataset
   z.innerHTML+=[...new Set(D.map(d=>d.zone))].map(v=>`<option>${v}</option>`).join("");
   const mx=document.getElementById("lm-max"),mv=document.getElementById("lm-maxv");mx.value=LMF.max;mv.textContent=fmt(LMF.max);
   const up=()=>{drawLMap(false);drawAirports();};
-  document.getElementById("lm-q").addEventListener("input",e=>{LMF.q=e.target.value;up();});
+  document.getElementById("lm-q").addEventListener("input",e=>{LMF.q=e.target.value;drawLMap(true);drawAirports();});
   z.addEventListener("change",e=>{LMF.zone=e.target.value;drawLMap(true);drawAirports();});
   mx.addEventListener("input",e=>{LMF.max=+e.target.value;mv.textContent=+e.target.value>=3000?"sin tope":fmt(+e.target.value);up();});
   document.getElementById("lm-color").addEventListener("change",e=>{LMF.color=e.target.value;up();});
@@ -1706,7 +1706,7 @@ function drawLMap(fit){if(!LMAP)return;initLMBar();LLAYER.clearLayers();const pt
     const cls=lmClass(r,best);
     L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${lmLabel(r)}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k})
       .bindPopup(()=>lpop(r),{maxWidth:300}).on('popupopen',()=>drawTrip(r,ll)).on('popupclose',()=>LTRIP&&LTRIP.clearLayers()).addTo(LLAYER);});
-  if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
+  if(fit&&pts.length===1)LMAP.setView(pts[0],11);else if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
   if(window.__reopen){const k=window.__reopen;window.__reopen=null;LLAYER.eachLayer(m=>{if(m.options.k===k){if(LLAYER.zoomToShowLayer)LLAYER.zoomToShowLayer(m,()=>m.openPopup());else m.openPopup();}});}}
 document.addEventListener("click",e=>{if(e.target.closest('[data-tab="mapa"]'))setTimeout(()=>{initLMap();if(LMAP){LMAP.invalidateSize();drawLMap(false);}},60);});
 function renderMap(base,out){MAPARGS=[base,out];LROWS=out;if(LMAP)drawLMap(false);else setTimeout(initLMap,0);
