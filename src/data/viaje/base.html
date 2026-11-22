@@ -829,6 +829,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
     <span class="lbl">Ordenar por</span>
     <div class="seg" id="sort" role="group" aria-label="Ordenar por">
       <button type="button" data-v="score" aria-pressed="true">Puntaje</button>
+      <button type="button" data-v="value" aria-pressed="false">Mejor valor</button>
       <button type="button" data-v="total" aria-pressed="false">Más barato</button>
       <button type="button" data-v="night" aria-pressed="false">Más noche</button>
       <button type="button" data-v="beach" aria-pressed="false">Mejor playa</button>
@@ -1382,12 +1383,16 @@ function build(){
   rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla"].includes(S.strat)))?bestKey(rt):S.strat;r.leg=rt[r.flk];r.fl=r.leg.p;
     r.bag=Math.round((CS.hub&&r.flk==="bue"?40:BAG[r.flk])*g.bag);r.ins=r.dom?0:g.ins;r.dayv=r.ai?(S.gasto==="ahorro"?8:20):Math.round(r.day*g.day);r.stayPP=r.houseTotal/PAX;r.daily=r.dayv*DAYS;r.total=r.fl+r.bag+r.ins+r.stayPP+r.tr+r.fee+r.ex+r.daily;
     r.sc={price:priceScore(r.total),beach:r.s[0],night:r.s[1],young:r.s[2],clima:NINO[r.zone],stay:r.stayS};
-    r.score=CRIT.reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sw;});
+    r.score=CRIT.reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sw;
+    const sq=CRIT.filter(c=>c.k!=="price").reduce((a,c)=>a+S.W[c.k],0)||1;r.q=CRIT.filter(c=>c.k!=="price").reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sq;});
 
   const ninoOk=r=>S.nino==="all"||(S.nino==="north"?NINO[r.zone]>=8:NINO[r.zone]>=5);
   const base=rows.filter(r=>matchQ(r)&&zoneOk(r)&&ninoOk(r)&&isFinite(r.total)&&(S.budget>=2800||r.total<=S.budget)&&r.s[1]>=S.minnight);
-  const cmp={score:(a,b)=>b.score-a.score,total:(a,b)=>a.total-b.total,night:(a,b)=>b.s[1]-a.s[1]||b.score-a.score,beach:(a,b)=>b.s[0]-a.s[0]||b.score-a.score}[S.sort];
-  base.sort(cmp);
+  const cmp={value:()=>0,score:(a,b)=>b.score-a.score,total:(a,b)=>a.total-b.total,night:(a,b)=>b.s[1]-a.s[1]||b.score-a.score,beach:(a,b)=>b.s[0]-a.s[0]||b.score-a.score}[S.sort];
+  if(S.sort==="value"){ // frontera: nadie es a la vez más barato y mejor; después, calidad por dólar
+    let mx=-1;[...base].sort((a,b)=>a.total-b.total).forEach(r=>{r.pareto=r.q>mx+0.05;if(r.pareto)mx=r.q;});
+    base.sort((a,b)=>(b.pareto-a.pareto)||(a.pareto?a.total-b.total:b.q/b.total-a.q/a.total));
+  }else base.sort(cmp);
   return {rows,base,out:base.filter(r=>!S.ap||r.ap===S.ap),all:rows.length,noflight:rows.filter(r=>!isFinite(r.total)).length};
 }
 
