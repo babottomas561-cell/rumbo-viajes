@@ -109,6 +109,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .route.na{opacity:.5}
 #lmap{height:min(72vh,640px);border-radius:14px;border:1px solid var(--line);z-index:0}
 .lpin{background:var(--surface);color:var(--ink);border:1.5px solid var(--accent);border-radius:999px;padding:2px 7px;font:700 11px var(--f-mono);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translate(-50%,-50%);display:inline-block}
+.lpin.grp.g-top{box-shadow:0 0 0 3px var(--sun)}.lpin.grp.g-ok{box-shadow:0 0 0 3px var(--good)}.lpin.grp.g-over{box-shadow:0 0 0 3px var(--warn)}
 .lmleg{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}.lmleg .lpin{transform:none;margin-right:5px}
 .lmapbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:10px 0}.lmapbar .tin{max-width:200px}.lmr{display:flex;align-items:center;gap:6px;font-size:13px}.lmr b{font-family:var(--f-mono);min-width:70px}
 .lpin .ln{font-family:var(--f-body);font-weight:600;margin-right:3px}.lpin.grp{background:var(--ink);border-color:var(--ink);color:var(--bg);text-align:center;line-height:1.25;padding:3px 8px}.lpin.ok{background:var(--good);border-color:var(--good);color:#fff}.lpin.over{background:var(--surface);border-color:var(--warn);color:var(--warn)}.lpin.top{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
@@ -1659,7 +1660,7 @@ let LMAP=null,LLAYER=null,LROWS=[];
 function initLMap(){if(LMAP||typeof L==="undefined")return;const el=document.getElementById("lmap");if(!el||el.offsetParent===null)return;
   LMAP=L.map(el,{scrollWheelZoom:false,worldCopyJump:true}).setView([-15,-50],4);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(LMAP);
-  LLAYER=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:38,showCoverageOnHover:false,iconCreateFunction:c=>{const v=c.getAllChildMarkers().map(m=>m.options.tot).filter(isFinite);return L.divIcon({className:"",html:`<span class="lpin grp">${c.getChildCount()} playas<br>desde ${Math.round(Math.min(...v)).toLocaleString("es-AR")}</span>`,iconSize:null});}}):L.layerGroup()).addTo(LMAP);drawLMap(true);}
+  LLAYER=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:38,showCoverageOnHover:false,iconCreateFunction:c=>{const v=c.getAllChildMarkers().map(m=>m.options.tot).filter(isFinite);return L.divIcon({className:"",html:LMF.color!=="total"?(()=>{const b=Math.max(...c.getAllChildMarkers().map(m=>m.options.sv).filter(isFinite));return `<span class="lpin grp ${b>=8.5?"g-top":b>=7?"g-ok":"g-over"}">${c.getChildCount()} playas<br>la mejor ${String(+b.toFixed(1)).replace(".",",")}/10</span>`;})():`<span class="lpin grp">${c.getChildCount()} playas<br>desde ${Math.round(Math.min(...v)).toLocaleString("es-AR")}</span>`,iconSize:null});}}):L.layerGroup()).addTo(LMAP);drawLMap(true);}
 function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.parts?r.parts[0][0]:r.k,nt=NINOTXT[r.zone];
   const ph=[1,2,3].map(i=>`<img src="/playas/${k}-${i}.jpg" alt="${r.name}" loading="lazy" onerror="this.remove()">`).join("");
   return `<div class="lpop"><div class="ph">${ph}</div><h4>${r.name}</h4><div class="z">${r.zone} · ${r.how||""}</div>
@@ -1693,7 +1694,7 @@ function drawAirports(){if(!LMAP)return;if(LAPL)LAPL.clearLayers();else LAPL=L.l
   Object.entries(ORGEO).forEach(([k,[la,lo,n]])=>L.circleMarker([la,lo],{radius:6,color:"#a86b12",fillColor:"#f2c230",fillOpacity:1}).bindTooltip("Salida: "+n).addTo(LAPL));}
 function initLMBar(){const z=document.getElementById("lm-zone");if(!z||z.dataset.ok)return;z.dataset.ok=1;
   z.innerHTML+=[...new Set(D.map(d=>d.zone))].map(v=>`<option>${v}</option>`).join("");
-  const mx=document.getElementById("lm-max"),mv=document.getElementById("lm-maxv");mx.value=LMF.max;mv.textContent=fmt(LMF.max);
+  const mx=document.getElementById("lm-max"),mv=document.getElementById("lm-maxv");mx.value=LMF.max;mv.textContent=LMF.max>=3000?"sin tope":fmt(LMF.max);
   const up=()=>{drawLMap(false);drawAirports();};
   document.getElementById("lm-q").addEventListener("input",e=>{LMF.q=e.target.value;drawLMap(true);drawAirports();});
   z.addEventListener("change",e=>{LMF.zone=e.target.value;drawLMap(true);drawAirports();});
@@ -1712,7 +1713,7 @@ function drawLMap(fit){if(!LMAP)return;initLMBar();lmLegend();LLAYER.clearLayers
   const ct=document.getElementById("lm-count");if(ct)ct.textContent=`${rows.length} playas en el mapa`;
   rows.forEach(r=>{const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,ll=PLL[k];if(!ll||!isFinite(r.total))return;pts.push(ll);
     const cls=lmClass(r,best);
-    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${lmLabel(r)}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k})
+    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${lmLabel(r)}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k,sv:LMF.color==="night"?(r.s[1]+r.s[2])/2:LMF.color==="beach"?r.s[0]:LMF.color==="clima"?NINO[r.zone]:null})
       .bindPopup(()=>lpop(r),{maxWidth:300}).on('popupopen',()=>drawTrip(r,ll)).on('popupclose',()=>LTRIP&&LTRIP.clearLayers()).addTo(LLAYER);});
   if(fit)LMAP.invalidateSize();if(fit&&pts.length===1)LMAP.setView(pts[0],11);else if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
   if(window.__reopen){const k=window.__reopen;window.__reopen=null;LLAYER.eachLayer(m=>{if(m.options.k===k){if(LLAYER.zoomToShowLayer)LLAYER.zoomToShowLayer(m,()=>m.openPopup());else m.openPopup();}});}}
