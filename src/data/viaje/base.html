@@ -109,6 +109,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .route.na{opacity:.5}
 #lmap{height:min(72vh,640px);border-radius:14px;border:1px solid var(--line);z-index:0}
 .lpin{background:var(--surface);color:var(--ink);border:1.5px solid var(--accent);border-radius:999px;padding:2px 7px;font:700 11px var(--f-mono);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translate(-50%,-50%);display:inline-block}
+.lmleg{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}.lmleg .lpin{transform:none;margin-right:5px}
 .lmapbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:10px 0}.lmapbar .tin{max-width:200px}.lmr{display:flex;align-items:center;gap:6px;font-size:13px}.lmr b{font-family:var(--f-mono);min-width:70px}
 .lpin .ln{font-family:var(--f-body);font-weight:600;margin-right:3px}.lpin.grp{background:var(--ink);border-color:var(--ink);color:var(--bg);text-align:center;line-height:1.25;padding:3px 8px}.lpin.ok{background:var(--good);border-color:var(--good);color:#fff}.lpin.over{background:var(--surface);border-color:var(--warn);color:var(--warn)}.lpin.top{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
 .lpop{width:270px;font:13px/1.4 var(--f-body)}.lpop .ph{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:4px;border-radius:10px;margin-bottom:8px}
@@ -582,6 +583,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
     <label class="chk"><input type="checkbox" id="lm-fit"> Solo las que entran en el presupuesto</label>
     <label class="chk"><input type="checkbox" id="lm-ap"> Mostrar aeropuertos</label>
     <span class="hint" id="lm-count"></span>
+    <div class="lmleg" id="lm-leg"></div>
   </div>
   <div class="lmapwrap"><div id="lmap" aria-label="Mapa con la ubicación exacta de cada playa"></div>
     <p class="hint">Mapa real (OpenStreetMap): cada etiqueta es una playa con el total por persona según lo elegido arriba. Tocala para ver fotos, descripción, clima y precio. Fotos de Wikimedia Commons.</p></div>
@@ -1658,7 +1660,7 @@ function initLMap(){if(LMAP||typeof L==="undefined")return;const el=document.get
   LMAP=L.map(el,{scrollWheelZoom:false,worldCopyJump:true}).setView([-15,-50],4);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(LMAP);
   LLAYER=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:38,showCoverageOnHover:false,iconCreateFunction:c=>{const v=c.getAllChildMarkers().map(m=>m.options.tot).filter(isFinite);return L.divIcon({className:"",html:`<span class="lpin grp">${c.getChildCount()} playas<br>desde ${Math.round(Math.min(...v)).toLocaleString("es-AR")}</span>`,iconSize:null});}}):L.layerGroup()).addTo(LMAP);drawLMap(true);}
-function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,nt=NINOTXT[r.zone];
+function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.parts?r.parts[0][0]:r.k,nt=NINOTXT[r.zone];
   const ph=[1,2,3].map(i=>`<img src="/playas/${k}-${i}.jpg" alt="${r.name}" loading="lazy" onerror="this.remove()">`).join("");
   return `<div class="lpop"><div class="ph">${ph}</div><h4>${r.name}</h4><div class="z">${r.zone} · ${r.how||""}</div>
     <div class="t">${fmt(r.total)} por persona</div><div class="z">${RLAB[r.flk]||""}${r.total<=S.target?" · entra en "+fmt(S.target):" · "+fmt(r.total-S.target)+" arriba"}</div>
@@ -1700,7 +1702,13 @@ function initLMBar(){const z=document.getElementById("lm-zone");if(!z||z.dataset
   document.getElementById("lm-fit").addEventListener("change",e=>{LMF.fit=e.target.checked;up();});
   document.getElementById("lm-ap").addEventListener("change",e=>{LMF.ap=e.target.checked;drawAirports();});
   document.querySelectorAll("#view button").forEach(b=>b.addEventListener("click",()=>{if(!LMAP)return;if(b.dataset.v==="br")LMAP.fitBounds([[-34,-58],[-2,-34]]);else drawLMap(true);}));}
-function drawLMap(fit){if(!LMAP)return;initLMBar();LLAYER.clearLayers();const pts=[];const rows=lmRows();const best=rows.length?Math.min(...rows.map(r=>r.total)):0;
+function lmLegend(){const el=document.getElementById("lm-leg");if(!el)return;const t=fmt(S.target);
+  const L={total:[["top","La más barata"],["ok","Entra en el presupuesto ("+t+")"],["over","Se pasa del presupuesto"]],
+    night:[["top","Mucha noche (8,5 o más)"],["ok","Algo de salida (7 a 8)"],["over","Tranquila (menos de 7)"]],
+    beach:[["top","Playa espectacular (8,5 o más)"],["ok","Muy linda (7 a 8)"],["over","Más común (menos de 7)"]],
+    clima:[["top","Buen clima con El Niño (8,5 o más)"],["ok","Aceptable (7 a 8)"],["over","Riesgo de lluvia (menos de 7)"]]}[LMF.color];
+  el.innerHTML=L.map(([c,x])=>`<span><span class="lpin ${c}">&nbsp;</span>${x}</span>`).join("")+`<span><span class="lpin grp">3</span>Varias playas juntas: acercate o tocalas</span>`;}
+function drawLMap(fit){if(!LMAP)return;initLMBar();lmLegend();LLAYER.clearLayers();const pts=[];const rows=lmRows();const best=rows.length?Math.min(...rows.map(r=>r.total)):0;
   const ct=document.getElementById("lm-count");if(ct)ct.textContent=`${rows.length} playas en el mapa`;
   rows.forEach(r=>{const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,ll=PLL[k];if(!ll||!isFinite(r.total))return;pts.push(ll);
     const cls=lmClass(r,best);
