@@ -2,7 +2,7 @@ name: Actualizar precios de vuelos
 
 on:
   schedule:
-    - cron: "17 */2 * * *" # cada 2 horas
+    - cron: "17 */4 * * *" # cada 4 horas
   workflow_dispatch:
     inputs:
       meses:

@@ -8,11 +8,12 @@ if (!URL || !KEY) throw new Error("Faltan SUPABASE_URL / SUPABASE_SECRET_KEY");
 const H = { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" };
 const ORIGINS = ["TUC", "SLA", "BUE"];
 const IX = { TUC: [0, 2, 4], BUE: [1, 3, 6], SLA: [7, 8, 9] };
-const TABS = Number(process.env.TABS || 4);
+const TABS = Number(process.env.TABS || 6);
 
-// Cada 2 horas renueva 2 meses: el año entero se renueva 2 veces por día.
-const slot = Math.floor(new Date().getUTCHours() / 2) % 6;
-const MESES = process.env.MESES ? process.env.MESES.split(",").map(Number) : [slot * 2 + 1, slot * 2 + 2];
+// Cada 4 horas renueva 1 mes (6 corridas por día): el año entero se renueva cada 2 días.
+// Enero (el mes del viaje) se renueva en todas las corridas pares para estar siempre al día.
+const run = Math.floor(Date.now() / 36e5 / 4);
+const MESES = process.env.MESES ? process.env.MESES.split(",").map(Number) : [run % 2 === 0 ? 1 : 2 + (Math.floor(run / 2) % 11)];
 
 async function sb(path, init = {}) {
   const r = await fetch(`${URL}/rest/v1/${path}`, { ...init, headers: { ...H, ...(init.headers || {}) } });
