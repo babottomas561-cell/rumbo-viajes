@@ -1,0 +1,20 @@
+name: Actualizar valores oficiales del viaje en auto
+
+on:
+  schedule:
+    - cron: "5 11 * * *" # todos los días a las 8:05 de Argentina
+  workflow_dispatch:
+
+jobs:
+  auto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/car_prices.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
