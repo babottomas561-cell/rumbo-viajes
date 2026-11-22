@@ -103,6 +103,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .route.win small{color:var(--sun-ink)}
 .route.sel{outline:2px solid var(--accent);outline-offset:-2px}
 .route.na{opacity:.5}
+button.route{font-family:inherit;line-height:inherit;color:inherit;background:var(--surface);text-align:left;cursor:pointer}button.route:hover:not(:disabled){border-color:var(--accent)}button.route.win{background:var(--sun)}
+.route small.fi{font-family:var(--f-body);font-size:10.5px;line-height:1.25}
 .links{display:flex;flex-wrap:wrap;gap:8px}
 .btn{font:600 13px var(--f-body);text-decoration:none;color:var(--accent);border:1px solid var(--accent);padding:6px 11px;border-radius:8px}
 
@@ -858,7 +860,7 @@ let TIN=6,GM=1;// GM = mes de la propuesta que se está dibujando
 const MABR=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];const lm=l=>MABR[((l&&l.m)||1)-1];// día de entrada a la casa = día de ida del vuelo de la propuesta
 const IND=()=>`2027-${String(GM).padStart(2,"0")}-${String(TIN).padStart(2,"0")}`;
 const OUTD=()=>`2027-${String(GM).padStart(2,"0")}-${String(TIN+NIGHTS()).padStart(2,"0")}`;
-const BAG={tuc:40,rio:80,bue:80,cor:40,foz:40,igr:80,sla:40}, IGR_X=20;
+const BAG={tuc:40,rio:80,bue:80,cor:40,foz:40,igr:80,sla:40,car:0}, IGR_X=20;
 // Modo de gastos: multiplicadores sobre comida diaria, excursiones y equipaje; seguro fijo
 const GASTO={normal:{day:1,ex:1,bag:1,ins:45},ahorro:{day:.7,ex:0,bag:.5,ins:30}};
 const EX={jurere:30,canasvieiras:30,daniela:20,brava:20,ingleses:20,barralagoa:30,campeche:30,armacao:30,bombinhas:30,garopaba:20,guarda:20,guarajuba:30,japaratinga:40,curazao:60,maresias:20,ubatuba:30,ilhabela:40,rio:40,buzios:50,arraialcabo:40,ilhagrande:50,paraty:50,floripa:30,camboriu:30,rosa:20,porto:40,ajuda:40,caraiva:30,trancoso:40,itacare:50,morro:50,salvador:30,praiaforte:40,maceio:40,frances:30,maragogi:50,milagres:40,galinhas:50,carneiros:40,jpa:30,pipa:40,natal:60,gostoso:40,jeri:80,canoa:50,cumbuco:50,fortaleza:50,atins:90,cabofrio:40,saquarema:20,barragrande:50,imbassai:30,icarai:40,barrasm:40,mardelplata:10,villagesell:10,pinamar:10,puntadiablo:10,lapedrera:10,puntadeleste:20,cartagena:50,santamarta:40,sanandres:40,puntacana:60,playadelcarmen:60,mancora:30,bocas:50,tamarindo:50,renaca:20,iquique:30,arica:20,montanita:20,huanchaco:30,eltunco:30,sanjuandelsur:30,puertoescondido:40,sayulita:40,playavenao:30};
@@ -1234,6 +1236,8 @@ const val=h=>(h[1]||0)*20-((h[10]??1500)/250)+(h[3]?2:0);
 // Casa elegida a mano en la tarjeta (se guarda en este navegador)
 let PICK={};try{PICK=JSON.parse(localStorage.getItem("pick27")||"{}")||{};}catch(_){}
 const savePick=()=>{try{localStorage.setItem("pick27",JSON.stringify(PICK));}catch(_){}};
+let RPICK={};try{RPICK=JSON.parse(localStorage.getItem("rpick27")||"{}")||{};}catch(_){}
+const saveRPick=()=>{try{localStorage.setItem("rpick27",JSON.stringify(RPICK));}catch(_){}};
 function pickStay(d){if(PICK[d.k]){const x=houses(d).find(y=>String(y[0][8])===PICK[d.k]);if(x)return x[0];}return pickAuto(d);}
 function pickAuto(d){const M=MORE[d.k];
   if(!M){const a=S.lvl<0?(cheapAh(d)||d.st[0]):d.st[Math.min(S.lvl,d.st.length-1)];if(fitsPax(a))return a;const f=[...(d.ah?[d.ah]:[]),...d.st].filter(fitsPax);return f.length?f[Math.min(Math.max(S.lvl,0),f.length-1)]:a;}
@@ -1380,7 +1384,8 @@ function build(){
     rows.push({...c,combo:true,houseTotal:ps.reduce((a,p)=>a+hpT(pickStay(p.d))*p.f,0),stayS:ps.reduce((a,p)=>a+stayScore(pickStay(p.d))*p.f,0),comboParts:ps.map(p=>p.d),
       ex:Math.round((ps.reduce((a,p)=>a+(EX[p.d.k]??40)*p.f,0)+20)*g.ex),fee:ps.reduce((a,p)=>a+(FEE[p.d.k]||0),0)});});
   const sw=Object.values(S.W).reduce((a,b)=>a+b,0)||1;
-  rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla"].includes(S.strat)))?bestKey(rt):S.strat;r.leg=rt[r.flk];r.fl=r.leg.p;
+  rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla"].includes(S.strat)))?bestKey(rt):S.strat;if(!r.ai&&CARKM[r.k]){const cc=carCost(r.k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else rt.car=NA;
+    if(RPICK[r.k]&&rt[RPICK[r.k]]&&isFinite(rt[RPICK[r.k]].p))r.flk=RPICK[r.k];r.leg=rt[r.flk];r.fl=r.leg.p;
     r.bag=Math.round((CS.hub&&r.flk==="bue"?40:BAG[r.flk])*g.bag);r.ins=r.dom?0:g.ins;r.dayv=r.ai?(S.gasto==="ahorro"?8:20):Math.round(r.day*g.day);r.stayPP=r.houseTotal/PAX;r.daily=r.dayv*DAYS;r.total=r.fl+r.bag+r.ins+r.stayPP+r.tr+r.fee+r.ex+r.daily;
     r.sc={price:priceScore(r.total),beach:r.s[0],night:r.s[1],young:r.s[2],clima:NINO[r.zone],stay:r.stayS};
     r.score=CRIT.reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sw;
@@ -1420,10 +1425,22 @@ function legLinks(r){const l=r.leg;if(!isFinite(l.p))return "";
   if(r.flk==="rio")return `<a class="btn" href="${GFL("TUC","RIO",l.d,l.r)}" target="_blank" rel="noopener">TUC → RIO</a><a class="btn" href="${GFL("RIO",r.ap,l.x.d,l.x.r)}" target="_blank" rel="noopener">RIO → ${r.ap}</a>`;
   if(r.flk==="igr")return `<a class="btn" href="${GFL2("TUC","IGR",l.a.d,l.r)}" target="_blank" rel="noopener">TUC → IGR</a><a class="btn" href="${GFL("IGU",r.ap,l.d,l.r)}" target="_blank" rel="noopener">IGU → ${r.ap}</a>`;
   return `<a class="btn" href="${GFL(l.o,r.ap,l.d,l.r)}" target="_blank" rel="noopener">Ver vuelos ${l.o} → ${r.ap}</a>`;}
+// Aerolínea, escalas y horas de viaje de cada forma de salir (datos de Google Flights)
+function fd0(o,ap){const f=FD[o+"-"+ap];return f&&f.o&&f.o[0];}
+function stx(n){return n==null?"":n===0?"directo":n+" escala"+(n>1?"s":"");}
+function finfo(k,l,ap){
+  if(k==="car"){const c=l.cc;return `~${c.hrs} h de manejo por tramo`;}
+  if(l.m&&l.m!==1)return [l.al,stx(l.st)].filter(Boolean).join(" · ");
+  if(k==="sla"){const f=ANIO.fl[ap]&&ANIO.fl[ap][1];return f?[f[9],stx(f[8])].filter(Boolean).join(" · "):"";}
+  if(k==="rio"||k==="igr")return "2 vuelos";
+  const o={tuc:"TUC",bue:"BUE",cor:"COR",foz:"IGU"}[k];const f=o&&fd0(o,ap);
+  return f?[f[2],stx(f[1]),f[6]].filter(Boolean).join(" · "):"";}
 function flightRows(r){const l=r.leg;
   if(r.flk==="rio")return `<span>TUC ↔ Río (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.leg1)}</span><span>Río ↔ ${r.ap} (${l.x.d}→${l.x.r} ${lm(l)})</span><span>${fmt(l.leg2)}</span>`;
   if(r.flk==="igr")return `<span>Vuelo TUC ↔ Puerto Iguazú (ida el ${dd(l.a.d)})</span><span>${fmt(l.leg1)}</span><span>Remís y cruce a Foz, ida y vuelta</span><span>${fmt(IGR_X)}</span><span>Vuelo Foz ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;
   if(r.flk==="tuc")return `<span>Vuelo TUC ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.p)}</span>`;
+  if(r.flk==="car"){const c=l.cc;return `<span>En auto (${CS.n} ${CS.n>1?"autos":"auto"}): nafta, peajes${c.cv?", Carta Verde":""}, ${c.legDays*2} noches de ruta con hotel y comida</span><span>${fmt(l.p)}</span>`;}
+  if(r.flk==="sla")return `<span>${CS.hub?"Auto TUC ↔ Salta y estacionamiento":"Micro TUC ↔ Salta (estimado)"}</span><span>${fmt(hubCost("sla"))}</span><span>Vuelo SLA ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;
   const tramo=(CS.hub?{bue:["Auto TUC ↔ Bs. As. y estacionamiento",hubCar("bue")],cor:["Auto TUC ↔ Córdoba y estacionamiento",hubCar("cor")],foz:["Auto TUC ↔ Foz, Carta Verde y estacionamiento",hubCar("foz")]}:{bue:["TUC ↔ EZE en JetSMART",TUC_BUE],cor:["Micro TUC ↔ Córdoba (estimado)",BUS_COR],foz:["Micro TUC ↔ Puerto Iguazú (estimado)",BUS_FOZ]})[r.flk];
   return `<span>${tramo[0]}</span><span>${fmt(tramo[1])}</span><span>Vuelo ${l.o} ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;}
 
@@ -1439,7 +1456,8 @@ function render(){PAX=S.pax;DAYS=S.nights+1;syncQuick();try{if(typeof renderAnio
   list.innerHTML=fmTop+out.map((r,i)=>{TIN=Math.max(1,r.leg.d||6);GM=r.leg.m||1;
     const best=bestKey(r.rt);const nt=NINOTXT[r.zone];
     const bars=CRIT.map(c=>`<span>${r.ai&&c.k==="stay"?"Calidad del hotel":c.l}</span><span class="bar"><i style="transform:scaleX(${(r.sc[c.k]/10).toFixed(2)})"></i></span><span class="v">${r.sc[c.k].toFixed(1)}</span>`).join("");
-    const rbox=RKEYS.filter(k=>S.mes===1||isFinite(r.rt[k].p)).map(k=>{const l=r.rt[k];const ok=isFinite(l.p);return `<div class="route ${ok&&k===best?"win":""} ${k===r.flk?"sel":""} ${ok?"":"na"}"><span>${RLAB[k]}</span><b>${ok?Math.round(l.p).toLocaleString("es-AR"):"—"}</b><small>${ok?l.d+"→"+l.r+" "+lm(l):"sin datos"}</small></div>`;}).join("");
+    const rbox=[...RKEYS,"car"].filter(k=>k==="car"?isFinite(r.rt.car.p):(S.mes===1||isFinite(r.rt[k].p))).map(k=>{const l=r.rt[k];const ok=isFinite(l.p);const fi=ok?finfo(k,l,r.ap):"";
+      return `<button type="button" class="route ${ok&&k===best?"win":""} ${k===r.flk?"sel":""} ${ok?"":"na"}" ${ok?`data-rpick="${r.k}" data-rk="${k}"`:"disabled"} aria-pressed="${k===r.flk}" title="${ok?"Usar esta forma de viajar en el total":"Sin datos"}"><span>${k==="car"?"En auto":RLAB[k]}${k===r.flk&&RPICK[r.k]?" ✓":""}</span><b>${ok?Math.round(l.p+(k==="car"?r.tr:0)).toLocaleString("es-AR"):"—"}</b><small>${ok?(k==="car"?`${l.cc.km.toLocaleString("es-AR")} km`:l.d+"→"+l.r+" "+lm(l)):"sin datos"}</small>${fi?`<small class="fi">${fi}</small>`:""}</button>`;}).join("")+(RPICK[r.k]?`<button type="button" class="linkbtn" data-rpick="${r.k}" data-rk="">Volver a la más barata</button>`:"");
     let stays;
     if(r.combo){stays=r.comboParts.map(d=>`<div class="stays-head"><b>${d.name}</b><span class="headlinks"><a class="region" href="${GIMG(d.name+" playa")}" target="_blank" rel="noopener">Fotos de la playa</a><a class="region" href="${GMAP(d.name)}" target="_blank" rel="noopener">Mapa</a><a class="region" href="${ABS(d.q)}" target="_blank" rel="noopener">Más casas</a></span></div>${stayGrid(d)}`).join("");}
     else if(r.ai){stays=aiGrid(r);}else{stays=`<div class="stays-head"><span class="lbl">Casas para ${PAX} · ${NIGHTS()} noches</span><span class="headlinks"><a class="region" href="${GIMG(r.name+" playa")}" target="_blank" rel="noopener">Fotos de la playa</a><a class="region" href="${GMAP(r.name)}" target="_blank" rel="noopener">Ver en Google Maps</a><a class="region" href="${ABS(r.q)}" target="_blank" rel="noopener">Más casas en Airbnb</a></span></div>${r.flag?`<p class="flag">${r.flag}</p>`:""}${stayGrid(r)}`;}
@@ -1892,6 +1910,8 @@ function renderAnioDet(k,m){const r=yRows().find(x=>x.d.k===k);const box=documen
 
 document.addEventListener("click",e=>{const b=e.target.closest("[data-yprop]");if(!b)return;S.mes=+b.dataset.ym;S.q="";S.zone="all";try{setSeg("zone","all");}catch(_){}render();if(window.__syncQuick)__syncQuick();if(window.__syncChips)__syncChips();},true);
 // Elegir una casa en la tarjeta: el total de esa propuesta se recalcula con esa casa
+document.addEventListener("click",e=>{const b=e.target.closest("[data-rpick]");if(!b)return;e.preventDefault();e.stopPropagation();
+  const k=b.dataset.rpick,v=b.dataset.rk;if(!v||RPICK[k]===v)delete RPICK[k];else RPICK[k]=v;saveRPick();render();});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-pick],[data-unpick]");if(!b)return;e.preventDefault();e.stopPropagation();
   const k=b.dataset.pick||b.dataset.unpick;if(b.dataset.unpick!=null||PICK[k]===b.dataset.hid)delete PICK[k];else PICK[k]=b.dataset.hid;savePick();
   const art=b.closest("article.card"),id=art&&art.id,top=art?art.getBoundingClientRect().top:0;
