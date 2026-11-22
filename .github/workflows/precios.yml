@@ -1,0 +1,31 @@
+name: Actualizar precios de vuelos
+
+on:
+  schedule:
+    - cron: "17 */2 * * *" # cada 2 horas
+  workflow_dispatch:
+    inputs:
+      meses:
+        description: "Meses a renovar (ej. 1,2). Vacío = rotación automática"
+        required: false
+
+concurrency:
+  group: precios
+  cancel-in-progress: false
+
+jobs:
+  vuelos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.49.1
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/flights-worker.mjs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          MESES: ${{ inputs.meses }}
