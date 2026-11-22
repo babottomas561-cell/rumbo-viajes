@@ -109,7 +109,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .route.na{opacity:.5}
 #lmap{height:min(72vh,640px);border-radius:14px;border:1px solid var(--line);z-index:0}
 .lpin{background:var(--surface);color:var(--ink);border:1.5px solid var(--accent);border-radius:999px;padding:2px 7px;font:700 11px var(--f-mono);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translate(-50%,-50%);display:inline-block}
-.lpin.grp{background:var(--ink);border-color:var(--ink);color:var(--bg);text-align:center;line-height:1.25;padding:3px 8px}.lpin.ok{background:var(--good);border-color:var(--good);color:#fff}.lpin.over{background:var(--surface);border-color:var(--warn);color:var(--warn)}.lpin.top{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
+.lpin .ln{font-family:var(--f-body);font-weight:600;margin-right:3px}.lpin.grp{background:var(--ink);border-color:var(--ink);color:var(--bg);text-align:center;line-height:1.25;padding:3px 8px}.lpin.ok{background:var(--good);border-color:var(--good);color:#fff}.lpin.over{background:var(--surface);border-color:var(--warn);color:var(--warn)}.lpin.top{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
 .lpop{width:270px;font:13px/1.4 var(--f-body)}.lpop .ph{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:4px;border-radius:10px;margin-bottom:8px}
 .lpop .ph img{width:270px;height:170px;object-fit:cover;flex:0 0 100%;scroll-snap-align:start;border-radius:10px;background:#ccc}
 .lpop h4{margin:0 0 2px;font:700 16px var(--f-display)}.lpop .z{color:#557079;font-size:12px}.lpop .t{font:700 15px var(--f-mono);margin:6px 0 2px}
@@ -1600,7 +1600,7 @@ function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMA
 function drawLMap(fit){if(!LMAP)return;LLAYER.clearLayers();const pts=[];const best=LROWS.length?Math.min(...LROWS.map(r=>r.total)):0;
   LROWS.forEach(r=>{const k=r.combo&&r.comboParts?r.comboParts[0].k:r.k,ll=PLL[k];if(!ll||!isFinite(r.total))return;pts.push(ll);
     const cls=r.total===best?"top":r.total<=S.target?"ok":"over";
-    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}">${Math.round(r.total).toLocaleString("es-AR")}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k})
+    L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${Math.round(r.total).toLocaleString("es-AR")}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k})
       .bindPopup(()=>lpop(r),{maxWidth:300}).on('popupopen',()=>drawTrip(r,ll)).on('popupclose',()=>LTRIP&&LTRIP.clearLayers()).addTo(LLAYER);});
   if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
   if(window.__reopen){const k=window.__reopen;window.__reopen=null;LLAYER.eachLayer(m=>{if(m.options.k===k){if(LLAYER.zoomToShowLayer)LLAYER.zoomToShowLayer(m,()=>m.openPopup());else m.openPopup();}});}}
