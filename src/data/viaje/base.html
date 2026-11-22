@@ -1167,7 +1167,7 @@ const DEF={mes:1,m1:1,m2:12,q:"",lv:"cards",aloj:"casa",pax:6,nights:8,target:15
 const S={...DEF,W:Object.fromEntries(CRIT.map(c=>[c.k,c.def]))};
 const LV=["Económica","Recomendada","Premium"];
 const RKEYS=["tuc","sla","rio","bue","cor","foz","igr"];
-const RLAB={tuc:"Desde TUC",sla:"Vía Salta",rio:"Conexión Río",bue:"Vía Bs. As.",cor:"Vía Córdoba",foz:"Foz en micro",igr:"Foz en avión"};
+const RLAB={car:"En auto",tuc:"Desde TUC",sla:"Vía Salta",rio:"Conexión Río",bue:"Vía Bs. As.",cor:"Vía Córdoba",foz:"Foz en micro",igr:"Foz en avión"};
 const dd=x=>x===0?"31 dic":x+" ene";
 const G=()=>GASTO[S.gasto];
 const fmt=n=>"USD "+Math.round(n).toLocaleString("es-AR");
@@ -1562,8 +1562,9 @@ function renderMap(base,out){MAPARGS=[base,out];
   const top=out[0];let path="";
   if(top){const a=APGEO[top.ap],T=ORGEO.TUC.slice(0,2),k=top.flk;
     if(k==="tuc")path=`<path class="path" d="${curve(T,a)}"/>`;
+    else if(k==="car")path=`<path class="path bus" d="M${P(...T).join(" ")}L${P(...a).join(" ")}"/>`;
     else if(k==="rio")path=`<path class="path" d="${curve(T,APGEO.RIO)}"/><path class="path" d="${curve(APGEO.RIO,a,.15)}"/>`;
-    else{const hh={bue:"BUE",cor:"COR",foz:"IGU",igr:"IGU"}[k];if(hh){const H=ORGEO[hh].slice(0,2);const air=k==="bue"||k==="igr";
+    else{const hh={bue:"BUE",cor:"COR",foz:"IGU",igr:"IGU",sla:"SLA"}[k];if(hh){const H=ORGEO[hh].slice(0,2);const air=k==="bue"||k==="igr";
       path=`<path class="path ${air?"":"bus"}" d="${air?curve(T,H):"M"+P(...T).join(" ")+"L"+P(...H).join(" ")}"/><path class="path" d="${curve(H,a)}"/>`;}}}
   const orig=Object.entries(ORGEO).map(([k,[la,lo,n]])=>{const [x,y]=P(la,lo);const L=S.view==="am"&&k==="BUE";return `<g class="orig"><circle cx="${x}" cy="${y}" r="${4*s}"/><text x="${L?x-8*s:x+8*s}" y="${y+4*s}" text-anchor="${L?"end":"start"}">${n}</text></g>`;}).join("");
   const shown=S.view==="br"?MAPAPS.filter(ap=>BRAPS.includes(ap)||ap==="SAO"):MAPAPS;
