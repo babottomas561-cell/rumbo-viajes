@@ -94,6 +94,18 @@ function roomUrl(id: string, month: number, nights: number, travelers: number) {
   return `https://www.airbnb.com.ar/rooms/${id}?check_in=${checkIn}&check_out=${checkOut.toISOString().slice(0, 10)}&adults=${travelers}`;
 }
 
+function flightOptionsFor(flight: FlightMonth, airport: string, month: number) {
+  const options: Array<{ label: string; origin: string; price: number; day: number; note?: string }> = [];
+  if (flight[0] != null) options.push({ label: "Desde Tucumán", origin: "TUC", price: flight[0], day: 10, note: flight[4] ?? undefined });
+  if (flight[1] != null) options.push({ label: "Vía Buenos Aires", origin: "BUE", price: flight[1] + 283, day: 10, note: `${flight[6] ?? "Vuelo"} + tramo TUC–BUE` });
+  if (month === 1) {
+    for (const route of januaryFlightOptions[airport] ?? []) {
+      if (route.origin !== "TUC" && route.origin !== "BUE") options.push(route);
+    }
+  }
+  return options.sort((a, b) => a.price - b.price);
+}
+
 function proposalBackground(key: string, zone: string) {
   const fallbackByZone: Record<string, string> = {
     "Costa argentina": "buzios",
@@ -132,7 +144,7 @@ export function TripPlanner() {
         const house = yearly.hr[key]?.[String(month)];
         const climate = yearly.cl[key]?.[String(month)];
         if (!flight || !house || !climate) return null;
-        const flightEach = flight[0] ?? flight[1] ?? 0;
+        const flightEach = flight[0] ?? (flight[1] != null ? flight[1] + 283 : 0);
         const experience = experiences[key];
         const hotel = allInclusive[key]?.[0];
         if (stayType === "all-inclusive" && !hotel) return null;
@@ -232,12 +244,9 @@ export function TripPlanner() {
                   <details className="proposal-detail" open={index < 3}>
                     <summary>Ver ficha completa: vuelos y alojamientos</summary>
                     <div className="flight-option-grid">
-                      {(month === 1 ? januaryFlightOptions[item.destination.ap] ?? [] : [
-                        item.flight[0] != null ? { label: "Desde Tucumán", price: item.flight[0], origin: "TUC", day: 10 } : null,
-                        item.flight[1] != null ? { label: "Vía Buenos Aires", price: item.flight[1] + 283, origin: "BUE", day: 10 } : null,
-                      ].filter(Boolean) as Array<Pick<FlightOption, "label" | "price" | "origin" | "day">>).map((option, optionIndex) => (
+                      {flightOptionsFor(item.flight, item.destination.ap, month).map((option, optionIndex) => (
                         <a className={optionIndex === 0 ? "selected" : ""} href={`https://www.google.com/travel/flights?q=Flights%20from%20${option.origin}%20to%20${item.destination.ap}%20in%20${monthNames[month - 1]}%202027&curr=USD&hl=es-419`} target="_blank" rel="noreferrer" key={`${option.label}-${option.origin}`}>
-                          <span>{option.label}</span><strong>{usd(option.price)}</strong><small>por persona · salida ref. día {option.day}</small>
+                          <span>{option.label}</span><strong>{usd(option.price)}</strong><small>{option.note ? `${option.note} · ` : ""}por persona · salida ref. día {option.day}</small>
                         </a>
                       ))}
                     </div>
