@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import "./vuelos.css";
@@ -21,7 +22,11 @@ function ago(iso: string) {
   return h < 1 ? "hace minutos" : h < 48 ? `hace ${h} h` : `hace ${Math.round(h / 24)} días`;
 }
 
-export default async function Vuelos({ searchParams }: { searchParams: Sp }) {
+export default function Vuelos({ searchParams }: { searchParams: Sp }) {
+  return <Suspense fallback={<main className="vz"><p>Cargando precios…</p></main>}><VuelosData searchParams={searchParams} /></Suspense>;
+}
+
+async function VuelosData({ searchParams }: { searchParams: Sp }) {
   const sp = await searchParams;
   const m = Math.min(12, Math.max(1, Number(sp.m) || 1));
   const db = getSupabaseAdmin();
