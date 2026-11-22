@@ -67,7 +67,14 @@ export async function GET(req: Request) {
   const batch = Array.from({ length: Math.min(BATCH, jobs.length) }, (_, k) => jobs[(start + k) % jobs.length]);
 
   const fetched_at = new Date().toISOString();
-  const results = await Promise.all(batch.map(async ([o, ap, m]) => ({ o, ap, m, opts: await fetchRoute(o, ap, m) })));
+  const results: { o: string; ap: string; m: number; opts: Opt[] }[] = [];
+  for (let i = 0; i < batch.length; i += 4) {
+    results.push(...(await Promise.all(batch.slice(i, i + 4).map(async ([o, ap, m]) => {
+      let opts = await fetchRoute(o, ap, m);
+      if (!opts.length) opts = await fetchRoute(o, ap, m);
+      return { o, ap, m, opts };
+    }))));
+  }
 
   const rows = results.flatMap(({ o, ap, m, opts }) =>
     opts.map((x) => ({
