@@ -104,7 +104,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .route.sel{outline:2px solid var(--accent);outline-offset:-2px}
 .route.na{opacity:.5}
 button.route{font-family:inherit;line-height:inherit;color:inherit;background:var(--surface);text-align:left;cursor:pointer}button.route:hover:not(:disabled){border-color:var(--accent)}button.route.win{background:var(--sun)}
-.route small.fi{font-family:var(--f-body);font-size:10.5px;line-height:1.25}
+.route small.fi{font-family:var(--f-body);font-size:10.5px;line-height:1.3}.route .hh{font-family:var(--f-mono);font-size:11px;font-weight:700}
 .links{display:flex;flex-wrap:wrap;gap:8px}
 .btn{font:600 13px var(--f-body);text-decoration:none;color:var(--accent);border:1px solid var(--accent);padding:6px 11px;border-radius:8px}
 
@@ -1428,13 +1428,26 @@ function legLinks(r){const l=r.leg;if(!isFinite(l.p))return "";
 // Aerolínea, escalas y horas de viaje de cada forma de salir (datos de Google Flights)
 function fd0(o,ap){const f=FD[o+"-"+ap];return f&&f.o&&f.o[0];}
 function stx(n){return n==null?"":n===0?"directo":n+" escala"+(n>1?"s":"");}
+function fd0(o,ap){const f=FD[o+"-"+ap];return f&&f.o&&f.o[0];}
+function stx(n){return n==null?"":n===0?"directo":n+" escala"+(n>1?"s":"");}
+const hrs=t=>{if(!t)return null;const h=/(\d+) h/.exec(t),m=/(\d+) min/.exec(t);return (h?+h[1]:0)+(m?+m[1]/60:0);};
+const hfmt=x=>{const h=Math.floor(x),m=Math.round((x-h)*60);return m?`${h} h ${String(m).padStart(2,"0")}`:`${h} h`;};
+const fdur=(o,ap)=>{const f=fd0(o,ap);return f?hrs(f[6]):null;};
+// Aerolínea, escalas y horas de viaje de puerta a puerta (micro + cruce + vuelos), por tramo de ida
 function finfo(k,l,ap){
-  if(k==="car"){const c=l.cc;return `~${c.hrs} h de manejo por tramo`;}
+  if(k==="car"){const c=l.cc;return `🚗 ~${c.hrs} h de manejo (${c.legDays} ${c.legDays>1?"días":"día"})`;}
   if(l.m&&l.m!==1)return [l.al,stx(l.st)].filter(Boolean).join(" · ");
-  if(k==="sla"){const f=ANIO.fl[ap]&&ANIO.fl[ap][1];return f?[f[9],stx(f[8])].filter(Boolean).join(" · "):"";}
-  if(k==="rio"||k==="igr")return "2 vuelos";
-  const o={tuc:"TUC",bue:"BUE",cor:"COR",foz:"IGU"}[k];const f=o&&fd0(o,ap);
-  return f?[f[2],stx(f[1]),f[6]].filter(Boolean).join(" · "):"";}
+  const parts=[];let tot=0,ok=true;const leg=(lab,h)=>{if(h==null){ok=false;parts.push(lab);}else{tot+=h;parts.push(`${lab} ${hfmt(h)}`);}};
+  let head="";
+  if(k==="tuc"){const f=fd0("TUC",ap);head=f?[f[2],stx(f[1])].join(" · "):"";leg("✈",fdur("TUC",ap));}
+  if(k==="bue"){const f=fd0("BUE",ap);head=f?[f[2],stx(f[1])].join(" · "):"";if(CS.hub)leg("🚗",13);else leg("✈ TUC-EZE",fdur("TUC","BUE"));leg("✈",fdur("BUE",ap));}
+  if(k==="cor"){const f=fd0("COR",ap);head=f?[f[2],stx(f[1])].join(" · "):"";leg(CS.hub?"🚗":"🚌",CS.hub?6:9);leg("✈",fdur("COR",ap));}
+  if(k==="foz"){const f=fd0("IGU",ap);head=f?[f[2],stx(f[1])].join(" · "):"";leg(CS.hub?"🚗":"🚌",CS.hub?16:BUS_FOZ_H);leg("cruce",1);leg("✈",fdur("IGU",ap));}
+  if(k==="igr"){head="2 vuelos";leg("✈ TUC-IGR",fdur("TUC","IGR"));leg("cruce",1);leg("✈",fdur("IGU",ap));}
+  if(k==="rio"){head="2 vuelos, cambio en Río";leg("✈ TUC-RIO",fdur("TUC","RIO"));leg("✈",fdur("RIO",ap));}
+  if(k==="sla"){const f=ANIO.fl[ap]&&ANIO.fl[ap][1];head=f?[f[9],stx(f[8])].filter(Boolean).join(" · "):"";leg(CS.hub?"🚗":"🚌",4.5);leg("✈",f&&f[10]?hrs(f[10]):null);}
+  if(!parts.length)return head;
+  return `${head?head+"<br>":""}${ok?`<b class="hh">⏱ ${hfmt(tot)} en total</b><br>`:""}${parts.join(" + ")}`;}
 function flightRows(r){const l=r.leg;
   if(r.flk==="rio")return `<span>TUC ↔ Río (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.leg1)}</span><span>Río ↔ ${r.ap} (${l.x.d}→${l.x.r} ${lm(l)})</span><span>${fmt(l.leg2)}</span>`;
   if(r.flk==="igr")return `<span>Vuelo TUC ↔ Puerto Iguazú (ida el ${dd(l.a.d)})</span><span>${fmt(l.leg1)}</span><span>Remís y cruce a Foz, ida y vuelta</span><span>${fmt(IGR_X)}</span><span>Vuelo Foz ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;

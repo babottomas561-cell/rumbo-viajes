@@ -116,8 +116,9 @@ if (snap && ok.length) {
     const [pi, si, ai] = IX[o];
     anio.fl[ap] ??= {};
     const row = (anio.fl[ap][String(m)] ??= [null, null, null, null, null, 0, null, null, null, null]);
-    while (row.length < 10) row.push(null);
+    while (row.length < 11) row.push(null);
     row[pi] = opts[0].price; row[si] = opts[0].stops; row[ai] = opts[0].airline;
+    if (o === "SLA") row[10] = opts[0].dur;
     row[5] = 0; // ya está a la venta: deja de ser estimado
   }
   await sb("app_snapshots?on_conflict=key", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "anio", data: anio, updated_at: fetched_at }) });
