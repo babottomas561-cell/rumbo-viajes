@@ -13,6 +13,12 @@ export async function GET() {
     if (i >= 0 && j > i) html = html.slice(0, i) + "const ANIO=" + JSON.stringify(data.data).replace(/</g, "\\u003c") + html.slice(j);
     const d = new Date(data.updated_at).toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
     html = html.replace(/Precios del [^<]*?: los de meses/, `Precios del ${d}: los de meses`);
+    const hours = (Date.now() - new Date(data.updated_at).getTime()) / 36e5;
+    if (hours > 12) {
+      const banner = `<div style="position:sticky;top:0;z-index:999;background:#f2c230;color:#3a2c00;padding:8px 16px;font:500 14px Inter,system-ui,sans-serif;text-align:center">Ojo: los precios son del ${d} (hace ${Math.round(hours)} h). Confirmalos antes de reservar.</div>`;
+      html = html.replace(/<body[^>]*>/, (m) => m + banner);
+      if (!/<body/.test(html)) html = banner + html;
+    }
   }
   return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=300, stale-while-revalidate=3600" } });
 }
