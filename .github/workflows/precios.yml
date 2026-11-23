@@ -11,6 +11,12 @@ on:
       dias:
         description: "Días de salida (ej. 3,10,17,24). Vacío = 10"
         required: false
+      modo:
+        description: "iv (ida y vuelta) · ida · vuelta (solo ida)"
+        required: false
+      origenes:
+        description: "Orígenes (ej. TUC,BUE). Vacío = TUC,SLA,BUE"
+        required: false
 
 concurrency:
   group: precios
@@ -19,7 +25,7 @@ concurrency:
 jobs:
   vuelos:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,3 +39,6 @@ jobs:
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           MESES: ${{ inputs.meses }}
           DIAS: ${{ inputs.dias }}
+          MODO: ${{ inputs.modo }}
+          ORIGENES: ${{ inputs.origenes }}
+          TABS: 3

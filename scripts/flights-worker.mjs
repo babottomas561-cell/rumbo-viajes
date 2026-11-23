@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 const URL = process.env.SUPABASE_URL, KEY = process.env.SUPABASE_SECRET_KEY;
 if (!URL || !KEY) throw new Error("Faltan SUPABASE_URL / SUPABASE_SECRET_KEY");
 const H = { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" };
-const ORIGINS = ["TUC", "SLA", "BUE"];
+const ORIGINS = (process.env.ORIGENES || "TUC,SLA,BUE").split(",");
 const IX = { TUC: [0, 2, 4], BUE: [1, 3, 6], SLA: [7, 8, 9] };
 const TABS = Number(process.env.TABS || 3);
 
@@ -25,14 +25,14 @@ function parse(labels) {
   const out = [], seen = new Set();
   for (const raw of labels) {
     const a = raw.replace(/[  ]/g, " ");
-    if (!a.startsWith("Precio total ida y vuelta desde")) continue;
-    const p = a.match(/desde ([\d.,]+) dólares/);
+    if (!a.startsWith("Precio total ida y vuelta desde") && !/^Desde [\d.,]+ dólares/.test(a)) continue;
+    const p = a.match(/[Dd]esde ([\d.,]+) dólares/);
     const al = a.match(/Vuelo (?:sin escalas |directo )?de (.+?)(?: con \d+ escalas?| sin escalas)?\./);
     const sl = a.match(/Sale de (.+?) el (.+?) a las (.+?) y llega a (.+?) el (.+?) a las (.+?)\.\.?\s/);
     const du = a.match(/Duración total: (.+?)\./);
     const st = a.match(/con (\d+) escalas?/);
     // Escalas: "Escala (1 de 2) de 2 h 10 min en Aeropuerto ... (GRU)"
-    const lay = [...a.matchAll(/Escala(?: \(\d+ de \d+\))? de (.+?) en (.+?)\./g)].map((m) => `${m[1]} en ${m[2]}`);
+    const lay = [...a.matchAll(/escala \(\d+ de \d+\) en (.+?) tiene una duración de (.+?)\.(?: Transbordo aquí de (.+?) a (.+?)\.)?/gi)].map((m) => `${m[2]} en ${m[1]}${m[3] ? ` (cambio de aeropuerto: ${m[3]} → ${m[4]})` : ""}`);
     if (!p || !sl) continue;
     const airline = al?.[1] ?? "?", key = airline + sl[3] + sl[6];
     if (seen.has(key)) continue;
@@ -47,13 +47,16 @@ function parse(labels) {
 // Fechas de salida a buscar (día del mes; vuelta 8 días después). Por defecto solo el 10. Ej. DIAS="3,10,17,24"
 const DIAS = (process.env.DIAS || "10").split(",").map(Number);
 const ymd = (m, d) => { const t = new Date(Date.UTC(2027, m - 1, d)); return t.toISOString().slice(0, 10); };
+// MODO: "iv" (ida y vuelta, 8 noches) · "ida" (solo ida origen→destino) · "vuelta" (solo ida destino→origen)
+const MODO = process.env.MODO || "iv";
 async function scrape(page, o, ap, m, d = 10) {
-  const u = `https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%20${ymd(m, d)}%20through%20${ymd(m, d + 8)}&curr=USD&hl=es-419&gl=AR`;
+  const u = MODO === "iv" ? `https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%20${ymd(m, d)}%20through%20${ymd(m, d + 8)}&curr=USD&hl=es-419&gl=AR`
+    : `https://www.google.com/travel/flights?q=Flights%20from%20${MODO === "ida" ? o : ap}%20to%20${MODO === "ida" ? ap : o}%20on%20${ymd(m, d)}%20one%20way&curr=USD&hl=es-419&gl=AR`;
   for (let i = 0; i < 2; i++) {
     try {
       await page.goto(u, { waitUntil: "domcontentloaded", timeout: 45000 });
       const state = await page.waitForFunction(() => {
-        if (document.querySelector('[aria-label^="Precio total ida y vuelta"]')) return "ok";
+        if (document.querySelector('[aria-label^="Precio total ida y vuelta"]') || [...document.querySelectorAll("[aria-label^='Desde ']")].some((e) => /dólares/.test(e.getAttribute("aria-label")))) return "ok";
         if (/No se encontraron resultados/.test(document.body.innerText)) return "none";
         return false;
       }, null, { timeout: 40000, polling: 500 }).then((h) => h.jsonValue()).catch(() => "timeout");
@@ -104,6 +107,20 @@ await Promise.all(Array.from({ length: Math.min(TABS, retry.length) }, async () 
 }));
 await browser.close();
 
+if (MODO !== "iv") {
+  const okw = results.filter((r) => r.opts.length);
+  const [ws] = await sb("app_snapshots?key=eq.ow&select=data");
+  const ow = ws?.data || {};
+  // clave "ORIGEN>DESTINO|2027-01-12" (el sentido real del vuelo): [precio, escalas, aerolínea, sale, llega, duración, escalas detalle, aeropuerto salida, aeropuerto llegada, fecha dato]
+  for (const { o, ap, m, d, opts } of okw) {
+    const x = opts[0], [a, b] = MODO === "ida" ? [o, ap] : [ap, o];
+    ow[`${a}>${b}|${ymd(m, d)}`] = [x.price, x.stops, x.airline, x.dep, x.arr, x.dur, x.lay, x.from, x.to, fetched_at.slice(0, 10)];
+  }
+  await sb("app_snapshots?on_conflict=key", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "ow", data: ow, updated_at: fetched_at }) });
+  await sb("sync_runs", { method: "POST", headers: { Prefer: "return=minimal" }, body: JSON.stringify({ source: "github_actions_ow", quotes: okw.length, note: `${MODO} meses ${MESES} días ${DIAS}` }) });
+  console.log("listo solo ida", MODO, okw.length, "de", results.length);
+  process.exit(okw.length ? 0 : 1);
+}
 const rows = results.flatMap(({ o, ap, m, d, opts }) => opts.map((x) => ({
   origin: o, dest: ap, depart_on: ymd(m, d), return_on: ymd(m, d + 8),
   price_usd: x.price, stops: x.stops, airline: x.airline, airlines: x.airline.split(/,| y /).map((s) => s.trim()).filter(Boolean),
