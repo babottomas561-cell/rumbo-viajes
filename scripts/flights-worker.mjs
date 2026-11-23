@@ -44,9 +44,11 @@ function parse(labels) {
 }
 
 // Devuelve {opts, none}: none=true cuando Google dice "No se encontraron resultados" (no hay vuelos, no es error).
-async function scrape(page, o, ap, m) {
-  const mm = String(m).padStart(2, "0");
-  const u = `https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%202027-${mm}-10%20through%202027-${mm}-18&curr=USD&hl=es-419&gl=AR`;
+// Fechas de salida a buscar (día del mes; vuelta 8 días después). Por defecto solo el 10. Ej. DIAS="3,10,17,24"
+const DIAS = (process.env.DIAS || "10").split(",").map(Number);
+const ymd = (m, d) => { const t = new Date(Date.UTC(2027, m - 1, d)); return t.toISOString().slice(0, 10); };
+async function scrape(page, o, ap, m, d = 10) {
+  const u = `https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%20${ymd(m, d)}%20through%20${ymd(m, d + 8)}&curr=USD&hl=es-419&gl=AR`;
   for (let i = 0; i < 2; i++) {
     try {
       await page.goto(u, { waitUntil: "domcontentloaded", timeout: 45000 });
@@ -68,7 +70,7 @@ async function scrape(page, o, ap, m) {
 
 const dests = await sb("destinations?select=airport");
 const aps = [...new Set(dests.map((d) => d.airport).filter(Boolean))].sort();
-const jobs = MESES.flatMap((m) => aps.flatMap((a) => ORIGINS.filter((o) => o !== a).map((o) => [o, a, m]))).slice(0, Number(process.env.LIMIT || 1e9));
+const jobs = MESES.flatMap((m) => DIAS.flatMap((d) => aps.flatMap((a) => ORIGINS.filter((o) => o !== a).map((o) => [o, a, m, d])))).slice(0, Number(process.env.LIMIT || 1e9));
 console.log(`meses ${MESES} · ${jobs.length} rutas`);
 
 const browser = await chromium.launch();
@@ -82,10 +84,10 @@ await Promise.all(Array.from({ length: TABS }, async () => {
   const page = await ctx.newPage();
   await page.route(/\.(png|jpg|jpeg|gif|webp|woff2?)$/, (r) => r.abort());
   while (next < jobs.length) {
-    const [o, ap, m] = jobs[next++];
-    const { opts, none } = await scrape(page, o, ap, m);
-    results.push({ o, ap, m, opts, none });
-    console.log(`${results.length}/${jobs.length} ${o}-${ap} ${m}: ${opts.length ? "USD " + opts[0].price + " " + opts[0].airline : none ? "Google: sin vuelos" : "sin dato"}`);
+    const [o, ap, m, d] = jobs[next++];
+    const { opts, none } = await scrape(page, o, ap, m, d);
+    results.push({ o, ap, m, d, opts, none });
+    console.log(`${results.length}/${jobs.length} ${o}-${ap} ${m}/${d}: ${opts.length ? "USD " + opts[0].price + " " + opts[0].airline : none ? "Google: sin vuelos" : "sin dato"}`);
   }
 }));
 // Segunda pasada: reintenta las que fallaron por demora (no las que Google dice que no tienen vuelos)
@@ -96,21 +98,29 @@ await Promise.all(Array.from({ length: Math.min(TABS, retry.length) }, async () 
   const page = await ctx.newPage();
   while (ri < retry.length) {
     const r = retry[ri++];
-    Object.assign(r, await scrape(page, r.o, r.ap, r.m));
+    Object.assign(r, await scrape(page, r.o, r.ap, r.m, r.d));
     console.log(`reintento ${r.o}-${r.ap} ${r.m}: ${r.opts.length ? "USD " + r.opts[0].price : r.none ? "Google: sin vuelos" : "sin dato"}`);
   }
 }));
 await browser.close();
 
-const rows = results.flatMap(({ o, ap, m, opts }) => opts.map((x) => ({
-  origin: o, dest: ap, depart_on: `2027-${String(m).padStart(2, "0")}-10`, return_on: `2027-${String(m).padStart(2, "0")}-18`,
+const rows = results.flatMap(({ o, ap, m, d, opts }) => opts.map((x) => ({
+  origin: o, dest: ap, depart_on: ymd(m, d), return_on: ymd(m, d + 8),
   price_usd: x.price, stops: x.stops, airline: x.airline, airlines: x.airline.split(/,| y /).map((s) => s.trim()).filter(Boolean),
   dep_time: x.dep, arr_time: x.arr, duration: x.dur, source: "google_flights_actions", fetched_at,
 })));
 for (let i = 0; i < rows.length; i += 500)
   await sb("flight_quotes?on_conflict=origin,dest,depart_on,return_on,airline,dep_time,fetched_at", { method: "POST", headers: { Prefer: "resolution=ignore-duplicates,return=minimal" }, body: JSON.stringify(rows.slice(i, i + 500)) });
 
-const ok = results.filter((r) => r.opts.length);
+const okAll = results.filter((r) => r.opts.length);
+const ok = okAll.filter((r) => r.d === 10);
+// Precio por fecha de salida: app_snapshots 'fechas' = {"TUC-FLN-1-17": [precio, escalas, aerolínea, duración, fecha]}
+if (okAll.some((r) => r.d !== 10) || DIAS.length > 1) {
+  const [fs] = await sb("app_snapshots?key=eq.fechas&select=data");
+  const fe = fs?.data || {};
+  for (const { o, ap, m, d, opts } of okAll) fe[`${o}-${ap}-${m}-${d}`] = [opts[0].price, opts[0].stops, opts[0].airline, opts[0].dur, fetched_at.slice(0, 10)];
+  await sb("app_snapshots?on_conflict=key", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "fechas", data: fe, updated_at: fetched_at }) });
+}
 // Detalle por ruta (aeropuerto de salida y llegada, horarios, escalas) para la página: app_snapshots 'fdet'
 {
   const [fs] = await sb("app_snapshots?key=eq.fdet&select=data");

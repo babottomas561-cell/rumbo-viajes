@@ -8,6 +8,9 @@ on:
       meses:
         description: "Meses a renovar (ej. 1,2). Vacío = rotación automática"
         required: false
+      dias:
+        description: "Días de salida (ej. 3,10,17,24). Vacío = 10"
+        required: false
 
 concurrency:
   group: precios
@@ -16,7 +19,7 @@ concurrency:
 jobs:
   vuelos:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,3 +32,4 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           MESES: ${{ inputs.meses }}
+          DIAS: ${{ inputs.dias }}
