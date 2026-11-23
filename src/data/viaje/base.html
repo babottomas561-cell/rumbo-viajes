@@ -774,7 +774,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
     <div><b>Si igual la pagás</b><p>No es un costo perdido: si no pagás Ganancias ni Bienes Personales, la pedís de vuelta a ARCA cuando cierra el año. Tarda meses y no se ajusta por inflación.</p></div>
     <div><b>Agencia argentina en pesos</b><p>Los servicios turísticos al exterior pagados en pesos a una agencia también llevan el recargo (<a href="https://comercioyjusticia.info/economia/el-recargo-del-30-seguira-vigente-para-servicios-turisticos-abonados-en-pesos/" target="_blank" rel="noopener">Comercio y Justicia</a>).</p></div>
   </div>
-  <h2 style="margin-top:22px">Qué pasa del 6 al 14 de enero</h2>
+  <h2 style="margin-top:22px">Qué pasa en enero</h2>
   <div class="incl-grid">
     <div><b>Jurerê (Floripa): shows en P12</b><p>Simone Mendes el 6, Jorge &amp; Mateus el 8 y Alok de día el 9 de enero. Las entradas para shows grandes se agotan; los precios de casas en Jurerê suben esos días (<a href="https://www.passeios.org/eventos/sertanejo-p12-jurere-verao-2026-2027-programacao-shows/" target="_blank" rel="noopener">Passeios</a>, <a href="https://baladasfloripa.com.br/temporada-de-verano-2027-en-p12-jurere-internacional/" target="_blank" rel="noopener">Baladas Floripa</a>).</p></div>
     <div><b>Salvador: Lavagem do Bonfim</b><p>Jueves 14 de enero: procesión de 8 km con baianas, música y fiesta en la calle todo el día. Coincide con la vuelta: si van a Salvador, conviene volver el 15 (<a href="https://www.correio24horas.com.br/salvador/muda-todo-ano-qual-e-a-data-exata-da-lavagem-do-senhor-do-bonfim-0126" target="_blank" rel="noopener">Correio</a>).</p></div>
@@ -1397,7 +1397,8 @@ function beachTxt(id){const b=BEACH[id];if(!b)return "";const d=b[0],m=Math.max(
   const t=d<120?`Frente a la playa${b[3]?" · "+b[3]:""}`:d<2000?`~${d<1000?Math.round(d/10)*10+" m":(d/1000).toFixed(1).replace(".",",")+" km"}${pl} · ${m} min a pie`:`${(d/1000).toFixed(1).replace(".",",")} km${pl}: auto o Uber`;
   return `<span class="dist ${d<500?"near":d<2000?"":"far"}">${t}</span>`;}
 const ABS=q=>`https://www.airbnb.com.ar/s/${q}/homes?checkin=${IND()}&checkout=${OUTD()}&adults=${PAX}&min_bedrooms=3&min_bathrooms=2&currency=USD`;
-const GFL=(o,ap,d,r)=>`https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%202027-${pad(GM)}-${pad(d)}%20through%202027-${pad(GM)}-${pad(r)}&curr=USD&hl=es-419&gl=AR`;
+// La vuelta del enlace respeta las noches elegidas (el precio guardado puede ser de otra duración)
+const GFL=(o,ap,d,r)=>{const a=new Date(Date.UTC(2027,GM-1,d)),b=new Date(a.getTime()+NIGHTS()*864e5),f=x=>x.toISOString().slice(0,10);return `https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%20${f(a)}%20through%20${f(b)}&curr=USD&hl=es-419&gl=AR`;};
 const NA={p:Infinity};
 const ymd=d=>d===0?"2026-12-31":`2027-01-${pad(d)}`;
 const GFL2=(o,ap,d,r)=>`https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%20${ymd(d)}%20through%202027-01-${pad(r)}&curr=USD&hl=es-419&gl=AR`;
@@ -1425,6 +1426,9 @@ function legIGR(ap,dep){const t=FL.IGU&&FL.IGU[ap],g=FL.TUC.IGR;if(!t||!g)return
     if(!b||p<b.p)b={p,d,r:d+NIGHTS(),o:"IGU",air:f[0],leg1:a.p,a};}
   return b;}
 function bestKey(r){return RKEYS.reduce((a,b)=>r[a].p<=r[b].p?a:b);}
+// Copensador: horas de puerta a puerta (ida) de cada forma de llegar, y la que más conviene = precio + USD 15 por hora de viaje
+function wayHrs(r,k){try{const L=tripLegs({...r,flk:k},null);if(!L.length)return null;let t=0;for(const g of L){if(g.h==null)return null;t+=g.h;}return t;}catch(_){return null;}}
+function bestKeyT(r,rt){let b=null,bv=Infinity;for(const k of RKEYS){const l=rt[k];if(!l||!isFinite(l.p))continue;const h=wayHrs({...r,rt},k);const v=l.p+15*(h==null?14:h)*2;if(v<bv){bv=v;b=k;}}return b||bestKey(rt);}
 function stayScore(h){let s=4+(h[1]-4.7)*20;if(h[3])s+=.5;if(h[2]>=40)s+=.5;if(h[2]<15)s-=1;return Math.max(1,Math.min(10,s));}
 function priceScore(t){if(!isFinite(t))return 0;const [lo,span]=S.gasto==="ahorro"?[800,900]:[1050,1200];return Math.max(1,Math.min(10,10-(t-lo)/span*9));}
 // “La más barata” (lvl −1) usa la casa de AH solo si es más barata que la económica
@@ -1469,7 +1473,7 @@ function aiPick(d){const a=AI[d.k];if(!a)return null;
   if(S.lvl===0)return a.find(x=>x[2]>=4.5)||a[0];
   if(S.lvl===1)return a.find(x=>x[2]>=4.6&&x[3]>=5)||a[Math.floor(a.length/2)];
   return a[a.length-1];}
-const GHOT=q=>`https://www.google.com/travel/search?q=${encodeURIComponent(q+" todo incluido del 6 al 14 de enero 2027")}`;
+const GHOT=q=>`https://www.google.com/travel/search?q=${encodeURIComponent(q+" todo incluido "+IND()+" al "+OUTD())}`;
 function aiGrid(r){const a=AI[r.k];
   return `<div class="stays-head"><span class="lbl">All inclusive para ${PAX} · ${NIGHTS()} noches</span><span class="headlinks"><a class="region" href="${GHOT(r.name)}" target="_blank" rel="noopener">Ver todos en Google Hoteles</a></span></div>
   <div class="stay-grid">${a.map(x=>`<a class="stay ${x===r.ai?"on":""}" href="${GHOT(x[0].replace(/ \(.*\)/,"")+" "+r.name)}" target="_blank" rel="noopener">
@@ -1596,11 +1600,11 @@ function build(){
     rows.push({...c,combo:true,houseTotal:ps.reduce((a,p)=>a+hpT(pickStay(p.d))*p.f,0),stayS:ps.reduce((a,p)=>a+stayScore(pickStay(p.d))*p.f,0),comboParts:ps.map(p=>p.d),
       ex:Math.round((ps.reduce((a,p)=>a+(EX[p.d.k]??40)*p.f,0)+20)*g.ex),fee:ps.reduce((a,p)=>a+(FEE[p.d.k]||0),0)});});
   const sw=Object.values(S.W).reduce((a,b)=>a+b,0)||1;
-  rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla"].includes(S.strat)))?bestKey(rt):S.strat;if(!r.ai&&!r.combo&&CARKM[r.k]){const cc=carCost(r.k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else if(!r.ai&&r.combo&&r.comboParts&&CARKM[r.comboParts[r.comboParts.length-1].k]){const cc=carCost(r.comboParts[r.comboParts.length-1].k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else rt.car=NA;
+  rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla"].includes(S.strat)))?bestKeyT(r,rt):S.strat;if(!r.ai&&!r.combo&&CARKM[r.k]){const cc=carCost(r.k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else if(!r.ai&&r.combo&&r.comboParts&&CARKM[r.comboParts[r.comboParts.length-1].k]){const cc=carCost(r.comboParts[r.comboParts.length-1].k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else rt.car=NA;
     if(RPICK[r.k]&&rt[RPICK[r.k]]&&isFinite(rt[RPICK[r.k]].p))r.flk=RPICK[r.k];r.leg=rt[r.flk];r.fl=r.leg.p;
     r.bag=Math.round((CS.hub&&r.flk==="bue"?40:BAG[r.flk])*g.bag);r.ins=r.dom?0:g.ins;r.dc=r.ai?null:dayCost(r,S.gasto);r.dayv=r.ai?(S.gasto==="ahorro"?8:20):r.dc?Math.round(r.dc.tot):Math.round(r.day*g.day);r.stayPP=r.houseTotal/PAX;r.daily=r.dayv*DAYS;r.total=r.fl+r.bag+r.ins+r.stayPP+r.tr+r.fee+r.ex+r.daily;
     r.sc={price:priceScore(r.total),beach:r.s[0],night:r.s[1],young:r.s[2],clima:NINO[r.zone],stay:r.stayS};
-    r.score=CRIT.reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sw;if(S.target&&r.total>S.target)r.score=Math.max(0,r.score-(r.total-S.target)/200);// pasarse del presupuesto resta: 0,5 punto cada USD 100
+    r.score=CRIT.reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sw;if(S.target&&r.total>S.target)r.score=Math.max(0,r.score-(r.total-S.target)/200);r.th=wayHrs(r,r.flk);if(r.th!=null&&r.th>6)r.score=Math.max(0,r.score-(r.th-6)*0.08);// cada hora de viaje (ida) por encima de 6 resta 0,08// pasarse del presupuesto resta: 0,5 punto cada USD 100
     const sq=CRIT.filter(c=>c.k!=="price").reduce((a,c)=>a+S.W[c.k],0)||1;r.q=CRIT.filter(c=>c.k!=="price").reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sq;});
 
   const ninoOk=r=>S.nino==="all"||(S.nino==="north"?NINO[r.zone]>=8:NINO[r.zone]>=5);
