@@ -2513,6 +2513,9 @@ const S2={o:"TUC",a:"RIO",i:null,v:null};
 // Escalas propias: dos pasajes separados vía una ciudad de conexión. Mismo día con 4 h o más entre vuelos, o durmiendo una noche (USD 35 por persona).
 const HUBS=["BUE","COR","SLA","SAO","RIO","IGU","SCL","LIM"],HOTEL=35;
 const hr=t=>typeof hh24==="function"?hh24(t):null,hs=x=>{const d=hrs(x[5]);return d;};
+// Precio de referencia del vuelo vendido junto: si ese día sale más de 1,5 veces la mediana de enero de la ruta, es una tarifa rara; se compara contra 1,5 x mediana para no inventar ahorros.
+const MEDC={};function medR(r){if(r in MEDC)return MEDC[r];const v=Object.values(idx[r]||{}).map(x=>x[0]).sort((a,b)=>a-b);return MEDC[r]=v.length?v[v.length>>1]:null;}
+function refP(r,x){if(!x)return null;const m=medR(r);return m&&x[0]>1.5*m?Math.round(1.5*m):x[0];}
 function selfx(A,B,d){let best=null;for(const H of HUBS){if(H===A||H===B)continue;const L1=idx[A+">"+H],L2=idx[H+">"+B];if(!L1||!L2||!L2[d])continue;const y=L2[d];
   const x=L1[d];if(x){const ar=hr(x[4]),dp=hr(y[3]),dur=hs(x);const dep1=hr(x[3]);// llega el mismo día (no pasa medianoche) y sobran 4 h
     if(ar!=null&&dp!=null&&dep1!=null&&ar>dep1&&dp-ar>=4){const c=x[0]+y[0];if(!best||c<best.c)best={c,H,a:x,b:y,n:0};}}
@@ -2528,7 +2531,7 @@ function fillA(){const L=dests(S2.o);if(!L.includes(S2.a))S2.a=L.includes("RIO")
 function grid(el,r,sel,lim,cb){const t=idx[r]||{},ps=Object.values(t).map(x=>x[0]).sort((a,b)=>a-b),lo=ps[Math.floor(ps.length*.25)],hi=ps[Math.floor(ps.length*.75)];
  el.innerHTML="";for(let d=1;d<=31;d++){const x=t[d],b=document.createElement("button");b.type="button";const off=lim&&lim(d);
   b.className="fcd"+(x?(x[0]<=lo?" lo":x[0]>=hi?" hi":""):" na")+(sel===d?" on":"")+(off?" off":"");
-  const sx=selfx(...r.split(">"),d);const cheaper=sx&&(!x||sx.c<x[0]-15);
+  const sx=selfx(...r.split(">"),d);const cheaper=sx&&(!x||sx.c<refP(r,x)-15);
   b.innerHTML=`${wd(d)} ${d}<b>${x?"$"+x[0]:"–"}</b>${x?(x[1]?x[1]+" esc.":"directo"):""}${cheaper?`<i class="fcx">🔀 $${sx.c}</i>`:""}`;b.title=x?`${x[2]} · ${x[3]} → ${x[4]} · ${x[5]}`:"Sin precio todavía";
   if((x||cheaper)&&!off){b.onclick=()=>cb(d);if(!x)b.classList.remove("na");}el.appendChild(b);}}
 const nd=x=>{const a=typeof hh24==="function"?hh24(x[3]):null,b=hrs(x[5]);if(a==null||b==null)return "";const k=Math.floor((a+b-1)/24);return k>0?` (${k===1?"día siguiente":"+"+k+" días"})`:"";};
@@ -2536,9 +2539,9 @@ const fl=(x,lbl,d)=>`<div><b>${lbl} ${wd(d)} ${d}/1:</b> ${usd(x[0])} · ${x[2]}
 function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
  grid($$("fcgi"),ri,S2.i,null,d=>{S2.i=d;if(S2.v&&S2.v<=d)S2.v=null;draw();});
  grid($$("fcgv"),rv,S2.v,d=>S2.i&&d<=S2.i,d=>{S2.v=d;draw();});
- const pickS=(d,A,B)=>{const x=(idx[A+">"+B]||{})[d],sx=d&&selfx(A,B,d);return sx&&(!x||sx.c<x[0]-15)?{sx,x}:null;};
+ const pickS=(d,A,B)=>{const x=(idx[A+">"+B]||{})[d],sx=d&&selfx(A,B,d);const rf=refP(A+">"+B,x);return sx&&(!x||sx.c<rf-15)?{sx,x,rf}:null;};
  const si=S2.i&&pickS(S2.i,S2.o,S2.a),sv=S2.v&&pickS(S2.v,S2.a,S2.o);
- const sxt=(p,lbl,d)=>`<div class="fadv">🔀 <b>${lbl} armando la escala vos:</b> ${CN[p.sx.H]||p.sx.H} · USD ${p.sx.c}${p.sx.n?` (incluye USD ${HOTEL} de una noche en ${CN[p.sx.H]||p.sx.H})`:""}${p.x?` · <b>ahorrás USD ${p.x[0]-p.sx.c}</b> contra el vuelo vendido junto`:" · no hay vuelo vendido junto ese día"}<br>1) ${p.sx.a[2]} ${p.sx.n?"el día anterior":"ese día"}, sale ${p.sx.a[3]}, llega ${p.sx.a[4]} · USD ${p.sx.a[0]}<br>2) ${p.sx.b[2]}, sale ${p.sx.b[3]}, llega ${p.sx.b[4]} · USD ${p.sx.b[0]}</div>`;
+ const sxt=(p,lbl,d)=>`<div class="fadv">🔀 <b>${lbl} armando la escala vos:</b> ${CN[p.sx.H]||p.sx.H} · USD ${p.sx.c}${p.sx.n?` (incluye USD ${HOTEL} de una noche en ${CN[p.sx.H]||p.sx.H})`:""}${p.x?` · <b>ahorrás USD ${p.rf-p.sx.c}</b> contra el vuelo vendido junto${p.rf<p.x[0]?` (ese día figura a USD ${p.x[0]}, una tarifa rara: comparo contra un precio normal de la ruta)`:""}`:" · no hay vuelo vendido junto ese día"}<br>1) ${p.sx.a[2]} ${p.sx.n?"el día anterior":"ese día"}, sale ${p.sx.a[3]}, llega ${p.sx.a[4]} · USD ${p.sx.a[0]}<br>2) ${p.sx.b[2]}, sale ${p.sx.b[3]}, llega ${p.sx.b[4]} · USD ${p.sx.b[0]}</div>`;
  const xi=S2.i&&((idx[ri]||{})[S2.i]||(si&&[si.sx.c,1,"escala propia","","","","",""])),xv=S2.v&&((idx[rv]||{})[S2.v]||(sv&&[sv.sx.c,1,"escala propia","","","","",""]));let h="";
  if(xi)h+=fl(xi,"Ida",S2.i);if(xv)h+=fl(xv,"Vuelta",S2.v);
  let best=null;
