@@ -30,6 +30,11 @@ export async function GET() {
     for (const [k, o] of Object.entries(fdx.data as Record<string, unknown[]>)) if (k.endsWith("-1")) live[k.slice(0, -2)] = { o };
     html = html.replace("const FD={", "const FDLIVE=" + JSON.stringify(live).replace(/</g, "\\u003c") + ";const FD={");
   }
+  // Vuelos solo ida de cualquier día (ow) e ida y vuelta por fecha (fechas): calendario de la pestaña Vuelos
+  for (const [key, name] of [["ow", "OWLIVE"], ["fechas", "FELIVE"]] as const) {
+    const { data: x } = db ? await db.from("app_snapshots").select("data").eq("key", key).maybeSingle() : { data: null };
+    if (x?.data) html = html.replace(`const ${name}=null;`, `const ${name}=` + JSON.stringify(x.data).replace(/</g, "\\u003c") + ";");
+  }
   // La plantilla es un artefacto (sin <head>): se agrega lo necesario para que el celular la muestre a su ancho real
   if (!/name="viewport"/.test(html)) html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` + html;
   return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=300, stale-while-revalidate=3600" } });

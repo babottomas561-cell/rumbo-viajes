@@ -728,7 +728,22 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
     <div><b>Movida joven en el sur</b><p><b>Florianópolis</b>: la más buscada por argentinos; Canasvieiras y Jurerê (beach club P12, <a href="https://www.lanacion.com.ar/sociedad/parador-12-de-jurere-florianopolis-donde-queda-como-llegar-y-que-hay-para-hacer-nid09122025" target="_blank" rel="noopener">La Nación</a>) para salir, Lagoa para bares. <b>Camboriú</b>: llena de argentinos, cuarteto y boliches grandes (<a href="https://www.cadena3.com/noticia/operativo-verano-2026/camboriu-explota-con-cuarteto-y-argentinos-que-llenan-la-playa_510817" target="_blank" rel="noopener">Cadena 3</a>). <b>Praia do Rosa</b>: de moda entre jóvenes argentinos de 18 a 25, bares y boliches llenos de noche (<a href="https://www.lanacion.com.ar/sociedad/praia-do-rosa-el-pueblo-costero-brasileno-que-volvio-a-estar-de-moda-entre-los-adolescentes-nid22082025/" target="_blank" rel="noopener">La Nación</a>). Bombinhas y Garopaba son más tranquilas.</p></div>
   </div>
 </section></div>
-<div class="panel" data-panel="vuelos" role="tabpanel" hidden><section style="display:flex;flex-direction:column;gap:14px" aria-label="Vuelos por origen">
+<div class="panel" data-panel="vuelos" role="tabpanel" hidden><section id="fcal" style="display:flex;flex-direction:column;gap:12px" aria-label="Calendario de vuelos de enero">
+  <h2>Calendario de enero: ir y volver cualquier día</h2>
+  <p class="lede" style="font-size:15px">Precio por persona del vuelo más barato de cada día, solo ida, buscado en Google Flights. Tocá un día de ida y uno de vuelta para ver el total. Los días en gris todavía no tienen precio.</p>
+  <div class="fcsel"><label>Desde <select id="fco"></select></label><label>Hacia <select id="fca"></select></label></div>
+  <div class="fcrow"><b>Ida</b><div class="fcg" id="fcgi"></div></div>
+  <div class="fcrow"><b>Vuelta</b><div class="fcg" id="fcgv"></div></div>
+  <div id="fcres" class="fcres"></div>
+</section>
+<style>
+.fcsel{display:flex;gap:10px;flex-wrap:wrap}.fcsel label{display:flex;gap:6px;align-items:center;font-size:14px}.fcsel select{padding:6px 8px;border-radius:8px;border:1px solid var(--line,#ccc);background:var(--card,#fff);color:inherit;font:inherit;max-width:100%}
+.fcrow{display:flex;flex-direction:column;gap:4px}.fcg{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:4px}
+.fcd{border:1px solid var(--line,#ddd);border-radius:8px;padding:4px 2px;text-align:center;font-size:11px;line-height:1.25;background:var(--card,#fff);color:inherit;cursor:pointer;font-family:inherit}
+.fcd b{display:block;font-size:13px}.fcd.na{opacity:.4;cursor:default}.fcd.lo{background:#e3f5e1;border-color:#5dae5a}.fcd.hi{background:#fbe9e7}.fcd.on{outline:3px solid #1f6feb;outline-offset:-1px}.fcd.off{opacity:.25}
+@media (prefers-color-scheme:dark){.fcd.lo{background:#1d3a1c}.fcd.hi{background:#3a1f1c}}
+.fcres{border:1px solid var(--line,#ddd);border-radius:12px;padding:12px;font-size:14px;line-height:1.5}.fcres .tot{font-size:20px;font-weight:700}
+</style><section style="display:flex;flex-direction:column;gap:14px" aria-label="Vuelos por origen">
   <h2>Vuelos por aeropuerto y forma de salir</h2>
   <p class="lede" style="font-size:15px">Ida y vuelta por persona para la fecha elegida arriba, con el tramo desde Tucumán incluido. En amarillo, lo más barato de cada fila.</p>
   <div class="tablebox"><table id="ftable"></table></div>
@@ -2441,4 +2456,39 @@ syncRanges();render();renderTable();renderDayTable();renderHeat();renderOcc();re
   dr.addEventListener("click",()=>setTimeout(sync,0));dr.addEventListener("input",()=>setTimeout(sync,0));
   sync();
 })();
+
+const OWLIVE=null;const FELIVE=null;
+(function(){const OW=OWLIVE||{},FE=FELIVE||{};
+const CN={TUC:"Tucumán",SLA:"Salta",BUE:"Buenos Aires",COR:"Córdoba",MDZ:"Mendoza",ROS:"Rosario",JUJ:"Jujuy",IGU:"Foz do Iguaçu",ASU:"Asunción",VVI:"Santa Cruz (Bolivia)",LPB:"La Paz (Bolivia)",RIO:"Río de Janeiro",SAO:"San Pablo",FLN:"Florianópolis",SSA:"Salvador",REC:"Recife",NAT:"Natal",FOR:"Fortaleza",MCZ:"Maceió",JPA:"João Pessoa",AJU:"Aracaju",IOS:"Ilhéus",BPS:"Porto Seguro",SLZ:"São Luís",MVD:"Montevideo",PDP:"Punta del Este",MDQ:"Mar del Plata",SCL:"Santiago",CUN:"Cancún",PUJ:"Punta Cana",CTG:"Cartagena",ADZ:"San Andrés",PTY:"Panamá",SJO:"San José (Costa Rica)",GYE:"Guayaquil",PIU:"Piura",TRU:"Trujillo",PVR:"Puerto Vallarta",PXM:"Puerto Escondido",CUR:"Curazao",MGA:"Managua",SMR:"Santa Marta",NVT:"Navegantes"};
+const ORIG=["TUC","SLA","BUE","COR","MDZ","ROS","JUJ","IGU","ASU","VVI","LPB"];
+const idx={};for(const k in OW){const p=k.split("|");(idx[p[0]]||(idx[p[0]]={}))[+p[1].slice(8,10)]=OW[k];}
+const S2={o:"TUC",a:"RIO",i:null,v:null};const $$=id=>document.getElementById(id);if(!$$("fco"))return;
+const dests=o=>[...new Set(Object.keys(idx).filter(r=>r.startsWith(o+">")).map(r=>r.split(">")[1]))].sort((x,y)=>(CN[x]||x).localeCompare(CN[y]||y));
+const nm=c=>CN[c]?`${CN[c]} (${c})`:c;const usd=n=>"USD "+Math.round(n).toLocaleString("es-AR");
+const wd=d=>["dom","lun","mar","mié","jue","vie","sáb"][new Date(Date.UTC(2027,0,d)).getUTCDay()];
+const pax=()=>typeof PAX==="number"?PAX:8;
+function fillO(){$$("fco").innerHTML=ORIG.map(o=>{const n=dests(o).length;return `<option value="${o}" ${n?"":"disabled"} ${o===S2.o?"selected":""}>${nm(o)}${n?"":" · buscando"}</option>`;}).join("");}
+function fillA(){const L=dests(S2.o);if(!L.includes(S2.a))S2.a=L.includes("RIO")?"RIO":L[0];$$("fca").innerHTML=L.map(a=>`<option value="${a}" ${a===S2.a?"selected":""}>${nm(a)} · ${Object.keys(idx[S2.o+">"+a]||{}).length} días ida, ${Object.keys(idx[a+">"+S2.o]||{}).length} vuelta</option>`).join("");}
+function grid(el,r,sel,lim,cb){const t=idx[r]||{},ps=Object.values(t).map(x=>x[0]).sort((a,b)=>a-b),lo=ps[Math.floor(ps.length*.25)],hi=ps[Math.floor(ps.length*.75)];
+ el.innerHTML="";for(let d=1;d<=31;d++){const x=t[d],b=document.createElement("button");b.type="button";const off=lim&&lim(d);
+  b.className="fcd"+(x?(x[0]<=lo?" lo":x[0]>=hi?" hi":""):" na")+(sel===d?" on":"")+(off?" off":"");
+  b.innerHTML=`${wd(d)} ${d}<b>${x?"$"+x[0]:"–"}</b>${x?(x[1]?x[1]+" esc.":"directo"):""}`;b.title=x?`${x[2]} · ${x[3]} → ${x[4]} · ${x[5]}`:"Sin precio todavía";
+  if(x&&!off)b.onclick=()=>cb(d);el.appendChild(b);}}
+const fl=(x,lbl,d)=>`<div><b>${lbl} ${wd(d)} ${d}/1:</b> ${usd(x[0])} · ${x[2]} · sale ${x[3]}${x[7]?" de "+x[7]:""}, llega ${x[4]}${x[8]?" a "+x[8]:""}${x[5]?` (${x[5]})`:""} · ${x[1]?x[1]+" escala"+(x[1]>1?"s":"")+(x[6]&&x[6].length?": "+x[6].join("; "):""):"directo"}</div>`;
+function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
+ grid($$("fcgi"),ri,S2.i,null,d=>{S2.i=d;if(S2.v&&S2.v<=d)S2.v=null;draw();});
+ grid($$("fcgv"),rv,S2.v,d=>S2.i&&d<=S2.i,d=>{S2.v=d;draw();});
+ const xi=S2.i&&(idx[ri]||{})[S2.i],xv=S2.v&&(idx[rv]||{})[S2.v];let h="";
+ if(xi)h+=fl(xi,"Ida",S2.i);if(xv)h+=fl(xv,"Vuelta",S2.v);
+ let best=null;
+ if(xi&&xv){const p=xi[0]+xv[0],n=S2.v-S2.i;h=`<div class="tot">${usd(p)} por persona · ${usd(p*pax())} el grupo de ${pax()}</div><div>${n} noches (${n+1} días)</div>`+h;
+  const iv=FE[`${S2.o}-${S2.a}-1-${S2.i}${n===8?"":"-n"+n}`];
+  if(iv&&(n===8||n===9))h+=`<div style="margin-top:6px">Comprado como ida y vuelta junto: <b>${usd(iv[0])}</b> (${iv[2]})${iv[0]<p?" · <b>más barato que por separado</b>":""}</div>`;}
+ else{const ti=idx[ri]||{},tv=idx[rv]||{};for(const i in ti)for(const v in tv){const n=v-i;if(n>=7&&n<=10&&(!best||ti[i][0]+tv[v][0]<best[0]))best=[ti[i][0]+tv[v][0],+i,+v];}
+  h=(h||"<div>Elegí el día de ida y el de vuelta.</div>")+(best?`<div style="margin-top:6px">Lo más barato entre 7 y 10 noches: ida ${wd(best[1])} ${best[1]}/1 y vuelta ${wd(best[2])} ${best[2]}/1 · <b>${usd(best[0])}</b> por persona <button type="button" class="pickb" id="fcbest">Elegir</button></div>`:"");}
+ const fr=Object.values(idx[ri]||{}).concat(Object.values(idx[rv]||{})).map(x=>x[9]).filter(Boolean).sort().pop();
+ $$("fcres").innerHTML=h+(fr?`<div style="font-size:12px;opacity:.7;margin-top:6px">Precios buscados hasta el ${fr.split("-").reverse().join("/")}. Pueden cambiar.</div>`:"");
+ const bb=$$("fcbest");if(bb&&best){const b2=best;bb.onclick=()=>{S2.i=b2[1];S2.v=b2[2];draw();};}}
+$$("fco").onchange=e=>{S2.o=e.target.value;S2.i=S2.v=null;fillA();draw();};$$("fca").onchange=e=>{S2.a=e.target.value;S2.i=S2.v=null;draw();};
+fillO();fillA();draw();})();
 </script>
