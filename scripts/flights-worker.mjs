@@ -142,7 +142,7 @@ if (snap && ok.length) {
   }
   await sb("app_snapshots?on_conflict=key", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "anio", data: anio, updated_at: fetched_at }) });
 }
-const by = Object.fromEntries(ORIGINS.map((o) => [o, `${ok.filter((r) => r.o === o).length}/${results.filter((r) => r.o === o).length} (sin vuelos ${results.filter((r) => r.o === o && r.none).length})`]));
+const by = Object.fromEntries(ORIGINS.map((o) => [o, `${okAll.filter((r) => r.o === o).length}/${results.filter((r) => r.o === o).length} (sin vuelos ${results.filter((r) => r.o === o && r.none).length})`]));
 await sb("sync_runs", { method: "POST", headers: { Prefer: "return=minimal" }, body: JSON.stringify({ source: "github_actions", quotes: rows.length, note: `meses ${MESES} · ${JSON.stringify(by)}` }) });
 console.log("listo", rows.length, "precios", by);
-if (!ok.length) process.exit(1);
+if (!okAll.length) process.exit(1);
