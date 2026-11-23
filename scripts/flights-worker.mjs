@@ -49,8 +49,10 @@ const DIAS = (process.env.DIAS || "10").split(",").map(Number);
 const ymd = (m, d) => { const t = new Date(Date.UTC(2027, m - 1, d)); return t.toISOString().slice(0, 10); };
 // MODO: "iv" (ida y vuelta, 8 noches) · "ida" (solo ida origen→destino) · "vuelta" (solo ida destino→origen)
 const MODO = process.env.MODO || "iv";
+// Noches de la estadía (8 = 9 días; 9 = 10 días). Con otro valor que 8, las claves de 'fechas' y 'fdet' llevan '-n<noches>'.
+const NOCHES = Number(process.env.NOCHES || 8), NK = NOCHES === 8 ? "" : `-n${NOCHES}`;
 async function scrape(page, o, ap, m, d = 10) {
-  const u = MODO === "iv" ? `https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%20${ymd(m, d)}%20through%20${ymd(m, d + 8)}&curr=USD&hl=es-419&gl=AR`
+  const u = MODO === "iv" ? `https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%20${ymd(m, d)}%20through%20${ymd(m, d + NOCHES)}&curr=USD&hl=es-419&gl=AR`
     : `https://www.google.com/travel/flights?q=Flights%20from%20${MODO === "ida" ? o : ap}%20to%20${MODO === "ida" ? ap : o}%20on%20${ymd(m, d)}%20one%20way&curr=USD&hl=es-419&gl=AR`;
   for (let i = 0; i < 2; i++) {
     try {
@@ -132,7 +134,7 @@ if (MODO !== "iv") {
   process.exit(okw.length ? 0 : 1);
 }
 const rows = results.flatMap(({ o, ap, m, d, opts }) => opts.map((x) => ({
-  origin: o, dest: ap, depart_on: ymd(m, d), return_on: ymd(m, d + 8),
+  origin: o, dest: ap, depart_on: ymd(m, d), return_on: ymd(m, d + NOCHES),
   price_usd: x.price, stops: x.stops, airline: x.airline, airlines: x.airline.split(/,| y /).map((s) => s.trim()).filter(Boolean),
   dep_time: x.dep, arr_time: x.arr, duration: x.dur, source: "google_flights_actions", fetched_at,
 })));
@@ -145,18 +147,18 @@ const ok = okAll.filter((r) => r.d === 10);
 if (okAll.some((r) => r.d !== 10) || DIAS.length > 1) {
   const [fs] = await sb("app_snapshots?key=eq.fechas&select=data");
   const fe = fs?.data || {};
-  for (const { o, ap, m, d, opts } of okAll) fe[`${o}-${ap}-${m}-${d}`] = [opts[0].price, opts[0].stops, opts[0].airline, opts[0].dur, fetched_at.slice(0, 10)];
+  for (const { o, ap, m, d, opts } of okAll) fe[`${o}-${ap}-${m}-${d}${NK}`] = [opts[0].price, opts[0].stops, opts[0].airline, opts[0].dur, fetched_at.slice(0, 10)];
   await sb("app_snapshots?on_conflict=key", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "fechas", data: fe, updated_at: fetched_at }) });
 }
 // Detalle por ruta (aeropuerto de salida y llegada, horarios, escalas) para la página: app_snapshots 'fdet'
 {
   const [fs] = await sb("app_snapshots?key=eq.fdet&select=data");
   const fdet = fs?.data || {};
-  for (const { o, ap, m, opts } of ok) fdet[`${o}-${ap}-${m}`] = opts.map((x) => [x.price, x.stops, x.airline, x.dep, x.arr, x.nd, x.dur, x.lay, x.from, x.to]);
+  for (const { o, ap, m, opts } of ok) fdet[`${o}-${ap}-${m}${NK}`] = opts.map((x) => [x.price, x.stops, x.airline, x.dep, x.arr, x.nd, x.dur, x.lay, x.from, x.to]);
   await sb("app_snapshots?on_conflict=key", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "fdet", data: fdet, updated_at: fetched_at }) });
 }
 const [snap] = await sb("app_snapshots?key=eq.anio&select=data");
-if (snap && ok.length) {
+if (snap && ok.length && NOCHES === 8) {
   const anio = snap.data;
   for (const { o, ap, m, opts } of ok) {
     if (!IX[o]) continue; // orígenes nuevos: quedan en flight_quotes, fechas y fdet
