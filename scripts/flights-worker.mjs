@@ -74,7 +74,8 @@ async function scrape(page, o, ap, m, d = 10) {
 }
 
 const dests = await sb("destinations?select=airport");
-const aps = [...new Set(dests.map((d) => d.airport).filter(Boolean))].sort();
+// DESTINOS (opcional): lista propia de aeropuertos, p. ej. ciudades de conexión para armar escalas propias
+const aps = process.env.DESTINOS ? process.env.DESTINOS.split(",") : [...new Set(dests.map((d) => d.airport).filter(Boolean))].sort();
 const jobs = MESES.flatMap((m) => DIAS.flatMap((d) => aps.flatMap((a) => ORIGINS.filter((o) => o !== a).map((o) => [o, a, m, d])))).slice(0, Number(process.env.LIMIT || 1e9));
 // En modo solo ida, saltea lo que ya está guardado (cada pasada completa los huecos)
 if (MODO !== "iv") {
