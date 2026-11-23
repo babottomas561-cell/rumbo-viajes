@@ -85,6 +85,12 @@ if (MODO !== "iv") {
     if (have.has(`${a}>${b}|${ymd(m, d)}`)) jobs.splice(i, 1);
   }
 }
+// En ida y vuelta con SALTEAR=1, saltea las fechas que ya tienen precio en 'fechas' (pasadas para llenar huecos)
+if (MODO === "iv" && process.env.SALTEAR === "1") {
+  const [f0] = await sb("app_snapshots?key=eq.fechas&select=data");
+  const have = new Set(Object.keys(f0?.data || {}));
+  for (let i = jobs.length - 1; i >= 0; i--) { const [o, ap, m, d] = jobs[i]; if (have.has(`${o}-${ap}-${m}-${d}${NK}`)) jobs.splice(i, 1); }
+}
 console.log(`meses ${MESES} · ${jobs.length} rutas`);
 
 const browser = await chromium.launch();

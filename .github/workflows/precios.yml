@@ -17,12 +17,15 @@ on:
       origenes:
         description: "Orígenes (ej. TUC,BUE). Vacío = TUC,SLA,BUE"
         required: false
+      saltear:
+        description: "1 = solo buscar lo que falta"
+        required: false
       noches:
         description: "Noches de estadía (8 = 9 días, 9 = 10 días). Vacío = 8"
         required: false
 
 concurrency:
-  group: precios-${{ inputs.modo || 'iv' }}-${{ inputs.meses || 'auto' }}-${{ inputs.origenes || 'def' }}-${{ inputs.dias || '10' }}-${{ inputs.noches || '8' }}
+  group: precios-${{ inputs.modo || 'iv' }}-${{ inputs.meses || 'auto' }}-${{ inputs.origenes || 'def' }}-${{ inputs.dias || '10' }}-${{ inputs.noches || '8' }}-${{ inputs.saltear || '0' }}
   cancel-in-progress: false
 
 jobs:
@@ -45,4 +48,5 @@ jobs:
           MODO: ${{ inputs.modo }}
           ORIGENES: ${{ inputs.origenes }}
           NOCHES: ${{ inputs.noches }}
+          SALTEAR: ${{ inputs.saltear }}
           TABS: 3
