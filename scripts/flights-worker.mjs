@@ -74,6 +74,15 @@ async function scrape(page, o, ap, m, d = 10) {
 const dests = await sb("destinations?select=airport");
 const aps = [...new Set(dests.map((d) => d.airport).filter(Boolean))].sort();
 const jobs = MESES.flatMap((m) => DIAS.flatMap((d) => aps.flatMap((a) => ORIGINS.filter((o) => o !== a).map((o) => [o, a, m, d])))).slice(0, Number(process.env.LIMIT || 1e9));
+// En modo solo ida, saltea lo que ya está guardado (cada pasada completa los huecos)
+if (MODO !== "iv") {
+  const [ws0] = await sb("app_snapshots?key=eq.ow&select=data");
+  const have = new Set(Object.keys(ws0?.data || {}));
+  for (let i = jobs.length - 1; i >= 0; i--) {
+    const [o, ap, m, d] = jobs[i], [a, b] = MODO === "ida" ? [o, ap] : [ap, o];
+    if (have.has(`${a}>${b}|${ymd(m, d)}`)) jobs.splice(i, 1);
+  }
+}
 console.log(`meses ${MESES} · ${jobs.length} rutas`);
 
 const browser = await chromium.launch();
@@ -89,6 +98,7 @@ await Promise.all(Array.from({ length: TABS }, async () => {
   while (next < jobs.length) {
     const [o, ap, m, d] = jobs[next++];
     const { opts, none } = await scrape(page, o, ap, m, d);
+    if (MODO !== "iv") await page.waitForTimeout(2500 + Math.random() * 2000);
     results.push({ o, ap, m, d, opts, none });
     console.log(`${results.length}/${jobs.length} ${o}-${ap} ${m}/${d}: ${opts.length ? "USD " + opts[0].price + " " + opts[0].airline : none ? "Google: sin vuelos" : "sin dato"}`);
   }
