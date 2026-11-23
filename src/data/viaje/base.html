@@ -537,6 +537,7 @@ body.lock{overflow:hidden}
 .pickb.on{background:var(--accent);color:var(--surface)}
 .pickbar{font-size:13px;margin:4px 0 8px;color:var(--muted)}
 .linkb{font:inherit;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+small.fz{opacity:.75;font-weight:400}small.fz.new{color:#2e7d32;opacity:1}
 article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition:outline-color .8s}
 @media (max-width:600px){#qbar .qctl{display:grid!important;grid-template-columns:1fr 1fr;gap:6px!important}#qbar .qctl>*{min-width:0;margin:0!important;width:auto!important}#qbar .qctl .qsel{flex-direction:column;align-items:stretch;gap:0}#qbar .qctl select{min-width:0;max-width:100%;width:100%}}
 </style>
@@ -952,7 +953,9 @@ const NIGHTS=()=>DAYS-1;
 // Los precios de Airbnb se relevaron para 8 noches: se pasan a las noches elegidas por precio por noche
 const hp=h=>{let p=h[0];const m=h[17];if(m){const ks=Object.keys(m).map(Number).sort((a,b)=>a-b);const k=ks.find(v=>v>=PAX)??ks[ks.length-1];p=m[k];}return p*NIGHTS()/8;};
 let TIN=6,GM=1;// GM = mes de la propuesta que se está dibujando
-const MABR=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];const lm=l=>MABR[((l&&l.m)||1)-1];// día de entrada a la casa = día de ida del vuelo de la propuesta
+const MABR=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];const lm=l=>MABR[((l&&l.m)||1)-1];
+// Ida → vuelta sin días imposibles (24 ene → 2 feb, no 24→33 ene)
+const DIM=[31,28,31,30,31,30,31,31,30,31,30,31],dr=l=>{const m=(l&&l.m)||1,n=DIM[m-1];return l.r>n?`${l.d} ${MABR[m-1]}→${l.r-n} ${MABR[m%12]}`:`${l.d}→${l.r} ${MABR[m-1]}`;};// día de entrada a la casa = día de ida del vuelo de la propuesta
 const IND=()=>`2027-${String(GM).padStart(2,"0")}-${String(TIN).padStart(2,"0")}`;
 const OUTD=()=>`2027-${String(GM).padStart(2,"0")}-${String(TIN+NIGHTS()).padStart(2,"0")}`;
 const BAG={tuc:40,rio:80,bue:80,cor:40,foz:40,igr:80,sla:40,car:0}, IGR_X=20;
@@ -1409,14 +1412,14 @@ function leg(o,ap,d){if(o==="SLA")slaFL();const t=FL[o]&&FL[o][ap];if(!t)return 
   const v=t[d];return v?{p:v[0],d:+d,r:+d+NIGHTS()}:null;}
 // Precios en vivo del robot ('fechas'): pisan la tabla FL de enero con el dato más nuevo para las noches elegidas
 // (claves "TUC-RIO-1-10" = 8 noches, "TUC-RIO-1-10-n9" = 9 noches). Si para 9 noches no hay dato, queda el de 8 y se marca.
-let FL0=null,FE_N=null,FE_LIVE=0;
+let FL0=null,FE_N=null,FE_LIVE=0;const FE_D={};const fz=(l,r)=>{if(!l||l.d==null||(l.m&&l.m!==1))return "";const d=FE_D[`${l.o||"TUC"}-${r.ap}-${l.d}`];return d?` <small class="fz new">· precio del ${d.slice(8,10)}/${d.slice(5,7)}</small>`:` <small class="fz">· precio del 20/11, actualizándose</small>`;};
 function applyFE(){if(typeof FELIVE==="undefined"||!FELIVE)return;const n=NIGHTS();if(FE_N===n)return;FE_N=n;
   if(!FL0)FL0=JSON.parse(JSON.stringify(FL));
   for(const o in FL0){FL[o]=FL[o]||{};for(const ap in FL0[o])FL[o][ap]={...FL0[o][ap]};}
-  const suf=n===8?"":n===9?"-n9":null;FE_LIVE=0;if(suf===null)return;
+  const suf=n===8?"":n===9?"-n9":null;FE_LIVE=0;for(const k in FE_D)delete FE_D[k];if(suf===null)return;
   for(const k in FELIVE){const m=/^([A-Z]{3})-([A-Z]{3})-1-(\d+)(-n\d+)?$/.exec(k);if(!m||(m[4]||"")!==suf)continue;
     const [,o,ap,d]=m,v=FELIVE[k];if(!v||!v[0])continue;FL[o]=FL[o]||{};FL[o][ap]=FL[o][ap]||{};
-    const old=FL[o][ap][d];FL[o][ap][d]=old?[v[0],...old.slice(1)]:[v[0]];FE_LIVE++;}}
+    const old=FL[o][ap][d];FL[o][ap][d]=old?[v[0],...old.slice(1)]:[v[0]];FE_LIVE++;FE_D[`${o}-${ap}-${d}`]=v[4]||"";}}
 function routes(ap,dep=S.dep){
   const r={};const t=leg("TUC",ap,dep);r.tuc=t?{...t,o:"TUC"}:NA;
   const b=leg("BUE",ap,dep);r.bue=b?{...b,p:b.p+hubCost("bue"),o:"BUE",air:b.p}:NA;
@@ -1676,13 +1679,13 @@ function finfo(k,l,ap){
   if(!parts.length)return head;
   return `${head?head+"<br>":""}${ok?`<b class="hh">⏱ ${hfmt(tot)} en total</b><br>`:""}${parts.join(" + ")}`;}
 function flightRows(r){const l=r.leg;
-  if(r.flk==="rio")return `<span>TUC ↔ Río (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.leg1)}</span><span>Río ↔ ${r.ap} (${l.x.d}→${l.x.r} ${lm(l)})</span><span>${fmt(l.leg2)}</span>`;
-  if(r.flk==="igr")return `<span>Vuelo TUC ↔ Puerto Iguazú (ida el ${dd(l.a.d)})</span><span>${fmt(l.leg1)}</span><span>Remís y cruce a Foz, ida y vuelta</span><span>${fmt(IGR_X)}</span><span>Vuelo Foz ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;
-  if(r.flk==="tuc")return `<span>Vuelo TUC ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.p)}</span>`;
+  if(r.flk==="rio")return `<span>TUC ↔ Río (${dr(l)})${fz(l,r)}</span><span>${fmt(l.leg1)}</span><span>Río ↔ ${r.ap} (${l.x.d}→${l.x.r} ${lm(l)})${fz(l,r)}</span><span>${fmt(l.leg2)}</span>`;
+  if(r.flk==="igr")return `<span>Vuelo TUC ↔ Puerto Iguazú (ida el ${dd(l.a.d)})</span><span>${fmt(l.leg1)}</span><span>Remís y cruce a Foz, ida y vuelta</span><span>${fmt(IGR_X)}</span><span>Vuelo Foz ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.air)}</span>`;
+  if(r.flk==="tuc")return `<span>Vuelo TUC ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.p)}</span>`;
   if(r.flk==="car"){const c=l.cc;return `<span>En auto (${CS.n} ${CS.n>1?"autos":"auto"}): nafta, peajes${c.cv?", Carta Verde":""}, ${c.legDays*2} noches de ruta con hotel y comida</span><span>${fmt(l.p)}</span>`;}
-  if(r.flk==="sla")return `<span>${CS.hub?"Auto TUC ↔ Salta y estacionamiento":"Micro TUC ↔ Salta (estimado)"}</span><span>${fmt(hubCost("sla"))}</span><span>Vuelo SLA ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;
+  if(r.flk==="sla")return `<span>${CS.hub?"Auto TUC ↔ Salta y estacionamiento":"Micro TUC ↔ Salta (estimado)"}</span><span>${fmt(hubCost("sla"))}</span><span>Vuelo SLA ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.air)}</span>`;
   const tramo=(CS.hub?{bue:["Auto TUC ↔ Bs. As. y estacionamiento",hubCar("bue")],cor:["Auto TUC ↔ Córdoba y estacionamiento",hubCar("cor")],foz:["Auto TUC ↔ Foz, Carta Verde y estacionamiento",hubCar("foz")]}:{bue:["TUC ↔ EZE en JetSMART",TUC_BUE],cor:["Micro TUC ↔ Córdoba (estimado)",BUS_COR],foz:["Micro TUC ↔ Puerto Iguazú (estimado)",BUS_FOZ]})[r.flk];
-  return `<span>${tramo[0]}</span><span>${fmt(tramo[1])}</span><span>Vuelo ${l.o} ↔ ${r.ap} (${l.d}→${l.r} ${lm(l)})</span><span>${fmt(l.air)}</span>`;}
+  return `<span>${tramo[0]}</span><span>${fmt(tramo[1])}</span><span>Vuelo ${l.o} ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.air)}</span>`;}
 
 let SHOWN=24,WANTK=null;
 document.addEventListener("click",e=>{if(e.target.id==="cardmore"){SHOWN+=24;const y=scrollY;render();scrollTo(0,y);}});
@@ -1701,7 +1704,7 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
     const best=bestKey(r.rt);const nt=NINOTXT[r.zone];
     const bars=CRIT.map(c=>`<span>${r.ai&&c.k==="stay"?"Calidad del hotel":c.l}</span><span class="bar"><i style="transform:scaleX(${(r.sc[c.k]/10).toFixed(2)})"></i></span><span class="v">${r.sc[c.k].toFixed(1)}</span>`).join("");
     const rbox=[...RKEYS,"car"].filter(k=>k==="car"?(isFinite(r.rt.car.p)||!r.ai):(S.mes===1||isFinite(r.rt[k].p))).map(k=>{const l=r.rt[k];const ok=isFinite(l.p);const fi=ok?finfo(k,l,r.ap):"";
-      return `<button type="button" class="route ${ok&&k===best?"win":""} ${k===r.flk?"sel":""} ${ok?"":"na"}" ${ok?`data-rpick="${r.k}" data-rk="${k}"`:"disabled"} aria-pressed="${k===r.flk}" title="${ok?"Usar esta forma de viajar en el total":"Sin datos"}"><span>${k==="car"?"En auto":RLAB[k]}${k===r.flk&&RPICK[r.k]?" ✓":""}</span><b>${ok?Math.round(l.p+(k==="car"?r.tr:0)).toLocaleString("es-AR"):"—"}</b><small>${ok?(k==="car"?`${l.cc.km.toLocaleString("es-AR")} km`:l.d+"→"+l.r+" "+lm(l)):k==="car"?(NOCAR.has(r.k)||(r.comboParts||[]).some(p=>NOCAR.has(p.k))?"no se llega en auto":"sin ruta"):"sin datos"}</small>${fi?`<small class="fi">${fi}</small>`:""}</button>`;}).join("")+(RPICK[r.k]?`<button type="button" class="linkbtn" data-rpick="${r.k}" data-rk="">Volver a la más barata</button>`:"");
+      return `<button type="button" class="route ${ok&&k===best?"win":""} ${k===r.flk?"sel":""} ${ok?"":"na"}" ${ok?`data-rpick="${r.k}" data-rk="${k}"`:"disabled"} aria-pressed="${k===r.flk}" title="${ok?"Usar esta forma de viajar en el total":"Sin datos"}"><span>${k==="car"?"En auto":RLAB[k]}${k===r.flk&&RPICK[r.k]?" ✓":""}</span><b>${ok?Math.round(l.p+(k==="car"?r.tr:0)).toLocaleString("es-AR"):"—"}</b><small>${ok?(k==="car"?`${l.cc.km.toLocaleString("es-AR")} km`:dr(l)):k==="car"?(NOCAR.has(r.k)||(r.comboParts||[]).some(p=>NOCAR.has(p.k))?"no se llega en auto":"sin ruta"):"sin datos"}</small>${fi?`<small class="fi">${fi}</small>`:""}</button>`;}).join("")+(RPICK[r.k]?`<button type="button" class="linkbtn" data-rpick="${r.k}" data-rk="">Volver a la más barata</button>`:"");
     let stays;
     if(r.combo){stays=r.comboParts.map(d=>`<div class="stays-head"><b>${d.name}</b><span class="headlinks"><a class="region" href="${GIMG(d.name+" playa")}" target="_blank" rel="noopener">Fotos de la playa</a><a class="region" href="${GMAP(d.name)}" target="_blank" rel="noopener">Mapa</a><a class="region" href="${ABS(d.q)}" target="_blank" rel="noopener">Más casas</a></span></div>${stayGrid(d)}`).join("");}
     else if(r.ai){stays=aiGrid(r);}else{stays=`<div class="stays-head"><span class="lbl">Casas para ${PAX} · ${NIGHTS()} noches</span><span class="headlinks"><a class="region" href="${GIMG(r.name+" playa")}" target="_blank" rel="noopener">Fotos de la playa</a><a class="region" href="${GMAP(r.name)}" target="_blank" rel="noopener">Ver en Google Maps</a><a class="region" href="${ABS(r.q)}" target="_blank" rel="noopener">Más casas en Airbnb</a></span></div>${r.flag?`<p class="flag">${r.flag}</p>`:""}${stayGrid(r)}`;}
@@ -2080,7 +2083,7 @@ document.getElementById("aplist").addEventListener("click",pickAp);
 function renderTable(){
   const head=`<thead><tr><th>Aeropuerto</th>${RKEYS.map(k=>`<th>${RLAB[k]}</th>`).join("")}</tr></thead>`;
   const body=APS.map(ap=>{const r=routes(ap);const m=Math.min(...RKEYS.map(k=>r[k].p));
-    return `<tr><td><b>${CITY[ap]}</b> <span class="mono" style="color:var(--muted);font-size:12px">${ap}</span></td>${RKEYS.map(k=>{const l=r[k];const ok=isFinite(l.p);return `<td class="${ok&&l.p===m?"min":""}">${ok?fmt(l.p):"—"}<small>${ok?l.d+"→"+l.r+" ene":""}</small></td>`;}).join("")}</tr>`;}).join("");
+    return `<tr><td><b>${CITY[ap]}</b> <span class="mono" style="color:var(--muted);font-size:12px">${ap}</span></td>${RKEYS.map(k=>{const l=r[k];const ok=isFinite(l.p);return `<td class="${ok&&l.p===m?"min":""}">${ok?fmt(l.p):"—"}<small>${ok?dr(l):""}</small></td>`;}).join("")}</tr>`;}).join("");
   document.getElementById("ftable").innerHTML=head+"<tbody>"+body+"</tbody>";
 }
 function renderDayTable(){
