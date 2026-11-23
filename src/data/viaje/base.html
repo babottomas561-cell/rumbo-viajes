@@ -730,7 +730,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
 </section></div>
 <div class="panel" data-panel="vuelos" role="tabpanel" hidden><section id="fcal" style="display:flex;flex-direction:column;gap:12px" aria-label="Calendario de vuelos de enero">
   <h2>Calendario de enero: ir y volver cualquier día</h2>
-  <p class="lede" style="font-size:15px">Precio por persona del vuelo más barato de cada día, solo ida, buscado en Google Flights. Tocá un día de ida y uno de vuelta para ver el total. Los días en gris todavía no tienen precio.</p>
+  <p class="lede" style="font-size:15px">Precio por persona del vuelo más barato de cada día, solo ida, buscado en Google Flights. Tocá un día de ida y uno de vuelta para ver el total. 🔀 = sale más barato armando la escala vos, con dos pasajes separados. Los días en gris todavía no tienen precio.</p>
   <div class="fcsel"><label>Desde <select id="fco"></select></label><label>Hacia <select id="fca"></select></label></div>
   <div class="fcrow"><b>Ida</b><div class="fcg" id="fcgi"></div></div>
   <div class="fcrow"><b>Vuelta</b><div class="fcg" id="fcgv"></div></div>
@@ -742,7 +742,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
 .fcd{border:1px solid var(--line,#ddd);border-radius:8px;padding:4px 2px;text-align:center;font-size:11px;line-height:1.25;background:var(--card,#fff);color:inherit;cursor:pointer;font-family:inherit}
 .fcd b{display:block;font-size:13px}.fcd.na{opacity:.4;cursor:default}.fcd.lo{background:#e3f5e1;border-color:#5dae5a}.fcd.hi{background:#fbe9e7}.fcd.on{outline:3px solid #1f6feb;outline-offset:-1px}.fcd.off{opacity:.25}
 @media (prefers-color-scheme:dark){.fcd.lo{background:#1d3a1c}.fcd.hi{background:#3a1f1c}}
-.fcres{border:1px solid var(--line,#ddd);border-radius:12px;padding:12px;font-size:14px;line-height:1.5}.fcres .tot{font-size:20px;font-weight:700}
+.fcres{border:1px solid var(--line,#ddd);border-radius:12px;padding:12px;font-size:14px;line-height:1.5}.fcres .tot{font-size:20px;font-weight:700}.fcx{display:block;font-style:normal;color:#7a3fc2;font-weight:600}
 </style><section style="display:flex;flex-direction:column;gap:14px" aria-label="Vuelos por origen">
   <h2>Vuelos por aeropuerto y forma de salir</h2>
   <p class="lede" style="font-size:15px">Ida y vuelta por persona para la fecha elegida arriba, con el tramo desde Tucumán incluido. En amarillo, lo más barato de cada fila.</p>
@@ -2488,7 +2488,16 @@ const OWLIVE=null;const FELIVE=null;
 const CN={TUC:"Tucumán",SLA:"Salta",BUE:"Buenos Aires",COR:"Córdoba",MDZ:"Mendoza",ROS:"Rosario",JUJ:"Jujuy",IGU:"Foz do Iguaçu",ASU:"Asunción",VVI:"Santa Cruz (Bolivia)",LPB:"La Paz (Bolivia)",RIO:"Río de Janeiro",SAO:"San Pablo",FLN:"Florianópolis",SSA:"Salvador",REC:"Recife",NAT:"Natal",FOR:"Fortaleza",MCZ:"Maceió",JPA:"João Pessoa",AJU:"Aracaju",IOS:"Ilhéus",BPS:"Porto Seguro",SLZ:"São Luís",MVD:"Montevideo",PDP:"Punta del Este",MDQ:"Mar del Plata",SCL:"Santiago",CUN:"Cancún",PUJ:"Punta Cana",CTG:"Cartagena",ADZ:"San Andrés",PTY:"Panamá",SJO:"San José (Costa Rica)",GYE:"Guayaquil",PIU:"Piura",TRU:"Trujillo",PVR:"Puerto Vallarta",PXM:"Puerto Escondido",CUR:"Curazao",MGA:"Managua",SMR:"Santa Marta",NVT:"Navegantes"};
 const ORIG=["TUC","SLA","BUE","COR","MDZ","ROS","JUJ","IGU","ASU","VVI","LPB"];
 const idx={};for(const k in OW){const p=k.split("|");(idx[p[0]]||(idx[p[0]]={}))[+p[1].slice(8,10)]=OW[k];}
-const S2={o:"TUC",a:"RIO",i:null,v:null};const $$=id=>document.getElementById(id);if(!$$("fco"))return;
+const S2={o:"TUC",a:"RIO",i:null,v:null};
+// Escalas propias: dos pasajes separados vía una ciudad de conexión. Mismo día con 4 h o más entre vuelos, o durmiendo una noche (USD 35 por persona).
+const HUBS=["BUE","COR","SLA","SAO","RIO","IGU","SCL","LIM"],HOTEL=35;
+const hr=t=>typeof hh24==="function"?hh24(t):null,hs=x=>{const d=hrs(x[5]);return d;};
+function selfx(A,B,d){let best=null;for(const H of HUBS){if(H===A||H===B)continue;const L1=idx[A+">"+H],L2=idx[H+">"+B];if(!L1||!L2||!L2[d])continue;const y=L2[d];
+  const x=L1[d];if(x){const ar=hr(x[4]),dp=hr(y[3]),dur=hs(x);const dep1=hr(x[3]);// llega el mismo día (no pasa medianoche) y sobran 4 h
+    if(ar!=null&&dp!=null&&dep1!=null&&ar>dep1&&dp-ar>=4){const c=x[0]+y[0];if(!best||c<best.c)best={c,H,a:x,b:y,n:0};}}
+  const z=L1[d-1];if(z){const c=z[0]+y[0]+HOTEL;if(!best||c<best.c)best={c,H,a:z,b:y,n:1};}}
+  return best;}
+const $$=id=>document.getElementById(id);if(!$$("fco"))return;
 const dests=o=>[...new Set(Object.keys(idx).filter(r=>r.startsWith(o+">")).map(r=>r.split(">")[1]))].sort((x,y)=>(CN[x]||x).localeCompare(CN[y]||y));
 const nm=c=>CN[c]?`${CN[c]} (${c})`:c;const usd=n=>"USD "+Math.round(n).toLocaleString("es-AR");
 const wd=d=>["dom","lun","mar","mié","jue","vie","sáb"][new Date(Date.UTC(2027,0,d)).getUTCDay()];
@@ -2498,13 +2507,17 @@ function fillA(){const L=dests(S2.o);if(!L.includes(S2.a))S2.a=L.includes("RIO")
 function grid(el,r,sel,lim,cb){const t=idx[r]||{},ps=Object.values(t).map(x=>x[0]).sort((a,b)=>a-b),lo=ps[Math.floor(ps.length*.25)],hi=ps[Math.floor(ps.length*.75)];
  el.innerHTML="";for(let d=1;d<=31;d++){const x=t[d],b=document.createElement("button");b.type="button";const off=lim&&lim(d);
   b.className="fcd"+(x?(x[0]<=lo?" lo":x[0]>=hi?" hi":""):" na")+(sel===d?" on":"")+(off?" off":"");
-  b.innerHTML=`${wd(d)} ${d}<b>${x?"$"+x[0]:"–"}</b>${x?(x[1]?x[1]+" esc.":"directo"):""}`;b.title=x?`${x[2]} · ${x[3]} → ${x[4]} · ${x[5]}`:"Sin precio todavía";
-  if(x&&!off)b.onclick=()=>cb(d);el.appendChild(b);}}
+  const sx=selfx(...r.split(">"),d);const cheaper=sx&&(!x||sx.c<x[0]-15);
+  b.innerHTML=`${wd(d)} ${d}<b>${x?"$"+x[0]:"–"}</b>${x?(x[1]?x[1]+" esc.":"directo"):""}${cheaper?`<i class="fcx">🔀 $${sx.c}</i>`:""}`;b.title=x?`${x[2]} · ${x[3]} → ${x[4]} · ${x[5]}`:"Sin precio todavía";
+  if((x||cheaper)&&!off){b.onclick=()=>cb(d);if(!x)b.classList.remove("na");}el.appendChild(b);}}
 const fl=(x,lbl,d)=>`<div><b>${lbl} ${wd(d)} ${d}/1:</b> ${usd(x[0])} · ${x[2]} · sale ${x[3]}${x[7]?" de "+x[7]:""}, llega ${x[4]}${x[8]?" a "+x[8]:""}${x[5]?` (${x[5]})`:""} · ${x[1]?x[1]+" escala"+(x[1]>1?"s":"")+(x[6]&&x[6].length?": "+x[6].join("; "):""):"directo"}</div>`;
 function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
  grid($$("fcgi"),ri,S2.i,null,d=>{S2.i=d;if(S2.v&&S2.v<=d)S2.v=null;draw();});
  grid($$("fcgv"),rv,S2.v,d=>S2.i&&d<=S2.i,d=>{S2.v=d;draw();});
- const xi=S2.i&&(idx[ri]||{})[S2.i],xv=S2.v&&(idx[rv]||{})[S2.v];let h="";
+ const pickS=(d,A,B)=>{const x=(idx[A+">"+B]||{})[d],sx=d&&selfx(A,B,d);return sx&&(!x||sx.c<x[0]-15)?{sx,x}:null;};
+ const si=S2.i&&pickS(S2.i,S2.o,S2.a),sv=S2.v&&pickS(S2.v,S2.a,S2.o);
+ const sxt=(p,lbl,d)=>`<div class="fadv">🔀 <b>${lbl} armando la escala vos:</b> ${CN[p.sx.H]||p.sx.H} · USD ${p.sx.c}${p.sx.n?` (incluye USD ${HOTEL} de una noche en ${CN[p.sx.H]||p.sx.H})`:""}${p.x?` · <b>ahorrás USD ${p.x[0]-p.sx.c}</b> contra el vuelo vendido junto`:" · no hay vuelo vendido junto ese día"}<br>1) ${p.sx.a[2]} ${p.sx.n?"el día anterior":"ese día"}, sale ${p.sx.a[3]}, llega ${p.sx.a[4]} · USD ${p.sx.a[0]}<br>2) ${p.sx.b[2]}, sale ${p.sx.b[3]}, llega ${p.sx.b[4]} · USD ${p.sx.b[0]}</div>`;
+ const xi=S2.i&&((idx[ri]||{})[S2.i]||(si&&[si.sx.c,1,"escala propia","","","","",""])),xv=S2.v&&((idx[rv]||{})[S2.v]||(sv&&[sv.sx.c,1,"escala propia","","","","",""]));let h="";
  if(xi)h+=fl(xi,"Ida",S2.i);if(xv)h+=fl(xv,"Vuelta",S2.v);
  let best=null;
  if(xi&&xv){const p=xi[0]+xv[0],n=S2.v-S2.i;h=`<div class="tot">${usd(p)} por persona · ${usd(p*pax())} el grupo de ${pax()}</div><div>${n} noches (${n+1} días)</div>`+h;
@@ -2512,6 +2525,8 @@ function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
   if(iv&&(n===8||n===9))h+=`<div style="margin-top:6px">Comprado como ida y vuelta junto: <b>${usd(iv[0])}</b> (${iv[2]})${iv[0]<p?" · <b>más barato que por separado</b>":""}</div>`;}
  else{const ti=idx[ri]||{},tv=idx[rv]||{};for(const i in ti)for(const v in tv){const n=v-i;if(n>=7&&n<=10&&(!best||ti[i][0]+tv[v][0]<best[0]))best=[ti[i][0]+tv[v][0],+i,+v];}
   h=(h||"<div>Elegí el día de ida y el de vuelta.</div>")+(best?`<div style="margin-top:6px">Lo más barato entre 7 y 10 noches: ida ${wd(best[1])} ${best[1]}/1 y vuelta ${wd(best[2])} ${best[2]}/1 · <b>${usd(best[0])}</b> por persona <button type="button" class="pickb" id="fcbest">Elegir</button></div>`:"");}
+ if(si)h+=sxt(si,"Ida",S2.i);if(sv)h+=sxt(sv,"Vuelta",S2.v);
+ if(si||sv)h+=`<div style="font-size:12px;opacity:.8;margin-top:4px">⚠ Con pasajes separados, si el primer vuelo se atrasa la aerolínea del segundo no responde, y hay que retirar y volver a despachar el equipaje. Por eso pido 4 h entre vuelos, o dormir una noche en el medio.</div>`;
  const fr=Object.values(idx[ri]||{}).concat(Object.values(idx[rv]||{})).map(x=>x[9]).filter(Boolean).sort().pop();
  $$("fcres").innerHTML=h+(fr?`<div style="font-size:12px;opacity:.7;margin-top:6px">Precios buscados hasta el ${fr.split("-").reverse().join("/")}. Pueden cambiar.</div>`:"");
  const bb=$$("fcbest");if(bb&&best){const b2=best;bb.onclick=()=>{S2.i=b2[1];S2.v=b2[2];draw();};}}
