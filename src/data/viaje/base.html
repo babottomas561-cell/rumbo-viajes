@@ -1899,7 +1899,7 @@ function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMA
   el.innerHTML=`<b>${r.k==="car"||r.flk==="car"?"En auto":RLAB[r.flk]} · Tucumán → ${r.name}</b>
     <div class="tbig"><span>⏱ ${miss?"~":""}${hfmt(tot)}<small> puerta a puerta, por tramo</small></span><span>${fmt(cost)}<small> ida y vuelta c/u</small></span></div>
     ${esc?`<div class="tsub">${esc} escala${esc>1?"s":""} en los vuelos</div>`:""}
-    <ol>${legs.map(g=>`<li><span>${IC[g.m]} ${g.t}${g.st!=null&&g.m==="avión"?` · ${stx(g.st)}`:""}${g.fd?`<em>Sale ${g.fd.dep}${g.fd.from?" de "+g.fd.from:""} · llega ${g.fd.arr}${g.fd.to?" a "+g.fd.to:""}${g.fd.nd?" (día siguiente)":""} · ${g.fd.dur}</em>${g.fd.lay.map(x=>`<em class="${x.warn?"w":""}">↳ Escala ${x.dur} en ${x.name}${x.warn?" — "+x.warn:""}</em>`).join("")}${g.fd.o?fadv(g.fd.o,g.fd.ap):""}`:""}</span><span>${g.h!=null?hfmt(g.h):"s/d"}</span><span>${g.c?fmt(g.c):"—"}</span></li>`).join("")}</ol>
+    <ol>${legs.map(g=>`<li><span>${IC[g.m]} ${g.t}${g.st!=null&&g.m==="avión"?` · ${stx(g.st)}`:""}${g.fd?`<em>Sale ${g.fd.dep}${g.fd.from?" de "+g.fd.from:""} · llega ${g.fd.arr}${g.fd.to?" a "+g.fd.to:""}${g.fd.nd?" (día siguiente)":""} · ${g.fd.dur}</em>${g.fd.st&&!g.fd.lay.length?`<em>↳ ${stx(g.fd.st)}: Google no dijo dónde</em>`:""}${g.fd.lay.map(x=>`<em class="${x.warn?"w":""}">↳ Escala ${x.dur} en ${x.name}${x.warn?" — "+x.warn:""}</em>`).join("")}${g.fd.o?fadv(g.fd.o,g.fd.ap):""}`:""}</span><span>${g.h!=null?hfmt(g.h):"s/d"}</span><span>${g.c?fmt(g.c):"—"}</span></li>`).join("")}</ol>
     <small>Horas: cada tramo de ida (la vuelta es igual). Costos: ida y vuelta por persona.</small>`;
   // El popup se abre arriba de la playa: se deja lugar arriba para él y a la izquierda (o abajo en el celular) para el cuadro del viaje
   try{const mob=innerWidth<700;LMAP.fitBounds(L.latLngBounds(pts),{maxZoom:7,paddingTopLeft:mob?[30,40]:[310,50],paddingBottomRight:mob?[30,30]:[340,40]});}catch(_){}}
@@ -2510,7 +2510,8 @@ function grid(el,r,sel,lim,cb){const t=idx[r]||{},ps=Object.values(t).map(x=>x[0
   const sx=selfx(...r.split(">"),d);const cheaper=sx&&(!x||sx.c<x[0]-15);
   b.innerHTML=`${wd(d)} ${d}<b>${x?"$"+x[0]:"–"}</b>${x?(x[1]?x[1]+" esc.":"directo"):""}${cheaper?`<i class="fcx">🔀 $${sx.c}</i>`:""}`;b.title=x?`${x[2]} · ${x[3]} → ${x[4]} · ${x[5]}`:"Sin precio todavía";
   if((x||cheaper)&&!off){b.onclick=()=>cb(d);if(!x)b.classList.remove("na");}el.appendChild(b);}}
-const fl=(x,lbl,d)=>`<div><b>${lbl} ${wd(d)} ${d}/1:</b> ${usd(x[0])} · ${x[2]} · sale ${x[3]}${x[7]?" de "+x[7]:""}, llega ${x[4]}${x[8]?" a "+x[8]:""}${x[5]?` (${x[5]})`:""} · ${x[1]?x[1]+" escala"+(x[1]>1?"s":"")+(x[6]&&x[6].length?": "+x[6].join("; "):""):"directo"}</div>`;
+const nd=x=>{const a=typeof hh24==="function"?hh24(x[3]):null,b=hrs(x[5]);if(a==null||b==null)return "";const k=Math.floor((a+b-1)/24);return k>0?` (${k===1?"día siguiente":"+"+k+" días"})`:"";};
+const fl=(x,lbl,d)=>`<div><b>${lbl} ${wd(d)} ${d}/1:</b> ${usd(x[0])} · ${x[2]} · sale ${x[3]}${x[7]?" de "+x[7]:""}, llega ${x[4]}${nd(x)}${x[8]?" a "+x[8]:""}${x[5]?` (${x[5]})`:""} · ${x[1]?x[1]+" escala"+(x[1]>1?"s":"")+(x[6]&&x[6].length?": "+x[6].map(t=>{const L=typeof layInfo==="function"?layInfo(t):null;return t+(L&&L.warn?` <b style="color:#b45309">⚠ ${L.warn}</b>`:"");}).join("; "):" (Google no dijo dónde)"):"directo"}</div>`;
 function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
  grid($$("fcgi"),ri,S2.i,null,d=>{S2.i=d;if(S2.v&&S2.v<=d)S2.v=null;draw();});
  grid($$("fcgv"),rv,S2.v,d=>S2.i&&d<=S2.i,d=>{S2.v=d;draw();});
@@ -2523,13 +2524,16 @@ function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
  if(xi&&xv){const p=xi[0]+xv[0],n=S2.v-S2.i;h=`<div class="tot">${usd(p)} por persona · ${usd(p*pax())} el grupo de ${pax()}</div><div>${n} noches (${n+1} días)</div>`+h;
   const iv=FE[`${S2.o}-${S2.a}-1-${S2.i}${n===8?"":"-n"+n}`];
   if(iv&&(n===8||n===9))h+=`<div style="margin-top:6px">Comprado como ida y vuelta junto: <b>${usd(iv[0])}</b> (${iv[2]})${iv[0]<p?" · <b>más barato que por separado</b>":""}</div>`;}
- else{const ti=idx[ri]||{},tv=idx[rv]||{};for(const i in ti)for(const v in tv){const n=v-i;if(n>=7&&n<=10&&(!best||ti[i][0]+tv[v][0]<best[0]))best=[ti[i][0]+tv[v][0],+i,+v];}
-  h=(h||"<div>Elegí el día de ida y el de vuelta.</div>")+(best?`<div style="margin-top:6px">Lo más barato entre 7 y 10 noches: ida ${wd(best[1])} ${best[1]}/1 y vuelta ${wd(best[2])} ${best[2]}/1 · <b>${usd(best[0])}</b> por persona <button type="button" class="pickb" id="fcbest">Elegir</button></div>`:"");}
+ else{const ti=idx[ri]||{},tv=idx[rv]||{};let good=null;const sc=(a,b)=>a[0]+b[0]+15*((hrs(a[5])||0)+(hrs(b[5])||0));
+  for(const i in ti)for(const v in tv){const n=v-i;if(n<7||n>10)continue;const p=ti[i][0]+tv[v][0];if(!best||p<best[0])best=[p,+i,+v];const q=sc(ti[i],tv[v]);if(!good||q<good[3])good=[p,+i,+v,q,(hrs(ti[i][5])||0)+(hrs(tv[v][5])||0)];}
+  const hb=best?(hrs(ti[best[1]][5])||0)+(hrs(tv[best[2]][5])||0):0;
+  h=(h||"<div>Elegí el día de ida y el de vuelta.</div>")+(good?`<div class="fadv">🧭 <b>Lo que más conviene</b> entre 7 y 10 noches: ida ${wd(good[1])} ${good[1]}/1 y vuelta ${wd(good[2])} ${good[2]}/1 · <b>${usd(good[0])}</b> por persona, ${hfmt(good[4])} de viaje sumando ida y vuelta <button type="button" class="pickb" data-fc="${good[1]},${good[2]}">Elegir</button></div>`:"")
+   +(best&&good&&(best[1]!==good[1]||best[2]!==good[2])?`<div style="margin-top:6px">💲 Lo más barato: ida ${best[1]}/1 y vuelta ${best[2]}/1 · ${usd(best[0])} (${usd(good[0]-best[0])} menos), pero ${hfmt(hb)} de viaje (${hfmt(hb-good[4])} más) <button type="button" class="pickb" data-fc="${best[1]},${best[2]}">Elegir</button></div>`:"");}
  if(si)h+=sxt(si,"Ida",S2.i);if(sv)h+=sxt(sv,"Vuelta",S2.v);
  if(si||sv)h+=`<div style="font-size:12px;opacity:.8;margin-top:4px">⚠ Con pasajes separados, si el primer vuelo se atrasa la aerolínea del segundo no responde, y hay que retirar y volver a despachar el equipaje. Por eso pido 4 h entre vuelos, o dormir una noche en el medio.</div>`;
  const fr=Object.values(idx[ri]||{}).concat(Object.values(idx[rv]||{})).map(x=>x[9]).filter(Boolean).sort().pop();
  $$("fcres").innerHTML=h+(fr?`<div style="font-size:12px;opacity:.7;margin-top:6px">Precios buscados hasta el ${fr.split("-").reverse().join("/")}. Pueden cambiar.</div>`:"");
- const bb=$$("fcbest");if(bb&&best){const b2=best;bb.onclick=()=>{S2.i=b2[1];S2.v=b2[2];draw();};}}
+ $$("fcres").querySelectorAll("[data-fc]").forEach(b=>b.onclick=()=>{const [i,v]=b.dataset.fc.split(",").map(Number);S2.i=i;S2.v=v;draw();});}
 $$("fco").onchange=e=>{S2.o=e.target.value;S2.i=S2.v=null;fillA();draw();};$$("fca").onchange=e=>{S2.a=e.target.value;S2.i=S2.v=null;draw();};
 fillO();fillA();draw();})();
 </script><style>.fadv{display:block;margin-top:6px;padding:6px 8px;border-radius:8px;background:rgba(31,111,235,.08);font-style:normal;font-size:12.5px;line-height:1.4}
