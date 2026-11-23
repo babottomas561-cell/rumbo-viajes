@@ -19,7 +19,7 @@ on:
         required: false
 
 concurrency:
-  group: precios-${{ inputs.modo || 'iv' }}-${{ inputs.meses || 'auto' }}
+  group: precios-${{ inputs.modo || 'iv' }}-${{ inputs.meses || 'auto' }}-${{ inputs.origenes || 'def' }}-${{ inputs.dias || '10' }}
   cancel-in-progress: false
 
 jobs:

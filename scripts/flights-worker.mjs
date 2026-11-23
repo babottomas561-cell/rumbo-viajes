@@ -40,7 +40,7 @@ function parse(labels) {
     const fx = (s) => (/[ap]\.m$/.test(s) ? s + "." : s);
     out.push({ price: parseInt(p[1].replace(/[.,]/g, ""), 10), stops: st ? +st[1] : 0, airline, dep: fx(sl[3]), arr: fx(sl[6]), dur: du?.[1] ?? "", from: sl[1], to: sl[4], nd: sl[5] !== sl[2] ? 1 : 0, lay });
   }
-  return out.sort((x, y) => x.price - y.price).slice(0, 8);
+  return out.sort((x, y) => x.price - y.price).slice(0, 14);
 }
 
 // Devuelve {opts, none}: none=true cuando Google dice "No se encontraron resultados" (no hay vuelos, no es error).
@@ -159,6 +159,7 @@ const [snap] = await sb("app_snapshots?key=eq.anio&select=data");
 if (snap && ok.length) {
   const anio = snap.data;
   for (const { o, ap, m, opts } of ok) {
+    if (!IX[o]) continue; // orígenes nuevos: quedan en flight_quotes, fechas y fdet
     const [pi, si, ai] = IX[o];
     anio.fl[ap] ??= {};
     const row = (anio.fl[ap][String(m)] ??= [null, null, null, null, null, 0, null, null, null, null]);
