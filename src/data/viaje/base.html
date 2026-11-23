@@ -1407,6 +1407,16 @@ function slaFL(){if(FL.SLA)return;FL.SLA={};for(const ap in ANIO.fl){const f=ANI
 function leg(o,ap,d){if(o==="SLA")slaFL();const t=FL[o]&&FL[o][ap];if(!t)return null;
   if(d==="best"){let b=null;for(const [k,v] of Object.entries(t)){if(!b||v[0]<b.p)b={p:v[0],d:+k,r:+k+NIGHTS()};}return b;}
   const v=t[d];return v?{p:v[0],d:+d,r:+d+NIGHTS()}:null;}
+// Precios en vivo del robot ('fechas'): pisan la tabla FL de enero con el dato más nuevo para las noches elegidas
+// (claves "TUC-RIO-1-10" = 8 noches, "TUC-RIO-1-10-n9" = 9 noches). Si para 9 noches no hay dato, queda el de 8 y se marca.
+let FL0=null,FE_N=null,FE_LIVE=0;
+function applyFE(){if(typeof FELIVE==="undefined"||!FELIVE)return;const n=NIGHTS();if(FE_N===n)return;FE_N=n;
+  if(!FL0)FL0=JSON.parse(JSON.stringify(FL));
+  for(const o in FL0){FL[o]=FL[o]||{};for(const ap in FL0[o])FL[o][ap]={...FL0[o][ap]};}
+  const suf=n===8?"":n===9?"-n9":null;FE_LIVE=0;if(suf===null)return;
+  for(const k in FELIVE){const m=/^([A-Z]{3})-([A-Z]{3})-1-(\d+)(-n\d+)?$/.exec(k);if(!m||(m[4]||"")!==suf)continue;
+    const [,o,ap,d]=m,v=FELIVE[k];if(!v||!v[0])continue;FL[o]=FL[o]||{};FL[o][ap]=FL[o][ap]||{};
+    const old=FL[o][ap][d];FL[o][ap][d]=old?[v[0],...old.slice(1)]:[v[0]];FE_LIVE++;}}
 function routes(ap,dep=S.dep){
   const r={};const t=leg("TUC",ap,dep);r.tuc=t?{...t,o:"TUC"}:NA;
   const b=leg("BUE",ap,dep);r.bue=b?{...b,p:b.p+hubCost("bue"),o:"BUE",air:b.p}:NA;
@@ -1600,7 +1610,7 @@ function build(){
     rows.push({...c,combo:true,houseTotal:ps.reduce((a,p)=>a+hpT(pickStay(p.d))*p.f,0),stayS:ps.reduce((a,p)=>a+stayScore(pickStay(p.d))*p.f,0),comboParts:ps.map(p=>p.d),
       ex:Math.round((ps.reduce((a,p)=>a+(EX[p.d.k]??40)*p.f,0)+20)*g.ex),fee:ps.reduce((a,p)=>a+(FEE[p.d.k]||0),0)});});
   const sw=Object.values(S.W).reduce((a,b)=>a+b,0)||1;
-  rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla"].includes(S.strat)))?bestKeyT(r,rt):S.strat;if(!r.ai&&!r.combo&&CARKM[r.k]){const cc=carCost(r.k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else if(!r.ai&&r.combo&&r.comboParts&&CARKM[r.comboParts[r.comboParts.length-1].k]){const cc=carCost(r.comboParts[r.comboParts.length-1].k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else rt.car=NA;
+  try{applyFE();}catch(_){}rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla"].includes(S.strat)))?bestKeyT(r,rt):S.strat;if(!r.ai&&!r.combo&&CARKM[r.k]){const cc=carCost(r.k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else if(!r.ai&&r.combo&&r.comboParts&&CARKM[r.comboParts[r.comboParts.length-1].k]){const cc=carCost(r.comboParts[r.comboParts.length-1].k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else rt.car=NA;
     if(RPICK[r.k]&&rt[RPICK[r.k]]&&isFinite(rt[RPICK[r.k]].p))r.flk=RPICK[r.k];r.leg=rt[r.flk];r.fl=r.leg.p;
     r.bag=Math.round((CS.hub&&r.flk==="bue"?40:BAG[r.flk])*g.bag);r.ins=r.dom?0:g.ins;r.dc=r.ai?null:dayCost(r,S.gasto);r.dayv=r.ai?(S.gasto==="ahorro"?8:20):r.dc?Math.round(r.dc.tot):Math.round(r.day*g.day);r.stayPP=r.houseTotal/PAX;r.daily=r.dayv*DAYS;r.total=r.fl+r.bag+r.ins+r.stayPP+r.tr+r.fee+r.ex+r.daily;
     r.sc={price:priceScore(r.total),beach:r.s[0],night:r.s[1],young:r.s[2],clima:NINO[r.zone],stay:r.stayS};
@@ -2543,7 +2553,7 @@ function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
  $$("fcres").innerHTML=h+(fr?`<div style="font-size:12px;opacity:.7;margin-top:6px">Precios buscados hasta el ${fr.split("-").reverse().join("/")}. Pueden cambiar.</div>`:"");
  $$("fcres").querySelectorAll("[data-fc]").forEach(b=>b.onclick=()=>{const [i,v]=b.dataset.fc.split(",").map(Number);S2.i=i;S2.v=v;draw();});}
 $$("fco").onchange=e=>{S2.o=e.target.value;S2.i=S2.v=null;fillA();draw();};$$("fca").onchange=e=>{S2.a=e.target.value;S2.i=S2.v=null;draw();};
-fillO();fillA();draw();})();
+fillO();fillA();draw();})();try{FE_N=null;applyFE();if(typeof render==="function")render();}catch(_){}
 </script><style>.fadv{display:block;margin-top:6px;padding:6px 8px;border-radius:8px;background:rgba(31,111,235,.08);font-style:normal;font-size:12.5px;line-height:1.4}
 .fopts{margin-top:4px;font-size:12px}.fopts summary{cursor:pointer;color:#1f6feb}.fopts ul{margin:4px 0 0;padding-left:16px}.fopts ul{max-height:260px;overflow:auto}.fopts li{margin:3px 0;display:block;white-space:normal;word-break:normal}.fopts li.on{font-weight:600}
 .ftag{color:#0a7c86}.fwarn{color:#b45309}</style>
