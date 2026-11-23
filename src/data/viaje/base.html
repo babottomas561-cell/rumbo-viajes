@@ -1825,8 +1825,34 @@ const LAYAP=[["Guarulhos",-23.43,-46.47,"São Paulo-Guarulhos"],["Congonhas",-23
  ["Navegantes",-26.88,-48.65,"Navegantes"],["Curitiba",-25.53,-49.18,"Curitiba"],["Miami",25.79,-80.29,"Miami"],["Foz do Iguaçu",-25.6,-54.49,"Foz do Iguaçu"],["Reina Beatrix",12.5,-70.01,"Aruba"],["Toronto",43.68,-79.63,"Toronto"]];
 function layInfo(t){const m=/^(.*?) en (.*)$/.exec(t||"");if(!m)return null;const a=LAYAP.find(x=>m[2].includes(x[0]));const h=hrs(m[1]);
   return {dur:m[1],h,name:a?a[3]:m[2],ll:a?[a[1],a[2]]:null,warn:h==null?"":h<1?"conexión justa: menos de 1 h":h>=10?"escala muy larga: conviene hotel o salir a pasear":h>=6?"escala larga":""};}
+
+// Copensador de vuelos: compara todas las opciones guardadas de una ruta y explica cuál conviene y por qué.
+// Puntaje = precio + USD 15 por hora de viaje + castigos (madrugada, escalas largas, cambio de aeropuerto, escalas).
+function fopts(o,ap){const L=typeof FDLIVE!=="undefined"?FDLIVE:null;const f=(L&&L[o+"-"+ap])||FD[o+"-"+ap];return (f&&f.o)||[];}
+function hh24(t){const m=/(\d+):(\d+)\s*([ap])/i.exec(t||"");if(!m)return null;let x=+m[1]%12+(+m[2])/60;if(/p/i.test(m[3]))x+=12;return x;}
+function fadv(o,ap){const O=fopts(o,ap);if(O.length<2&&!(typeof OWLIVE!=="undefined"&&OWLIVE))return "";
+  const X=O.map((f,i)=>{const d=hrs(f[6])||0,lay=(f[7]||[]).map(layInfo).filter(Boolean),ar=hh24(f[4]),why=[];let pen=0;
+    if(ar!=null&&ar<6){pen+=40;why.push("llega de madrugada");}const dp=hh24(f[3]);if(dp!=null&&dp<5){pen+=25;why.push("sale de madrugada");}
+    if(lay.some(x=>x.h>=6)){pen+=30;why.push("escala larga");}
+    if((f[7]||[]).some(t=>/cambio de aeropuerto/.test(t))){pen+=50;why.push("cambio de aeropuerto");}
+    if(lay.some(x=>x.h!=null&&x.h<1)){pen+=25;why.push("conexión justa");}
+    pen+=(f[1]||0)*20;return {i,f,d,pen,why,sc:f[0]+15*d+pen};});
+  let h="";
+  if(X.length>=2){const cheap=X.reduce((a,b)=>b.f[0]<a.f[0]?b:a),fast=X.reduce((a,b)=>b.d&&(!a.d||b.d<a.d)?b:a),best=X.reduce((a,b)=>b.sc<a.sc?b:a);
+    const tag=x=>[x===best?"⭐ recomendado":"",x===cheap?"💲 más barato":"",x===fast?"⚡ más rápido":""].filter(Boolean).join(" · ");
+    let why;if(best===cheap)why="es el más barato y no tiene contras graves";else{const dp=best.f[0]-cheap.f[0],dh=cheap.d-best.d;why=`cuesta USD ${dp} más que el más barato pero ${dh>0?`ahorra ${hfmt(dh)} de viaje`:""}${cheap.why.length?`${dh>0?" y ":""}evita: ${cheap.why.join(", ")}`:""}`;}
+    h+=`<div class="fadv"><b>🧭 Opinión:</b> te conviene <b>${best.f[2]}</b> (USD ${best.f[0]}, ${best.f[3]} → ${best.f[4]}, ${best.f[6]}): ${why}.</div>`;
+    h+=`<details class="fopts"><summary>Ver las ${X.length} opciones de este vuelo</summary><ul>${X.slice().sort((a,b)=>a.sc-b.sc).map(x=>`<li${x===best?' class="on"':""}><b>USD ${x.f[0]}</b> · ${x.f[2]} · ${x.f[3]} → ${x.f[4]}${x.f[5]?" (+1)":""} · ${x.f[6]} · ${stx(x.f[1])}${tag(x)?` <span class="ftag">${tag(x)}</span>`:""}${x.why.length?` <span class="fwarn">⚠ ${x.why.join(", ")}</span>`:""}</li>`).join("")}</ul></details>`;}
+  // otro día: lo más barato de ida en enero según el calendario
+  if(typeof OWLIVE!=="undefined"&&OWLIVE){const a=ap==="GIG"?"RIO":ap,ds=[];for(const k in OWLIVE)if(k.startsWith(o+">"+a+"|2027-01"))ds.push([OWLIVE[k][0],+k.slice(-2)]);
+    if(ds.length>=5){ds.sort((x,y)=>x[0]-y[0]);const ref=X.length?Math.min(...X.map(x=>x.f[0])):null,b=ds[0];
+      h+=`<div class="fadv">📅 Solo ida en enero, el día más barato es el <b>${b[1]}/1</b> (USD ${b[0]})${ref?`, contra USD ${ref} del ida y vuelta del 10/1`:""}. <a href="#" class="fcgo" data-o="${o}" data-a="${a}">Ver calendario</a></div>`;}}
+  return h;}
+document.addEventListener("click",e=>{const a=e.target.closest(".fcgo");if(!a)return;e.preventDefault();const t=document.querySelector('[data-tab="vuelos"]');if(t)t.click();const so=document.getElementById("fco"),sa=document.getElementById("fca");
+  if(so&&[...so.options].some(x=>x.value===a.dataset.o&&!x.disabled)){so.value=a.dataset.o;so.dispatchEvent(new Event("change"));if([...sa.options].some(x=>x.value===a.dataset.a)){sa.value=a.dataset.a;sa.dispatchEvent(new Event("change"));}}
+  setTimeout(()=>document.getElementById("fcal")?.scrollIntoView({behavior:"smooth"}),100);});
 // Detalle del vuelo más barato de cada tramo (horarios, duración, escalas)
-function fdet(o,ap){const f=fd0(o,ap);if(!f)return null;return {al:f[2],st:f[1],dep:f[3],arr:f[4],nd:f[5],dur:f[6],lay:(f[7]||[]).map(layInfo).filter(Boolean),from:f[8]||"",to:f[9]||""};}
+function fdet(o,ap){const f=fd0(o,ap);if(!f)return null;return {al:f[2],st:f[1],dep:f[3],arr:f[4],nd:f[5],dur:f[6],lay:(f[7]||[]).map(layInfo).filter(Boolean),from:f[8]||"",to:f[9]||"",o,ap};}
 // Tramos del viaje según la forma de llegar elegida: {a,b: [lat,lon], m: avión|micro|auto|cruce|traslado, t: texto, h: horas por tramo, c: costo ida y vuelta por persona}
 function tripLegs(r,ll){const k=r.flk,l=r.rt&&r.rt[k];if(!l)return [];const ap=r.ap,T=ORGEO.TUC.slice(0,2),G=x=>(ORGEO[x]||APGEO[x]||[]).slice(0,2),A=APGEO[ap];ll=ll||(GEO[r.k]?GEO[r.k]:A);if(!A||!ll)return [];
   const air=(a,b,t,h,c,st,o2)=>({a,b,m:"avión",t,h,c,st,fd:o2?fdet(o2[0],o2[1]):null}),gnd=(a,b,m,t,h,c)=>({a,b,m,t,h,c});const L=[];
@@ -1873,7 +1899,7 @@ function drawTrip(r,ll){if(!LMAP)return;if(!LTRIP)LTRIP=L.layerGroup().addTo(LMA
   el.innerHTML=`<b>${r.k==="car"||r.flk==="car"?"En auto":RLAB[r.flk]} · Tucumán → ${r.name}</b>
     <div class="tbig"><span>⏱ ${miss?"~":""}${hfmt(tot)}<small> puerta a puerta, por tramo</small></span><span>${fmt(cost)}<small> ida y vuelta c/u</small></span></div>
     ${esc?`<div class="tsub">${esc} escala${esc>1?"s":""} en los vuelos</div>`:""}
-    <ol>${legs.map(g=>`<li><span>${IC[g.m]} ${g.t}${g.st!=null&&g.m==="avión"?` · ${stx(g.st)}`:""}${g.fd?`<em>Sale ${g.fd.dep}${g.fd.from?" de "+g.fd.from:""} · llega ${g.fd.arr}${g.fd.to?" a "+g.fd.to:""}${g.fd.nd?" (día siguiente)":""} · ${g.fd.dur}</em>${g.fd.lay.map(x=>`<em class="${x.warn?"w":""}">↳ Escala ${x.dur} en ${x.name}${x.warn?" — "+x.warn:""}</em>`).join("")}`:""}</span><span>${g.h!=null?hfmt(g.h):"s/d"}</span><span>${g.c?fmt(g.c):"—"}</span></li>`).join("")}</ol>
+    <ol>${legs.map(g=>`<li><span>${IC[g.m]} ${g.t}${g.st!=null&&g.m==="avión"?` · ${stx(g.st)}`:""}${g.fd?`<em>Sale ${g.fd.dep}${g.fd.from?" de "+g.fd.from:""} · llega ${g.fd.arr}${g.fd.to?" a "+g.fd.to:""}${g.fd.nd?" (día siguiente)":""} · ${g.fd.dur}</em>${g.fd.lay.map(x=>`<em class="${x.warn?"w":""}">↳ Escala ${x.dur} en ${x.name}${x.warn?" — "+x.warn:""}</em>`).join("")}${g.fd.o?fadv(g.fd.o,g.fd.ap):""}`:""}</span><span>${g.h!=null?hfmt(g.h):"s/d"}</span><span>${g.c?fmt(g.c):"—"}</span></li>`).join("")}</ol>
     <small>Horas: cada tramo de ida (la vuelta es igual). Costos: ida y vuelta por persona.</small>`;
   // El popup se abre arriba de la playa: se deja lugar arriba para él y a la izquierda (o abajo en el celular) para el cuadro del viaje
   try{const mob=innerWidth<700;LMAP.fitBounds(L.latLngBounds(pts),{maxZoom:7,paddingTopLeft:mob?[30,40]:[310,50],paddingBottomRight:mob?[30,30]:[340,40]});}catch(_){}}
@@ -2491,4 +2517,6 @@ function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
  const bb=$$("fcbest");if(bb&&best){const b2=best;bb.onclick=()=>{S2.i=b2[1];S2.v=b2[2];draw();};}}
 $$("fco").onchange=e=>{S2.o=e.target.value;S2.i=S2.v=null;fillA();draw();};$$("fca").onchange=e=>{S2.a=e.target.value;S2.i=S2.v=null;draw();};
 fillO();fillA();draw();})();
-</script>
+</script><style>.fadv{display:block;margin-top:6px;padding:6px 8px;border-radius:8px;background:rgba(31,111,235,.08);font-style:normal;font-size:12.5px;line-height:1.4}
+.fopts{margin-top:4px;font-size:12px}.fopts summary{cursor:pointer;color:#1f6feb}.fopts ul{margin:4px 0 0;padding-left:16px}.fopts ul{max-height:260px;overflow:auto}.fopts li{margin:3px 0;display:block;white-space:normal;word-break:normal}.fopts li.on{font-weight:600}
+.ftag{color:#0a7c86}.fwarn{color:#b45309}</style>
