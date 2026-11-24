@@ -1,0 +1,20 @@
+name: Actualizar itinerario en auto
+
+on:
+  schedule:
+    - cron: "40 */6 * * *" # cada 6 horas
+  workflow_dispatch:
+
+jobs:
+  ruta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/road_trip.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}

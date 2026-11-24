@@ -35,6 +35,9 @@ export async function GET() {
     const { data: x } = db ? await db.from("app_snapshots").select("data").eq("key", key).maybeSingle() : { data: null };
     if (x?.data) html = html.replace(`const ${name}=null;`, `const ${name}=` + JSON.stringify(x.data).replace(/</g, "\\u003c") + ";");
   }
+  // Itinerario en auto día por día (horarios OSRM, pronóstico, noches de Airbnb, noticias de ruta y fotos): scripts/road_trip.py cada 6 h
+  const { data: rt } = db ? await db.from("app_snapshots").select("data").eq("key", "ruta").maybeSingle() : { data: null };
+  if (rt?.data) html = html.replace("const RUTALIVE=null;", "const RUTALIVE=" + JSON.stringify(rt.data).replace(/</g, "\\u003c") + ";");
   // La plantilla es un artefacto (sin <head>): se agrega lo necesario para que el celular la muestre a su ancho real
   if (!/name="viewport"/.test(html)) html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` + html;
   return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=300, stale-while-revalidate=3600" } });
