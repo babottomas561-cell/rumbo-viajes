@@ -38,6 +38,15 @@ export async function GET() {
   // Itinerario en auto día por día (horarios OSRM, pronóstico, noches de Airbnb, noticias de ruta y fotos): scripts/road_trip.py cada 6 h
   const { data: rt } = db ? await db.from("app_snapshots").select("data").eq("key", "ruta").maybeSingle() : { data: null };
   if (rt?.data) html = html.replace("const RUTALIVE=null;", "const RUTALIVE=" + JSON.stringify(rt.data).replace(/</g, "\\u003c") + ";");
+  // Distancia de cada casa de la página a la playa más cercana (OpenStreetMap + PostGIS, tabla listing_beach)
+  if (db) {
+    const ids = [...new Set([...html.matchAll(/,"(\d{5,20})"[,\]]/g)].map((m) => m[1]))];
+    const live: Record<string, [number, number | null, number | null, string | null]> = {};
+    const chunks = Array.from({ length: Math.ceil(ids.length / 150) }, (_, i) => ids.slice(i * 150, i * 150 + 150));
+    const res = await Promise.all(chunks.map((c) => db.from("listing_beach").select("listing_id,beach_m,lat,lon,beach_name").in("listing_id", c)));
+    for (const r of res) for (const x of r.data ?? []) live[x.listing_id] = [x.beach_m, x.lat, x.lon, x.beach_name];
+    if (Object.keys(live).length) html = html.replace("const BEACHLIVE=null;", "const BEACHLIVE=" + JSON.stringify(live).replace(/</g, "\\u003c") + ";");
+  }
   // La plantilla es un artefacto (sin <head>): se agrega lo necesario para que el celular la muestre a su ancho real
   if (!/name="viewport"/.test(html)) html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` + html;
   return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=300, stale-while-revalidate=3600" } });
