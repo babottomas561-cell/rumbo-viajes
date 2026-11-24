@@ -113,11 +113,11 @@ def airbnb():
         for r in ss:
             pl = (r.get("structuredDisplayPrice") or {}).get("primaryLine") or {}
             p = money_usd(pl.get("discountedPrice") or pl.get("price") or pl.get("accessibilityLabel"))
-            rm = re.match(r"([\d,]+)\s*\((\d+)\)", r.get("avgRatingLocalized") or "")
-            if p: items.append({"p": p, "r": float(rm.group(1).replace(",", ".")) if rm else None, "n": int(rm.group(2)) if rm else 0,
+            rm = re.match(r"(\d+,?\d*)(?:\s*\((\d+)\))?", r.get("avgRatingLocalized") or "")
+            if p: items.append({"p": p, "r": float(rm.group(1).replace(",", ".")) if rm else None, "n": int(rm.group(2)) if rm and rm.group(2) else None,
                                 "t": r.get("title") or r.get("nameLocalized") or ""})
         if len(items) < 3: continue
-        good = sorted((x for x in items if (x["r"] or 0) >= 4.6 and x["n"] >= 3), key=lambda x: x["p"])
+        good = sorted((x for x in items if (x["r"] or 0) >= 4.6 and (x["n"] is None or x["n"] >= 3)), key=lambda x: x["p"])
         ps = [x["p"] for x in items]
         out[k] = {"n": len(items), "min": min(ps), "med": statistics.median(ps), "best": good[0] if good else None, "url": url}
         time.sleep(3)

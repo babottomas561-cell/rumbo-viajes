@@ -75,7 +75,7 @@ export async function GET(request: Request) {
   const raw: Raw[] = res?.searchResults ?? [];
   const items = raw.map((r) => {
     const pl = r.structuredDisplayPrice?.primaryLine ?? {};
-    const rate = /([\d,]+)\s*\((\d+)\)/.exec(r.avgRatingLocalized ?? "");
+    const rate = /^([\d]+,?\d*)(?:\s*\((\d+)\))?/.exec(r.avgRatingLocalized ?? "");
     const c = r.demandStayListing?.location?.coordinate;
     return {
       id: listingId(r),
@@ -86,7 +86,7 @@ export async function GET(request: Request) {
       priceOrig: usd(pl.originalPrice),
       qualifier: pl.qualifier ?? "",
       rating: rate ? Number(rate[1].replace(",", ".")) : null,
-      reviews: rate ? Number(rate[2]) : 0,
+      reviews: rate?.[2] ? Number(rate[2]) : null,
       lat: c?.latitude ?? null,
       lon: c?.longitude ?? null,
       photos: (r.contextualPictures ?? []).map((p) => p.picture).filter(Boolean).slice(0, 6),
