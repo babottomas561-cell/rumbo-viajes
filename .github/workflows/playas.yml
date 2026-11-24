@@ -1,0 +1,21 @@
+name: Distancia de las casas a la playa
+
+on:
+  schedule:
+    - cron: "20 6 * * *" # todos los días a las 3:20 de Argentina
+  workflow_dispatch:
+
+jobs:
+  playas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/beaches.py
+        env:
+          REFRESH: "1"
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
