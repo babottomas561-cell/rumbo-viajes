@@ -51,9 +51,10 @@ async function fetchRoute(o: string, ap: string, m: number) {
 }
 
 export async function GET(req: Request) {
-  const secret = process.env.CRON_SECRET;
+  // CRON_SECRET lo manda el cron diario de Vercel; FLIGHTS_HOOK_KEY, el pg_cron horario de Supabase (guardada en Vault).
+  const keys = [process.env.CRON_SECRET, process.env.FLIGHTS_HOOK_KEY].filter(Boolean);
   const auth = req.headers.get("x-cron-secret") ?? req.headers.get("authorization")?.replace("Bearer ", "");
-  if (!secret || auth !== secret) return new Response("no", { status: 401 });
+  if (!auth || !keys.includes(auth)) return new Response("no", { status: 401 });
   const db = getSupabaseAdmin();
   if (!db) return new Response("sin supabase", { status: 503 });
 
