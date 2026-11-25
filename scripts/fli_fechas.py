@@ -108,5 +108,29 @@ def main():
         print("  " + ", ".join(empty))
 
 
+def ow_igr():
+    """Pasajes de solo ida TUC→IGR e IGR→TUC (para combinar la ida por Foz con la vuelta directa) en el snapshot 'ow'."""
+    upd = {}
+    for o, a in (("TUC", "IGR"), ("IGR", "TUC")):
+        try:
+            r = subprocess.run(["fli", "dates", o, a, "--from", "2027-01-01", "--to", "2027-01-31", "--currency", "USD", "--format", "json"],
+                               capture_output=True, text=True, timeout=90)
+            for x in json.loads(r.stdout).get("dates") or []:
+                if x.get("price"):
+                    upd[f"{o}>{a}|{x['departure_date']}"] = [round(x["price"]), None, "", "", "", "", [], "", "", TODAY]
+        except (subprocess.TimeoutExpired, json.JSONDecodeError):
+            pass
+        time.sleep(PAUSE)
+    if upd:
+        r = rest("app_snapshots?key=eq.ow&select=data")
+        cur = (r[0]["data"] if r else {}) or {}
+        cur.update(upd)
+        rest("app_snapshots?on_conflict=key", [{"key": "ow", "data": cur, "updated_at": dt.datetime.now(dt.timezone.utc).isoformat()}],
+             "POST", {"Prefer": "resolution=merge-duplicates"})
+    print(f"solo ida TUC/IGR: {len(upd)}")
+
+
 if __name__ == "__main__":
+    if "TUC" in ORIG:
+        ow_igr()
     main()

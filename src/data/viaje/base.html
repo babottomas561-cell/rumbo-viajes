@@ -1586,9 +1586,15 @@ function legIGR(ap,dep){const t=FL.IGU&&FL.IGU[ap];if(!t||!FL.TUC.IGR)return nul
   let b=null;
   for(const d of (dep==="best"?Object.keys(t).map(Number):[dep])){const f=t[d];if(!f)continue;const r=d+NIGHTS();
     const a=[d-1,d].map(x=>({p:igrFare(x,r),d:x,r})).filter(x=>x.p).sort((x,y)=>x.p-y.p)[0];
-    if(!a)continue;const p=a.p+IGR_X+f[0];
-    if(!b||p<b.p)b={p,d,r:d+NIGHTS(),o:"IGU",air:f[0],leg1:a.p,a};}
+    if(a){const p=a.p+IGR_X+f[0];if(!b||p<b.p)b={p,d,r,o:"IGU",air:f[0],leg1:a.p,a};}
+    // Con pasajes de solo ida: ida por Foz y la vuelta por donde salga más barato (directo a Tucumán o de nuevo por Foz)
+    const go=Math.min(...[d-1,d].map(x=>owP("TUC","IGR",x)).filter(isFinite)),g2=owP("IGU",ap,d);
+    if(isFinite(go)&&isFinite(g2)){const vd=owP(ap,"TUC",r),vf=owP(ap,"IGU",r)+IGR_X/2+owP("IGR","TUC",r);
+      const v=Math.min(vd,vf);if(isFinite(v)){const p=Math.round(go+IGR_X/2+g2+v);
+        if(!b||p<b.p)b={p,d,r,o:"IGU",air:Math.round(g2+(vd<=vf?0:owP(ap,"IGU",r))),leg1:Math.round(go+(vd<=vf?0:owP("IGR","TUC",r))),a:{p:go,d,r},ow:1,ret:vd<=vf?"tuc":"foz",retP:Math.round(v)};}}}
   return b;}
+// Pasaje de solo ida guardado (Google Flights) del día d de enero; Infinity si no hay
+function owP(o,a,d){try{const v=OWLIVE&&OWLIVE[`${o}>${a==="GIG"?"RIO":a}|2027-01-${String(d).padStart(2,"0")}`];return v&&v[0]?v[0]:Infinity;}catch(_){return Infinity;}}
 function bestKey(r){return RKEYS.reduce((a,b)=>r[a].p<=r[b].p?a:b);}
 // Copensador: horas de puerta a puerta (ida) de cada forma de llegar, y la que más conviene = precio + USD 15 por hora de viaje
 function wayHrs(r,k){try{const L=tripLegs({...r,flk:k},null);if(!L.length)return null;let t=0;for(const g of L){if(g.h==null)return null;t+=g.h;}return t;}catch(_){return null;}}
@@ -1894,6 +1900,8 @@ function finfo(k,l,ap){
   return `${head?head+"<br>":""}${ok?`<b class="hh">⏱ ${hfmt(tot)} en total</b><br>`:""}${parts.join(" + ")}`;}
 function flightRows(r){const l=r.leg;
   if(r.flk==="rio")return `<span>TUC ↔ Río (${dr(l)})${fz(l,r)}</span><span>${fmt(l.leg1)}</span><span>Río ↔ ${r.ap} (${l.x.d}→${l.x.r} ${lm(l)})${fz(l,r)}</span><span>${fmt(l.leg2)}</span>`;
+  if(r.flk==="igr"&&l.ow&&l.ret==="tuc")return `<span>Ida: TUC → Puerto Iguazú, cruce y Foz → ${r.ap} (${dd(l.d)})${fz(l,r)}</span><span>${fmt(l.p-l.retP)}</span><span>Vuelta directa ${r.ap} → Tucumán (${dd(l.r)}), pasaje de solo ida</span><span>${fmt(l.retP)}</span>`;
+  if(r.flk==="igr"&&l.ow)return `<span>Ida: TUC → Puerto Iguazú, cruce y Foz → ${r.ap} (${dd(l.d)}), pasajes de solo ida</span><span>${fmt(l.p-l.retP)}</span><span>Vuelta: ${r.ap} → Foz, cruce y Puerto Iguazú → TUC (${dd(l.r)})</span><span>${fmt(l.retP)}</span>`;
   if(r.flk==="igr")return `<span>Vuelo TUC ↔ Puerto Iguazú (ida el ${dd(l.a.d)})</span><span>${fmt(l.leg1)}</span><span>Remís y cruce a Foz, ida y vuelta</span><span>${fmt(IGR_X)}</span><span>Vuelo Foz ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.air)}</span>`;
   if(r.flk==="tuc")return `<span>Vuelo TUC ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.p)}</span>`;
   if(r.flk==="car"){const c=l.cc;return `<span>En auto (${CS.n} ${CS.n>1?"autos":"auto"}): nafta, peajes${c.cv?", Carta Verde":""}, ${c.legDays*2} noches de ruta con hotel y comida</span><span>${fmt(l.p)}</span>`;}
