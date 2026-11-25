@@ -1647,8 +1647,10 @@ async function liveBase(){const m=liveM(),q=`${PAX}|${m}|${NIGHTS()}`;if(q===LIV
     if(n)liveRender();}catch(_){LIVEBASE_Q="";}}
 const liveWhen=t=>{const d=new Date(t),hoy=new Date();return d.toDateString()===hoy.toDateString()?`de las ${liveHM(t)}`:`del ${d.getDate()}/${d.getMonth()+1} a las ${liveHM(t)}`;};
 function liveFetch(k,m,tin,fresh){const id=liveId(k,m),box=liveBox(k);if(!box)return;const old=LIVE[id];
-  if(!fresh&&old&&(old.st==="cargando"||(old.st!=="error"&&Date.now()-old.t<LIVE_TTL)))return;
   const n=NIGHTS(),ci=`2027-${String(m).padStart(2,"0")}-${String(tin).padStart(2,"0")}`,co=new Date(Date.UTC(2027,m-1,tin+n)).toISOString().slice(0,10);
+  // Las casas tienen que ser de las mismas fechas que el vuelo de la ficha: si lo guardado es de otra ida, se vuelve a buscar
+  if(!fresh&&old&&old.ci===ci&&(old.st==="cargando"||(old.st!=="error"&&Date.now()-old.t<LIVE_TTL)))return;
+  if(old&&old.st==="cargando"&&old.ci!==ci&&!fresh)return;
   LIVE[id]={...(old||{}),st:"cargando",ci,co,t:old?old.t:0};
   LIVEQ.push(async()=>{const p=new URLSearchParams({k,sw_lat:box[0],sw_lng:box[1],ne_lat:box[2],ne_lng:box[3],checkin:ci,checkout:co,adults:PAX,bedrooms:Math.max(2,Math.ceil(PAX/3))});if(fresh)p.set("fresh","1");
     try{const r=await fetch("/api/stays/live?"+p),j=await r.json();if(!r.ok)throw new Error(j.error||"error");
@@ -1909,7 +1911,7 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
   // Se dibujan de a 24 fichas (son pesadas): "Ver más" agrega otras 24; ir a una ficha puntual la incluye
   if(WANTK)KEEPK=WANTK;const wi=KEEPK?out.findIndex(r=>r.k===KEEPK):-1;const nShow=Math.max(SHOWN,wi+1);WANTK=null;// la ficha pedida (link compartido, mapa) sigue dibujada aunque se redibuje con precios en vivo
   list.innerHTML=fmTop+out.slice(0,nShow).map((r,i)=>{TIN=Math.max(1,r.leg.d||6);GM=r.leg.m||1;
-    const best=bestKey(r.rt);const nt=NINOTXT[r.zone];
+    const best=bestKey(r.rt);const nt=ninoTxt(r);
     const bars=CRIT.map(c=>`<span>${r.ai&&c.k==="stay"?"Calidad del hotel":c.l}</span><span class="bar"><i style="transform:scaleX(${(r.sc[c.k]/10).toFixed(2)})"></i></span><span class="v">${r.sc[c.k].toFixed(1)}</span>`).join("");
     const rbox=[...RKEYS,"car"].filter(k=>k==="car"?(isFinite(r.rt.car.p)||!r.ai):(S.mes===1||isFinite(r.rt[k].p))).map(k=>{const l=r.rt[k];const ok=isFinite(l.p);const fi=ok?finfo(k,l,r.ap):"";
       return `<button type="button" class="route ${ok&&k===best?"win":""} ${k===r.flk?"sel":""} ${ok?"":"na"}" ${ok?`data-rpick="${r.k}" data-rk="${k}"`:"disabled"} aria-pressed="${k===r.flk}" title="${ok?"Usar esta forma de viajar en el total":"Sin datos"}"><span>${k==="car"?"En auto":RLAB[k]}${k===r.flk&&RPICK[r.k]?" ✓":""}</span><b>${ok?Math.round(l.p+(k==="car"?r.tr:0)).toLocaleString("es-AR"):"—"}</b><small>${ok?(k==="car"?`${l.cc.km.toLocaleString("es-AR")} km`:dr(l)):k==="car"?(NOCAR.has(r.k)||(r.comboParts||[]).some(p=>NOCAR.has(p.k))?"no se llega en auto":"sin ruta"):"sin datos"}</small>${fi?`<small class="fi">${fi}</small>`:""}</button>`;}).join("")+(RPICK[r.k]?`<button type="button" class="linkbtn" data-rpick="${r.k}" data-rk="">Volver a la más barata</button>`:"");
@@ -2361,6 +2363,12 @@ const ngIdx=(lat,lon)=>{const i=Math.round((NG.lat0-lat)/NG.d),j=Math.round((lon
 const dParts=r=>r.parts||[[r.k,1]];
 function ngVal(r,mode){let v=0,c=0;dParts(r).forEach(([k,f])=>{const n=ngIdx(...GEO[k]);v+=NG[mode][n]*f;c+=NG.clim[n]*f;});return {v:Math.round(v),c:Math.round(c)};}
 const mm=v=>(v>0?"+":v<0?"−":"")+Math.abs(v)+" mm";
+// El aviso de cada ficha sale del dato de ese lugar (no de la zona): si con los Niños fuertes no llovió más, no se dice que va a llover más
+function ninoTxt(r){const z=NINOTXT[r.zone];let a,n;try{if(!z)return z;a=ngVal(r,"ep").v;n=ngVal(r,"cnt").v;}catch(_){return z;}
+  if(r.zone==="Perú")return z;
+  if(a>=15&&n>=4)return ["wet","Puede llover más de lo normal con El Niño"];
+  if(a<=-15&&n<=2)return ["dry","Con los Niños fuertes acá llovió menos de lo normal"];
+  return ["mid","El Niño casi no cambia la lluvia acá"];}
 function ninoLine(r){const a=ngVal(r,"ep"),n=ngVal(r,"cnt").v;
   const txt=Math.abs(a.v)<15?"casi igual":mm(a.v);
   return `enero tipo 1983/98: ${txt} (normal ${a.c} mm) · llovió más en ${n} de 6 Niños fuertes`;}
@@ -2536,7 +2544,7 @@ function renderCar(rows){const el=document.getElementById("carout");if(!el)retur
     <label class="chk" style="margin-top:6px"><input type="checkbox" id="carhub" ${CS.hub?"checked":""}> Usar el auto para llegar a Bs. As., Córdoba y Foz en el ranking</label>`;
   {const legN=c.legDays-1,st=routeStops(CS.dest,legN,c.km);const maxH=Math.max(...(st.length?st.map(x=>x.h):[c.km/CS.speed]));
    const box=document.createElement("div");box.className="carstops";
-   box.innerHTML=`<h4>Dónde dormir en la ruta (ida, ${legN?legN+" "+(legN>1?"noches":"noche"):"de un tirón"})</h4>${legForced(c.km)?`<p class="warn" style="color:#b45309;font-weight:600">⚠ Con ${CS.rn} ${+CS.rn===1?"noche":"noches"} de ruta serían ${hfmt(c.hrs/(+CS.rn+1))} de manejo por día. Subí a ${legN} noches por tramo para no pasar de ${MAXHD} h por día.</p>`:""}${legN?`<ol>${st.map((x,i)=>`<li><b>Día ${i+1}:</b> ${Math.round(x.dayKm).toLocaleString("es-AR")} km, ~${hfmt(x.h)} de manejo → ${x.last?"llegada a "+nm(CS.dest):`dormir en <b>${x.name}</b> (km ${x.km.toLocaleString("es-AR")}${x.off>40?`, a ${x.off} km de la ruta`:""}) · hotel ~USD ${CS.hotel} por persona`}</li>`).join("")}</ol>`:`<p>${Math.round(c.km).toLocaleString("es-AR")} km sin dormir en la ruta: ~${hfmt(c.km/CS.speed)} de manejo.</p>`}${maxH>14?`<p class="w">Ojo: ${hfmt(maxH)} de manejo en un día es mucho. Turnarse al volante cada 2–3 h, o sumar una noche.</p>`:maxH>11?`<p class="w">Día largo (${hfmt(maxH)}): conviene tener 2 o más choferes.</p>`:""}<p class="hint">Las ciudades se eligen cortando la ruta real en partes iguales; la vuelta es igual al revés.</p>`;
+   box.innerHTML=`<h4>Dónde dormir en la ruta (ida, ${legN?legN+" "+(legN>1?"noches":"noche"):"de un tirón"})</h4>${legForced(c.km)?`<p class="warn" style="color:#b45309;font-weight:600">⚠ Con ${CS.rn} ${+CS.rn===1?"noche":"noches"} de ruta serían ${hfmt(c.hrs/(+CS.rn+1))} de manejo por día. Subí a ${legN} ${legN===1?"noche":"noches"} por tramo para no pasar de ${MAXHD} h por día.</p>`:""}${legN?`<ol>${st.map((x,i)=>`<li><b>Día ${i+1}:</b> ${Math.round(x.dayKm).toLocaleString("es-AR")} km, ~${hfmt(x.h)} de manejo → ${x.last?"llegada a "+nm(CS.dest):`dormir en <b>${x.name}</b> (km ${x.km.toLocaleString("es-AR")}${x.off>40?`, a ${x.off} km de la ruta`:""}) · hotel ~USD ${CS.hotel} por persona`}</li>`).join("")}</ol>`:`<p>${Math.round(c.km).toLocaleString("es-AR")} km sin dormir en la ruta: ~${hfmt(c.km/CS.speed)} de manejo.</p>`}${maxH>14?`<p class="w">Ojo: ${hfmt(maxH)} de manejo en un día es mucho. Turnarse al volante cada 2–3 h, o sumar una noche.</p>`:maxH>11?`<p class="w">Día largo (${hfmt(maxH)}): conviene tener 2 o más choferes.</p>`:""}<p class="hint">Las ciudades se eligen cortando la ruta real en partes iguales; la vuelta es igual al revés.</p>`;
    el.appendChild(box);}
   const V=document.getElementById("carverdict");
   if(V){const br=cmp.filter(x=>["floripa","camboriu","rosa","floricambo"].includes(x.r.k)),ar=cmp.filter(x=>["mardelplata","villagesell","pinamar"].includes(x.r.k)),uy=cmp.filter(x=>["puntadeleste","lapedrera","puntadiablo"].includes(x.r.k));
