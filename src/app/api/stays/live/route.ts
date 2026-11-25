@@ -1,110 +1,51 @@
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { airbnbUrl, attachBeaches, cachedStays, destBoxes, saveStays, searchAirbnb, type Query } from "@/lib/airbnb-live";
 
-// Búsqueda de casas en Airbnb en el momento: precios y disponibilidad para las fechas pedidas (Airbnb solo
-// devuelve lo que está libre), con la playa más cercana y los metros calculados en Supabase (beaches + PostGIS).
-// GET /api/stays/live?sw_lat=&sw_lng=&ne_lat=&ne_lng=&checkin=YYYY-MM-DD&checkout=YYYY-MM-DD&adults=6&bedrooms=3&cursor=
+// Casas de Airbnb en el momento para cada ficha de la página: precio total y disponibilidad para esas fechas y ese grupo
+// (Airbnb solo devuelve lo que está libre), fotos, playa más cercana y metros. Lo que trae se guarda en Supabase;
+// si la misma búsqueda se hizo hace menos de 30 min (otra persona o el refresco automático), sale de la base.
+// GET /api/stays/live?k=jurere&checkin=YYYY-MM-DD&checkout=YYYY-MM-DD&adults=8&bedrooms=3[&sw_lat=&sw_lng=&ne_lat=&ne_lng=][&cursor=][&fresh=1]
 export const maxDuration = 30;
 
-const UA = {
-  "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36",
-  "Accept-Language": "es-AR,es;q=0.9",
-  Accept: "text/html,application/xhtml+xml",
-};
 const iso = /^\d{4}-\d{2}-\d{2}$/;
-
-type Raw = Record<string, unknown> & {
-  demandStayListing?: { id?: string; location?: { coordinate?: { latitude?: number; longitude?: number } } };
-  structuredDisplayPrice?: { primaryLine?: Record<string, string> };
-  avgRatingLocalized?: string;
-  title?: string;
-  nameLocalized?: { localizedStringWithTranslationPreference?: string };
-  subtitle?: string;
-  contextualPictures?: { picture?: string }[];
-  structuredContent?: { primaryLine?: { body?: string }[]; mapPrimaryLine?: { body?: string }[] };
-};
-
-const usd = (s?: string) => {
-  const m = /\$\s*([\d.,]+)\s*USD/.exec(s ?? "");
-  return m ? Number(m[1].replace(/\./g, "").replace(",", ".")) : null;
-};
-
-function listingId(r: Raw) {
-  const enc = r.demandStayListing?.id;
-  if (!enc) return null;
-  try {
-    const dec = Buffer.from(enc, "base64").toString("utf8");
-    return /:(\d+)$/.exec(dec)?.[1] ?? null;
-  } catch {
-    return null;
-  }
-}
+const FRESH_MIN = 30;
 
 export async function GET(request: Request) {
-  const q = new URL(request.url).searchParams;
-  const box = ["sw_lat", "sw_lng", "ne_lat", "ne_lng"].map((k) => Number(q.get(k)));
-  const checkin = q.get("checkin") ?? "", checkout = q.get("checkout") ?? "";
-  const adults = Math.min(16, Math.max(1, Number(q.get("adults")) || 6));
-  const bedrooms = Math.min(8, Math.max(0, Number(q.get("bedrooms")) || 0));
-  const cursor = q.get("cursor") ?? "";
-  if (box.some((x) => !Number.isFinite(x)) || Math.abs(box[2] - box[0]) > 1 || Math.abs(box[3] - box[1]) > 1)
+  const sp = new URL(request.url).searchParams;
+  const k = (sp.get("k") ?? "").replace(/[^a-z0-9_]/g, "");
+  let box = ["sw_lat", "sw_lng", "ne_lat", "ne_lng"].map((x) => Number(sp.get(x)));
+  if (box.some((x) => !Number.isFinite(x) || x === 0)) box = (k && destBoxes()[k]) || [];
+  const q: Query = {
+    box,
+    checkin: sp.get("checkin") ?? "",
+    checkout: sp.get("checkout") ?? "",
+    adults: Math.min(16, Math.max(1, Number(sp.get("adults")) || 6)),
+    bedrooms: Math.min(8, Math.max(0, Number(sp.get("bedrooms")) || 0)),
+    cursor: sp.get("cursor") ?? "",
+  };
+  if (box.length !== 4 || Math.abs(box[2] - box[0]) > 1 || Math.abs(box[3] - box[1]) > 1)
     return Response.json({ error: "Zona inválida." }, { status: 400 });
-  if (!iso.test(checkin) || !iso.test(checkout) || checkout <= checkin)
+  if (!iso.test(q.checkin) || !iso.test(q.checkout) || q.checkout <= q.checkin)
     return Response.json({ error: "Fechas inválidas." }, { status: 400 });
 
-  const url = new URL("https://www.airbnb.com.ar/s/homes");
-  const params: Record<string, string> = {
-    checkin, checkout, adults: String(adults), currency: "USD", search_type: "user_map_move", search_by_map: "true",
-    sw_lat: String(box[0]), sw_lng: String(box[1]), ne_lat: String(box[2]), ne_lng: String(box[3]), zoom_level: "14",
-  };
-  if (bedrooms) params.min_bedrooms = String(bedrooms);
-  if (cursor) params.cursor = cursor;
-  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
-
-  let html: string;
-  try {
-    const r = await fetch(url, { headers: UA, cache: "no-store", signal: AbortSignal.timeout(20000) });
-    if (!r.ok) throw new Error(`Airbnb respondió ${r.status}`);
-    html = await r.text();
-  } catch (e) {
-    return Response.json({ error: `Airbnb no respondió (${e instanceof Error ? e.message : "error"}). Probá de nuevo en un rato.`, airbnbUrl: url.toString() }, { status: 502 });
-  }
-  const m = /<script[^>]*id="data-deferred-state-0"[^>]*>([\s\S]*?)<\/script>/.exec(html);
-  if (!m) return Response.json({ error: "Airbnb cambió la página y no se pudo leer. Abrí la búsqueda directo en Airbnb.", airbnbUrl: url.toString() }, { status: 502 });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const res: any = JSON.parse(m[1]).niobeClientData?.[0]?.[1]?.data?.presentation?.staysSearch?.results;
-  const raw: Raw[] = res?.searchResults ?? [];
-  const items = raw.map((r) => {
-    const pl = r.structuredDisplayPrice?.primaryLine ?? {};
-    const rate = /^([\d]+,?\d*)(?:\s*\((\d+)\))?/.exec(r.avgRatingLocalized ?? "");
-    const c = r.demandStayListing?.location?.coordinate;
-    return {
-      id: listingId(r),
-      title: r.nameLocalized?.localizedStringWithTranslationPreference || r.title || "",
-      kind: r.title || "",
-      rooms: [...new Set([...(r.structuredContent?.mapPrimaryLine ?? []), ...(r.structuredContent?.primaryLine ?? [])].map((x) => x.body).filter(Boolean))].join(" · "),
-      price: usd(pl.discountedPrice || pl.price || pl.accessibilityLabel),
-      priceOrig: usd(pl.originalPrice),
-      qualifier: pl.qualifier ?? "",
-      rating: rate ? Number(rate[1].replace(",", ".")) : null,
-      reviews: rate?.[2] ? Number(rate[2]) : null,
-      lat: c?.latitude ?? null,
-      lon: c?.longitude ?? null,
-      photos: (r.contextualPictures ?? []).map((p) => p.picture).filter(Boolean).slice(0, 6),
-      beach: null as null | { m: number; name: string | null; kind: string; k: string | null },
-    };
-  }).filter((x) => x.id && x.price);
-
   const db = getSupabaseAdmin();
-  const pts = items.filter((x) => x.lat != null).map((x) => [x.lat, x.lon]);
-  if (db && pts.length) {
-    const { data } = await db.rpc("nearest_beach_batch", { p_pts: pts });
-    const withPt = items.filter((x) => x.lat != null);
-    for (const b of (data ?? []) as { i: number; beach_m: number; beach_name: string | null; beach_kind: string; k: string | null }[])
-      if (withPt[b.i]) withPt[b.i].beach = { m: b.beach_m, name: b.beach_name, kind: b.beach_kind, k: b.k };
+  const headers = { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900" };
+  // Búsqueda por destino (no por zona del mapa): primero la base, si está fresca
+  if (db && k && !q.cursor && sp.get("fresh") !== "1") {
+    const c = await cachedStays(db, k, q, FRESH_MIN);
+    if (c) return Response.json({ fetchedAt: c.fetchedAt, from: "base", airbnbUrl: airbnbUrl(q).toString(), pageCursors: [], items: c.items }, { headers });
   }
-
-  return Response.json(
-    { fetchedAt: new Date().toISOString(), airbnbUrl: url.toString(), pageCursors: (res?.paginationInfo?.pageCursors ?? []) as string[], items },
-    { headers: { "Cache-Control": "public, s-maxage=600, stale-while-revalidate=1800" } },
-  );
+  try {
+    const r = await searchAirbnb(q);
+    if (db) {
+      await attachBeaches(db, r.items);
+      if (k && !q.cursor) await saveStays(db, k, q, r.items, "live");
+    }
+    return Response.json({ fetchedAt: new Date().toISOString(), from: "airbnb", airbnbUrl: r.url, pageCursors: r.pageCursors, items: r.items }, { headers });
+  } catch (e) {
+    // Si Airbnb no responde, lo último guardado (aunque tenga más de 30 min), avisando la hora
+    const c = db && k ? await cachedStays(db, k, q, 60 * 24 * 7) : null;
+    if (c) return Response.json({ fetchedAt: c.fetchedAt, from: "base", stale: true, airbnbUrl: airbnbUrl(q).toString(), pageCursors: [], items: c.items });
+    return Response.json({ error: `Airbnb no respondió (${e instanceof Error ? e.message : "error"}).`, airbnbUrl: airbnbUrl(q).toString() }, { status: 502 });
+  }
 }
