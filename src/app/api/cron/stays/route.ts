@@ -1,5 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { attachBeaches, destBoxes, saveStays, searchAirbnb, type Query } from "@/lib/airbnb-live";
+import { attachBeaches, destBoxes, saveStays, searchWide, type Query } from "@/lib/airbnb-live";
 
 // Refresco de casas en el servidor (sin depender de ninguna compu): cada llamada renueva 4 destinos × 2 tamaños de grupo
 // con la búsqueda de Airbnb del momento y lo guarda en stay_listings + listing_beach. Lo dispara pg_cron cada 20 min.
@@ -28,7 +28,7 @@ export async function GET(req: Request) {
   for (let i = 0; i < jobs.length; i += 4) {
     await Promise.all(jobs.slice(i, i + 4).map(async ({ k, q }) => {
       try {
-        const r = await searchAirbnb(q);
+        const r = await searchWide(q);
         await attachBeaches(db, r.items);
         await saveStays(db, k, q, r.items, "cron");
         done.push(`${k}/${q.adults}:${r.items.length}`);

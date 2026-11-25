@@ -1,5 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { airbnbUrl, attachBeaches, cachedStays, destBoxes, saveStays, searchAirbnb, type Query } from "@/lib/airbnb-live";
+import { airbnbUrl, attachBeaches, cachedStays, destBoxes, saveStays, searchWide, type Query } from "@/lib/airbnb-live";
 
 // Casas de Airbnb en el momento para cada ficha de la página: precio total y disponibilidad para esas fechas y ese grupo
 // (Airbnb solo devuelve lo que está libre), fotos, playa más cercana y metros. Lo que trae se guarda en Supabase;
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
     if (c) return Response.json({ fetchedAt: c.fetchedAt, from: "base", airbnbUrl: airbnbUrl(q).toString(), pageCursors: [], items: c.items }, { headers });
   }
   try {
-    const r = await searchAirbnb(q);
+    const r = await searchWide(q);
     if (db) {
       await attachBeaches(db, r.items);
       if (k && !q.cursor) await saveStays(db, k, q, r.items, "live");

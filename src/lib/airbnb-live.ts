@@ -117,6 +117,21 @@ export async function searchAirbnb(q: Query): Promise<{ url: string; items: Live
   return { url: url.toString(), items, pageCursors: (res?.paginationInfo?.pageCursors ?? []) as string[] };
 }
 
+// Pueblos chicos: con la caja justa (o una coordenada redondeada) Airbnb puede no devolver casi nada.
+// Si trae menos de 6, se agranda alrededor del centro (±0,05° ≈ 5 km, después ±0,1°) y se queda con la que más trae.
+export async function searchWide(q: Query) {
+  let best = await searchAirbnb(q);
+  if (q.cursor || best.items.length >= 6) return best;
+  const la = (q.box[0] + q.box[2]) / 2, lo = (q.box[1] + q.box[3]) / 2;
+  for (const w of [0.05, 0.1]) {
+    if (Math.abs(q.box[2] - q.box[0]) >= 2 * w) continue;
+    const r = await searchAirbnb({ ...q, box: [la - w, lo - w, la + w, lo + w] }).catch(() => null);
+    if (r && r.items.length > best.items.length) best = r;
+    if (best.items.length >= 6) break;
+  }
+  return best;
+}
+
 // Playa más cercana de cada casa. Más de 5 km = el mapa de playas de esa zona todavía no está bajado: sin dato.
 export async function attachBeaches(db: SupabaseClient, items: LiveStay[]) {
   const withPt = items.filter((x) => x.lat != null);
