@@ -1659,14 +1659,14 @@ function liveFetch(k,m,tin,fresh){const id=liveId(k,m),box=liveBox(k);if(!box)re
   livePump();}
 function livePump(){while(LIVEN<LIVE_MAX&&LIVEQ.length){const f=LIVEQ.shift();LIVEN++;f().finally(()=>{LIVEN--;livePump();});}}
 // Redibuja todo (totales, orden, mapa) sin perder dónde estaba mirando la persona ni lo que tenía abierto
-function liveRender(){clearTimeout(LIVET);LIVET=setTimeout(()=>{const cards=[...document.querySelectorAll("#list .card")];
+function liveRender(){if(LIVET)return;LIVET=setTimeout(()=>{LIVET=0;const cards=[...document.querySelectorAll("#list .card")];
   const a=cards.find(c=>c.getBoundingClientRect().bottom>80),aid=a&&a.id,atop=a&&a.getBoundingClientRect().top;
   const open=[...document.querySelectorAll("#list .card details[open]")].map(d=>{const c=d.closest(".card");return [c.id,[...c.querySelectorAll("details")].indexOf(d)];});
   const sx={};document.querySelectorAll("#list .stay-grid.scroll").forEach(g=>{const w=g.closest(".hwrap");if(w)sx[w.dataset.k]=g.scrollLeft;});
   render();
   for(const [cid,i] of open){const c=document.getElementById(cid),d=c&&c.querySelectorAll("details")[i];if(d)d.open=true;}
   document.querySelectorAll("#list .stay-grid.scroll").forEach(g=>{const w=g.closest(".hwrap");if(w&&sx[w.dataset.k])g.scrollLeft=sx[w.dataset.k];});
-  const b=aid&&document.getElementById(aid);if(b)window.scrollBy(0,b.getBoundingClientRect().top-atop);if(typeof LIVEPIN!=="undefined"&&LIVEPIN){const c=document.getElementById("card-"+LIVEPIN);if(c)c.scrollIntoView({block:"start"});}},500);}
+  const b=aid&&document.getElementById(aid);if(b)window.scrollBy(0,b.getBoundingClientRect().top-atop);if(typeof LIVEPIN!=="undefined"&&LIVEPIN){const c=document.getElementById("card-"+LIVEPIN);if(c)c.scrollIntoView({block:"start"});}},300);}
 const liveHM=t=>new Date(t).toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
 const liveD=s=>{const [y,m,d]=s.split("-");return `${+d} ${MABR[+m-1]}`;};
 function liveNote(d){const x=LIVE[liveId(d.k,liveM())];if(typeof liveBox!=="function"||!liveBox(d.k))return "";

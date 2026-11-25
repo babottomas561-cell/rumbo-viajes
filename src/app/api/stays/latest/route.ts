@@ -11,5 +11,5 @@ export async function GET(request: Request) {
   if (!db) return Response.json({}, { status: 503 });
   const { data, error } = await db.rpc("stays_latest", { p_adults: adults, p_month: month });
   if (error) return Response.json({ error: error.message }, { status: 500 });
-  return Response.json(data ?? {}, { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900" } });
+  return Response.json(data ?? {}, { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400" } });
 }
