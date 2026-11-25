@@ -1653,7 +1653,7 @@ function liveRender(){clearTimeout(LIVET);LIVET=setTimeout(()=>{const cards=[...
   render();
   for(const [cid,i] of open){const c=document.getElementById(cid),d=c&&c.querySelectorAll("details")[i];if(d)d.open=true;}
   document.querySelectorAll("#list .stay-grid.scroll").forEach(g=>{const w=g.closest(".hwrap");if(w&&sx[w.dataset.k])g.scrollLeft=sx[w.dataset.k];});
-  const b=aid&&document.getElementById(aid);if(b)window.scrollBy(0,b.getBoundingClientRect().top-atop);},500);}
+  const b=aid&&document.getElementById(aid);if(b)window.scrollBy(0,b.getBoundingClientRect().top-atop);if(typeof LIVEPIN!=="undefined"&&LIVEPIN){const c=document.getElementById("card-"+LIVEPIN);if(c)c.scrollIntoView({block:"start"});}},500);}
 const liveHM=t=>new Date(t).toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
 const liveD=s=>{const [y,m,d]=s.split("-");return `${+d} ${MABR[+m-1]}`;};
 function liveNote(d){const x=LIVE[liveId(d.k,liveM())];if(typeof liveBox!=="function"||!liveBox(d.k))return "";
@@ -2679,7 +2679,8 @@ const SHARED=(()=>{try{const q=new URLSearchParams(location.search),k=(q.get("p"
   if(casa&&/^\d{3,25}$/.test(casa))PICK[k]=casa;if(via&&/^[a-z]{2,4}$/.test(via))RPICK[k]=via;
   for(const id of ["pax","nights","mes"])try{setSeg(id,S[id]);}catch(_){}
   return {k};}catch(_){return null;}})();
-window.addEventListener("load",()=>{if(SHARED)setTimeout(()=>goCard(SHARED.k),300);});
+let LIVEPIN=null;// ficha abierta desde un link: queda fija en pantalla mientras llegan los precios en vivo, hasta que la persona se mueva
+window.addEventListener("load",()=>{if(!SHARED)return;setTimeout(()=>{goCard(SHARED.k);LIVEPIN=SHARED.k;setTimeout(()=>{const c=document.getElementById("card-"+SHARED.k);if(c&&LIVEPIN)c.scrollIntoView({block:"start"});},700);["wheel","touchstart","keydown","mousedown"].forEach(ev=>addEventListener(ev,()=>{LIVEPIN=null;},{passive:true,once:true}));},300);});
 function shareToast(html){let t=document.getElementById("sharetoast");if(!t){t=document.createElement("div");t.id="sharetoast";t.setAttribute("role","status");document.body.appendChild(t);}
   t.innerHTML=html;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,6000);}
 document.addEventListener("click",async e=>{const b=e.target.closest("[data-share]");if(!b)return;e.preventDefault();
