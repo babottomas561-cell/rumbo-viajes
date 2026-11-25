@@ -1878,7 +1878,7 @@ function flightRows(r){const l=r.leg;
   const tramo=(CS.hub?{bue:["Auto TUC ↔ Bs. As. y estacionamiento",hubCar("bue")],cor:["Auto TUC ↔ Córdoba y estacionamiento",hubCar("cor")],foz:["Auto TUC ↔ Foz, Carta Verde y estacionamiento",hubCar("foz")]}:{bue:["TUC ↔ EZE en JetSMART",TUC_BUE],cor:["Micro TUC ↔ Córdoba (estimado)",BUS_COR],foz:["Micro TUC ↔ Puerto Iguazú (estimado)",BUS_FOZ]})[r.flk];
   return `<span>${tramo[0]}</span><span>${fmt(tramo[1])}</span><span>Vuelo ${l.o} ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.air)}</span>`;}
 
-let SHOWN=24,WANTK=null;
+let SHOWN=24,WANTK=null,KEEPK=null;
 document.addEventListener("click",e=>{if(e.target.id==="cardmore"){SHOWN+=24;const y=scrollY;render();scrollTo(0,y);}});
 function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1;try{fillPay();}catch(_){}syncQuick();try{if(typeof renderAnio==='function'&&document.getElementById('yrt')&&document.getElementById('yrt').innerHTML)setTimeout(renderAnio,0);}catch(e){}document.querySelectorAll(".v-pax").forEach(e=>e.textContent=PAX);document.querySelectorAll(".v-nights").forEach(e=>e.textContent=NIGHTS());document.querySelectorAll(".v-days").forEach(e=>e.textContent=DAYS);
   const {base,out,all,noflight,rows}=build();
@@ -1890,7 +1890,7 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
   GM=1;if(S.lv==="prices"){list.innerHTML=(norm(S.q)==="floripa"?floripaMap(out,true):"")+priceTable(out);TIN=6;return;}
   const fmTop=norm(S.q)==="floripa"?floripaMap(out,true):"";
   // Se dibujan de a 24 fichas (son pesadas): "Ver más" agrega otras 24; ir a una ficha puntual la incluye
-  const wi=WANTK?out.findIndex(r=>r.k===WANTK):-1;const nShow=Math.max(SHOWN,wi+1);WANTK=null;
+  if(WANTK)KEEPK=WANTK;const wi=KEEPK?out.findIndex(r=>r.k===KEEPK):-1;const nShow=Math.max(SHOWN,wi+1);WANTK=null;// la ficha pedida (link compartido, mapa) sigue dibujada aunque se redibuje con precios en vivo
   list.innerHTML=fmTop+out.slice(0,nShow).map((r,i)=>{TIN=Math.max(1,r.leg.d||6);GM=r.leg.m||1;
     const best=bestKey(r.rt);const nt=NINOTXT[r.zone];
     const bars=CRIT.map(c=>`<span>${r.ai&&c.k==="stay"?"Calidad del hotel":c.l}</span><span class="bar"><i style="transform:scaleX(${(r.sc[c.k]/10).toFixed(2)})"></i></span><span class="v">${r.sc[c.k].toFixed(1)}</span>`).join("");
