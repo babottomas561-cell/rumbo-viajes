@@ -1626,7 +1626,7 @@ const MESHM=d=>{const m=typeof S.mes==="number"?S.mes:1,x=meshOf(d,m);return x&&
 // Cada ficha le pide a /api/stays/live las casas libres en Airbnb para SUS fechas y el tamaño del grupo: precio total
 // de ese momento, fotos, puntaje y playa más cercana con los metros (Supabase + OpenStreetMap). Cuando llegan, la ficha,
 // el total por persona, el orden y el mapa se recalculan solos. Se renuevan cada 15 min mientras la página está abierta.
-const LIVE={},LIVEP={},LIVEQ=[];let LIVEN=0,LIVET=0;const LIVE_MAX=3,LIVE_TTL=15*60e3;
+const LIVE={},LIVEP={},LIVEQ=[];let LIVEN=0,LIVET=0;const LIVE_MAX=6,LIVE_TTL=15*60e3;
 const liveM=()=>typeof S!=="undefined"&&typeof S.mes==="number"?S.mes:GM;
 const liveBox=k=>ABB[k]||(GEO[k]?[GEO[k][0]-.02,GEO[k][1]-.02,GEO[k][0]+.02,GEO[k][1]+.02]:null);
 const liveId=(k,m)=>`${k}|${m}|${PAX}|${NIGHTS()}`;
