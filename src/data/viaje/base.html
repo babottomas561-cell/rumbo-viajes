@@ -128,7 +128,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 #glight .gcap{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#ddd;font:13px var(--f-body,Inter,system-ui,sans-serif)}
 .lsal{font-size:12px;margin:4px 0 6px}.lsal:empty{display:none}
 .livest{font-size:12.5px;margin:2px 0 8px;color:var(--muted)}.livest.ok{color:var(--good,#1a7f4b)}.livest.err{color:var(--warn,#b45309)}.livest .linkb{font-size:12.5px}.hpin{border-color:#e4572e;font-size:10.5px}.hpop img{width:100%;border-radius:8px;margin-bottom:4px;aspect-ratio:4/3;object-fit:cover}.hpop{font-size:12.5px;line-height:1.45}
-#list .card{scroll-margin-top:72px}.carmode{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;justify-content:space-between;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:12px 0;font-size:14.5px;background:var(--surface)}.carmode .btn{background:var(--accent);color:var(--bg,#0f1d21);border-color:var(--accent);cursor:pointer;font-size:13.5px;padding:8px 14px}.carmode.flash{outline:2px solid var(--accent);outline-offset:2px}.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
+#list .card{scroll-margin-top:72px}.carmode{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;justify-content:space-between;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:12px 0;font-size:14.5px;background:var(--surface)}.cmq{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;font-size:15px}.cmseg button{min-width:42px}.cmt{margin:6px 0 0;font-size:13.5px;color:var(--muted);flex-basis:100%}.mixl{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}.caradv summary{cursor:pointer;font-size:13px;color:var(--muted);margin:6px 0}.carmode .btn{background:var(--accent);color:var(--bg,#0f1d21);border-color:var(--accent);cursor:pointer;font-size:13.5px;padding:8px 14px}.carmode.flash{outline:2px solid var(--accent);outline-offset:2px}.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
 .salpin{font-size:16px;line-height:22px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:99px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .csal{margin:6px 0;font-size:14px}.csal summary{cursor:pointer;color:var(--accent,#0a7c86);font-weight:600}
 .salbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:8px}
@@ -1505,7 +1505,7 @@ const C = [
 
 D.forEach(d=>{if(AH[d.k])d.ah=AH[d.k];});
 const CRIT=[{k:"price",l:"Precio",def:3},{k:"beach",l:"Playa",def:3},{k:"night",l:"Vida nocturna",def:4},{k:"young",l:"Movimiento joven",def:4},{k:"clima",l:"Clima con El Niño",def:3},{k:"stay",l:"Calidad de la casa",def:2}];
-const DEF={mes:1,m1:1,m2:12,q:"",lv:"cards",aloj:"casa",pax:8,nights:9,target:1500,view:"am",strat:"best",dep:"best",nino:"all",lvl:-1,gasto:"ahorro",zone:"all",sort:"score",budget:2800,minnight:0,ap:null};
+const DEF={mes:1,m1:1,m2:12,q:"",lv:"cards",aloj:"casa",pax:8,nights:9,target:1500,view:"am",strat:"best",enAuto:0,dep:"best",nino:"all",lvl:-1,gasto:"ahorro",zone:"all",sort:"score",budget:2800,minnight:0,ap:null};
 const S={...DEF,W:Object.fromEntries(CRIT.map(c=>[c.k,c.def]))};
 const LV=["Económica","Recomendada","Premium"];
 const RKEYS=["tuc","sla","rio","bue","cor","foz","igr"];
@@ -1822,6 +1822,7 @@ function build(){
   try{applyFE();}catch(_){}rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla","car"].includes(S.strat)))?bestKeyT(r,rt):S.strat;if(!r.ai&&!r.combo&&CARKM[r.k]){const cc=carCost(r.k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else if(!r.ai&&r.combo&&r.comboParts&&CARKM[r.comboParts[r.comboParts.length-1].k]){const cc=carCost(r.comboParts[r.comboParts.length-1].k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else rt.car=NA;
     if(RPICK[r.k]&&rt[RPICK[r.k]]&&isFinite(rt[RPICK[r.k]].p))r.flk=RPICK[r.k];r.leg=rt[r.flk];r.fl=r.leg.p;
     r.bag=Math.round((CS.hub&&r.flk==="bue"?40:BAG[r.flk])*g.bag);r.ins=r.dom?0:g.ins;r.dc=r.ai?null:dayCost(r,S.gasto);r.dayv=r.ai?(S.gasto==="ahorro"?8:20):r.dc?Math.round(r.dc.tot):Math.round(r.day*g.day);r.stayPP=r.houseTotal/PAX;r.daily=r.dayv*DAYS;r.total=r.fl+r.bag+r.ins+r.stayPP+r.tr+r.fee+r.ex+r.daily;
+    if(S.enAuto>0&&S.enAuto<PAX&&r.flk!=="car"&&r.rt.car&&isFinite(r.rt.car.p)&&isFinite(r.total)){const tF=r.total,tC=r.total-r.fl-r.bag+r.rt.car.p,nC=S.enAuto,nF=PAX-nC;r.mix={nC,nF,tC,tF};r.total=(nC*tC+nF*tF)/PAX;}
     r.sc={price:priceScore(r.total),beach:r.s[0],night:r.s[1],young:r.s[2],clima:NINO[r.zone],stay:r.stayS};
     r.score=CRIT.reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sw;if(S.target&&r.total>S.target)r.score=Math.max(0,r.score-(r.total-S.target)/200);r.th=wayHrs(r,r.flk);if(r.th!=null&&r.th>6)r.score=Math.max(0,r.score-(r.th-6)*0.08);// cada hora de viaje (ida) por encima de 6 resta 0,08// pasarse del presupuesto resta: 0,5 punto cada USD 100
     const sq=CRIT.filter(c=>c.k!=="price").reduce((a,c)=>a+S.W[c.k],0)||1;r.q=CRIT.filter(c=>c.k!=="price").reduce((a,c)=>a+S.W[c.k]*r.sc[c.k],0)/sq;});
@@ -1925,7 +1926,7 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
           <div class="bars">${bars}</div>
         </div>
         <div class="cost">
-          <div class="total"><span class="pp">${fmt(r.total)}</span><span class="grp">por persona · ${fmt(r.total*PAX)} el grupo</span></div>
+          <div class="total"><span class="pp">${fmt(r.total)}</span><span class="grp">${r.mix?"promedio ":""}por persona · ${fmt(r.total*PAX)} el grupo</span>${r.mix?`<span class="mixl">🚗 ${r.mix.nC} en auto: ${fmt(r.mix.tC)} c/u · ✈️ ${r.mix.nF} en avión: ${fmt(r.mix.tF)} c/u</span>`:""}</div>
           ${r.total<=S.target?`<span class="fit">Entra en ${fmt(S.target)}</span>`:`<span class="over">${fmt(r.total-S.target)} arriba de ${fmt(S.target).slice(4)}</span>`}
           <div class="break">
             ${flightRows(r)}
@@ -1948,11 +1949,14 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
 // Después de cada dibujo se piden en vivo las fichas que quedaron a la vista; abrir una playa en el mapa también la pide
 // En auto ↔ propuestas: la calculadora siempre cambia la opción "En auto" de cada ficha; con este botón además el auto
 // pasa a ser lo que suman todas las propuestas (y el mapa), igual que elegir "En auto" en Filtros → Cómo salen.
-function carModeUI(){const el=document.getElementById("carmode");if(!el)return;const on=S.strat==="car";
-  el.innerHTML=`<span>${on?"<b>Las propuestas y el mapa están sumando el auto</b> con esta calculadora (solo aparecen los destinos a los que se llega manejando).":"<b>Las propuestas y el mapa están sumando el avión.</b> Lo que cambies acá se ve en el botón “En auto” de cada ficha."}</span><button type="button" class="btn" data-carmode="${on?"best":"car"}">${on?"Volver a sumar el avión":"Sumar el auto en todas las propuestas"}</button>`;}
-document.addEventListener("click",e=>{const b=e.target.closest("[data-carmode]");if(!b)return;S.strat=b.dataset.carmode;try{setSeg("strat",S.strat);}catch(_){}render();
-  const n=document.getElementById("carmode");if(n){n.classList.remove("flash");void n.offsetWidth;n.classList.add("flash");}});
-{const r0=render;render=function(){try{const need=Math.ceil(S.pax/CS.cap);if(CS.n<need&&need<=4){CS.n=need;setSeg("carn",CS.n);}}catch(_){}r0.apply(this,arguments);try{carModeUI();liveScan();liveBase();}catch(_){}
+function carModeUI(){const el=document.getElementById("carmode");if(!el)return;const n=S.enAuto||0;
+  el.innerHTML=`<div class="cmq"><b>¿Cuántos van en auto?</b><div class="seg cmseg">${Array.from({length:PAX+1},(_,i)=>`<button type="button" data-enauto="${i}" aria-pressed="${i===n}">${i===0?"Nadie":i===PAX?`Todos (${i})`:i}</button>`).join("")}</div></div>
+  <p class="cmt">${n===0?"Todos vuelan: las propuestas suman el avión más conveniente. Lo de abajo calcula cuánto saldría manejar y se ve en el botón “En auto” de cada ficha."
+   :n===PAX?`Van todos en auto: ${CS.n} ${CS.n>1?"vehículos":"vehículo"} de ${CS.cap} plazas. Las propuestas suman el auto (quedan afuera las playas a las que no se llega manejando).`
+   :`${n} en auto (${CS.n} ${CS.n>1?"vehículos":"vehículo"} de ${CS.cap} plazas; los gastos del auto los pagan ellos) y ${PAX-n} en avión. Cada ficha muestra lo de cada uno y el promedio por persona.`}</p>`;}
+document.getElementById("strat").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.v==="car")S.enAuto=S.pax;else if(S.enAuto>=S.pax)S.enAuto=0;},true);
+document.addEventListener("click",e=>{const b=e.target.closest("[data-enauto]");if(!b)return;S.enAuto=+b.dataset.enauto;CS.pay=0;render();});
+{const r0=render;render=function(){try{if(S.enAuto>S.pax)S.enAuto=S.pax;if(S.enAuto===S.pax&&S.pax>0)S.strat="car";else if(S.strat==="car"&&S.enAuto<S.pax)S.strat="best";try{setSeg("strat",S.strat);}catch(_){}const d=S.enAuto>0&&S.enAuto<S.pax?S.enAuto:S.pax,need=Math.min(4,Math.max(1,Math.ceil(d/CS.cap)));if(CS.n!==need){CS.n=need;setSeg("carn",CS.n);}}catch(_){}r0.apply(this,arguments);try{carModeUI();liveScan();liveBase();}catch(_){}
   try{if(BPOP&&BBOX&&!BBOX.getContainer().hidden){const r=LROWS.find(x=>x.k===BPOP);if(r){const el=BBOX.getContainer(),st=el.scrollTop;el.innerHTML=`<button type="button" class="bbx" aria-label="Cerrar">✕</button>`+lpop(r);el.querySelector(".bbx").onclick=closeBeach;el.scrollTop=st;}}}catch(_){}};}
 {const o0=openBeach;openBeach=function(r){try{const d=r.combo&&r.comboParts?r.comboParts[0]:r;liveFetch(d.k,(r.leg&&r.leg.m)||1,(r.leg&&r.leg.d)||6);}catch(_){}return o0.apply(this,arguments);};}
 // Mapa: al acercarse a una playa aparecen las casas libres de Airbnb de esa zona, con su precio por persona de este momento
@@ -2490,7 +2494,7 @@ function routeStops(k,n,km){if(!n||!GEO[k])return [];
     const kmAt=Math.round(km*j/(n+1));out.push({name:c[0][0],ll:[c[0][1],c[0][2]],off:Math.round(c[1]),km:kmAt,dayKm:kmAt-prev,h:(kmAt-prev)/CS.speed});prev=kmAt;}
   out.push({name:"destino",km,dayKm:km-prev,h:(km-prev)/CS.speed,last:true});return out;}
 // Los gastos del vehículo (nafta, peajes, Carta Verde, desgaste) se multiplican por la cantidad de vehículos y se dividen entre los que pagan.
-const carPay=()=>Math.min(PAX,CS.pay||PAX),carPer=()=>carPay()/CS.n,carFits=()=>CS.n*CS.cap>=PAX;
+const carDrivers=()=>S.enAuto>0&&S.enAuto<PAX?S.enAuto:PAX;const carPay=()=>Math.min(carDrivers(),CS.pay||carDrivers()),carPer=()=>carPay()/CS.n,carFits=()=>CS.n*CS.cap>=PAX;
 function carCost(k){const [ka,kb,ku,tollARS]=CARKM[k];const intl=kb+ku>0,local=intl?CS.local:CS.localAR,per=carPer();
   // km de ida y vuelta por país; las movidas allá se cargan en el país del destino
   const kmAR=2*ka+(intl?0:local),kmBR=kb?2*kb+local:0,kmUY=ku?2*ku+local:0,kmT=kmAR+kmBR+kmUY;
@@ -2554,6 +2558,7 @@ function carParamsUI(){const g=document.getElementById("carpgrid");if(!g)return;
 document.getElementById("carpgrid").addEventListener("change",e=>{const i=e.target.closest("input[data-k]");if(!i)return;const v=parseFloat(i.value);if(v>=0&&isFinite(v)){CS[i.dataset.k]=v;if(i.dataset.k==="hd")setSeg("carnoches",v);saveCar();carParamsUI();try{setSeg("carnoches",CS.hd);}catch(_){}render();}});
 document.getElementById("carpgrid").addEventListener("click",e=>{const b=e.target.closest(".cpone");if(!b)return;e.preventDefault();CS[b.dataset.k]=CS0[b.dataset.k];saveCar();carParamsUI();render();});
 try{setSeg("carrn",CS.rn);setSeg("carnoches",CS.hd);}catch(_){}
+try{const n=document.getElementById("carn").closest(".ctl"),p=document.getElementById("carpay").closest(".ctl"),d=document.createElement("details");d.className="caradv";d.innerHTML="<summary>Ajustes: vehículos y quién paga (se calculan solos)</summary>";n.parentNode.insertBefore(d,n);d.appendChild(n);d.appendChild(p);}catch(_){}
 document.getElementById("carreset").addEventListener("click",()=>{Object.assign(CS,CS0,{rn:1});setSeg("carrn",1);setSeg("carnoches",CS.hd);saveCar();carParamsUI();render();});
 if(CARLIVE&&CARLIVE.at){const h=document.getElementById("carlivehint");if(h)h.textContent+=` Dólar, real y combustibles se actualizan solos todos los días desde sus fuentes oficiales (último: ${new Date(CARLIVE.at).toLocaleString("es-AR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}).`;}
 carParamsUI();
@@ -2697,7 +2702,7 @@ document.getElementById("anio").addEventListener("click",e=>{const b=e.target.cl
 // /viaje?p=jurere&pax=6&n=8&mes=1&casa=123&via=tuc. Quien lo abre ve esa ficha con los precios en vivo de ese momento.
 const SHARED=(()=>{try{const q=new URLSearchParams(location.search),k=(q.get("p")||"").replace(/[^a-z0-9_]/g,"");if(!k)return null;
   const pax=+q.get("pax"),n=+q.get("n"),m=+q.get("mes"),casa=q.get("casa"),via=q.get("via");
-  if(pax>=1&&pax<=16)S.pax=pax;if(n>=2&&n<=30)S.nights=n;if(m>=1&&m<=12)S.mes=m;
+  if(pax>=1&&pax<=16)S.pax=pax;{const ea=+q.get("auto");if(ea>=0&&ea<=16)S.enAuto=ea;}if(n>=2&&n<=30)S.nights=n;if(m>=1&&m<=12)S.mes=m;
   if(casa&&/^\d{3,25}$/.test(casa))PICK[k]=casa;try{if(CARKM[k])CS.dest=k;}catch(_){}if(via&&/^[a-z]{2,4}$/.test(via))RPICK[k]=via;
   for(const id of ["pax","nights","mes"])try{setSeg(id,S[id]);}catch(_){}
   return {k};}catch(_){return null;}})();
@@ -2709,7 +2714,7 @@ document.addEventListener("click",async e=>{const b=e.target.closest("[data-shar
   const k=b.dataset.share,r=(LROWS||[]).find(x=>x.k===k);if(!r)return;
   const d=r.combo&&r.comboParts?r.comboParts[0]:r,h=D.find(x=>x.k===d.k)?pickStay(D.find(x=>x.k===d.k)):null,m=(r.leg&&r.leg.m)||1;
   TIN=Math.max(1,(r.leg&&r.leg.d)||6);GM=m;const fechas=`del ${liveD(IND())} al ${liveD(OUTD())}`;TIN=6;GM=1;
-  const p=new URLSearchParams({p:k,pax:PAX,n:NIGHTS(),mes:m});if(h&&h[8])p.set("casa",h[8]);if(r.flk&&r.flk!=="car")p.set("via",r.flk);else if(r.flk==="car")p.set("via","car");
+  const p=new URLSearchParams({p:k,pax:PAX,n:NIGHTS(),mes:m});if(S.enAuto)p.set("auto",S.enAuto);if(h&&h[8])p.set("casa",h[8]);if(r.flk&&r.flk!=="car")p.set("via",r.flk);else if(r.flk==="car")p.set("via","car");
   const url=`${location.origin}${location.pathname}?${p}`;
   const text=`${r.name.replace(/\s*\(.*?\)/g,"")}: ${fmt(r.total)} por persona en total (vuelo, casa, comida y salidas) para ${PAX}, ${NIGHTS()} noches ${fechas}.${h&&h[7]?` Casa: ${h[7]}.`:""}`;
   if(navigator.share){try{await navigator.share({title:`${r.name} · Viaje 2027`,text,url});return;}catch(err){if(err&&err.name==="AbortError")return;}}
