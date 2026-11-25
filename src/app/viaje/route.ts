@@ -6,7 +6,17 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 export async function GET(req: Request) {
   let html = await readFile(path.join(process.cwd(), "src/data/viaje/base.html"), "utf8");
   const db = getSupabaseAdmin();
-  const { data } = db ? await db.from("app_snapshots").select("data,updated_at").eq("key", "anio").maybeSingle() : { data: null };
+  // IDs de las casas de la plantilla, antes de inyectar los datos grandes (si no, la búsqueda recorre 6 MB)
+  const ids = [...new Set([...html.matchAll(/,"(\d{5,20})"[,\]]/g)].map((m) => m[1]))];
+  // Todo lo de Supabase en paralelo: una sola consulta de snapshots + las distancias a la playa
+  const chunks = Array.from({ length: Math.ceil(ids.length / 150) }, (_, i) => ids.slice(i * 150, i * 150 + 150));
+  const [snapRes, ...beachRes] = db ? await Promise.all([
+    db.from("app_snapshots").select("key,data,updated_at").in("key", ["anio", "carprices", "fdet", "ow", "fechas", "ruta"]),
+    ...chunks.map((c) => db.from("listing_beach").select("listing_id,beach_m,lat,lon,beach_name").in("listing_id", c)),
+  ]) : [{ data: null }];
+  const SNAP = new Map(((snapRes.data ?? []) as { key: string; data: unknown; updated_at: string }[]).map((r) => [r.key, r]));
+  const snap = (k: string) => ({ data: (SNAP.get(k) ?? null) as { data: any; updated_at: string } | null }); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const { data } = snap("anio");
   if (data) {
     const i = html.indexOf("const ANIO=");
     const j = html.indexOf(";\nconst MES=[", i);
@@ -21,10 +31,10 @@ export async function GET(req: Request) {
     }
   }
   // Valores oficiales del cálculo en auto (los actualiza scripts/car_prices.py todos los días)
-  const { data: cp } = db ? await db.from("app_snapshots").select("data").eq("key", "carprices").maybeSingle() : { data: null };
+  const { data: cp } = snap("carprices");
   html = html.replace("const CARLIVE=null;", "const CARLIVE=" + JSON.stringify(cp?.data ?? null).replace(/</g, "\\u003c") + ";");
   // Detalle de vuelos del robot (aeropuertos, horarios, escalas) del mes de enero: pisa FD
-  const { data: fdx } = db ? await db.from("app_snapshots").select("data").eq("key", "fdet").maybeSingle() : { data: null };
+  const { data: fdx } = snap("fdet");
   if (fdx?.data) {
     const live: Record<string, { o: unknown[] }> = {};
     for (const [k, o] of Object.entries(fdx.data as Record<string, unknown[]>)) if (k.endsWith("-1")) live[k.slice(0, -2)] = { o };
@@ -32,19 +42,16 @@ export async function GET(req: Request) {
   }
   // Vuelos solo ida de cualquier día (ow) e ida y vuelta por fecha (fechas): calendario de la pestaña Vuelos
   for (const [key, name] of [["ow", "OWLIVE"], ["fechas", "FELIVE"]] as const) {
-    const { data: x } = db ? await db.from("app_snapshots").select("data").eq("key", key).maybeSingle() : { data: null };
+    const { data: x } = snap(key);
     if (x?.data) html = html.replace(`const ${name}=null;`, `const ${name}=` + JSON.stringify(x.data).replace(/</g, "\\u003c") + ";");
   }
   // Itinerario en auto día por día (horarios OSRM, pronóstico, noches de Airbnb, noticias de ruta y fotos): scripts/road_trip.py cada 6 h
-  const { data: rt } = db ? await db.from("app_snapshots").select("data").eq("key", "ruta").maybeSingle() : { data: null };
+  const { data: rt } = snap("ruta");
   if (rt?.data) html = html.replace("const RUTALIVE=null;", "const RUTALIVE=" + JSON.stringify(rt.data).replace(/</g, "\\u003c") + ";");
   // Distancia de cada casa de la página a la playa más cercana (OpenStreetMap + PostGIS, tabla listing_beach)
   if (db) {
-    const ids = [...new Set([...html.matchAll(/,"(\d{5,20})"[,\]]/g)].map((m) => m[1]))];
     const live: Record<string, [number, number | null, number | null, string | null]> = {};
-    const chunks = Array.from({ length: Math.ceil(ids.length / 150) }, (_, i) => ids.slice(i * 150, i * 150 + 150));
-    const res = await Promise.all(chunks.map((c) => db.from("listing_beach").select("listing_id,beach_m,lat,lon,beach_name").in("listing_id", c)));
-    for (const r of res) for (const x of r.data ?? []) live[x.listing_id] = [x.beach_m, x.lat, x.lon, x.beach_name];
+    for (const r of beachRes) for (const x of (r.data ?? []) as { listing_id: string; beach_m: number; lat: number | null; lon: number | null; beach_name: string | null }[]) live[x.listing_id] = [x.beach_m, x.lat, x.lon, x.beach_name];
     if (Object.keys(live).length) html = html.replace("const BEACHLIVE=null;", "const BEACHLIVE=" + JSON.stringify(live).replace(/</g, "\\u003c") + ";");
   }
   // Link compartido de una ficha (?p=jurere&pax=6&n=8): vista previa con la playa, la foto de una casa libre y el precio en vivo
@@ -74,5 +81,5 @@ export async function GET(req: Request) {
   }
   // La plantilla es un artefacto (sin <head>): se agrega lo necesario para que el celular la muestre a su ancho real
   if (!/name="viewport"/.test(html)) html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` + html;
-  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=0, s-maxage=60, stale-while-revalidate=120" } });
+  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=0, s-maxage=120, stale-while-revalidate=86400" } });
 }
