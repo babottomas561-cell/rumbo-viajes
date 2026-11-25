@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install "flights==0.9.0"
+      - run: pip install "flights==0.9.0" click rich
       - run: fli --help > /dev/null
       - name: Calendario de enero
         run: python3 scripts/fli_fechas.py "${{ inputs.origenes || 'TUC,BUE,COR,SLA,IGU' }}"
