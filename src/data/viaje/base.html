@@ -151,7 +151,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .lclim{display:flex;flex-wrap:wrap;gap:4px 10px;margin:6px 0;padding:6px 8px;border-radius:8px;background:color-mix(in srgb,#3b8ea5 10%,transparent);font-size:12px}.lclim b{flex-basis:100%}.lclim small{flex-basis:100%;color:var(--muted)}
 .lmchips{display:inline-flex;flex-wrap:wrap;gap:6px}.lmchips .chip{font-size:12px}
 .lmleg{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}.lmleg .lpin{transform:none;margin-right:5px}
-.lmapbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:10px 0}.lmapbar .tin{max-width:200px}.lmr{display:flex;align-items:center;gap:6px;font-size:13px}.lmr b{font-family:var(--f-mono);min-width:70px}
+.lmapbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:10px 0}.lmapbar .tin{width:min(100%,280px);max-width:none}.lmmore{flex-basis:100%;font-size:13px}.lmmore summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content}.lmmorein{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px}.lmapwrap{position:relative}.lmfs{position:absolute;z-index:500;top:10px;right:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:600 13px var(--f-body);box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer}.lmapwrap.full{position:fixed;inset:0;z-index:1200;background:var(--bg,#fff);padding:0;margin:0}.lmapwrap.full #lmap{height:100vh;min-height:0;border-radius:0}.lmapwrap.full>p{display:none}body.lmfull{overflow:hidden}@media(max-width:700px){#lmap{height:70vh;min-height:420px}.lmapbar select,.lmapbar .tin{flex:1 1 45%}}.lmr{display:flex;align-items:center;gap:6px;font-size:13px}.lmr b{font-family:var(--f-mono);min-width:70px}
 .lpin .ln{font-family:var(--f-body);font-weight:600;margin-right:3px}.lpin.grp{background:var(--ink);border-color:var(--ink);color:var(--bg);text-align:center;line-height:1.25;padding:3px 8px}.lpin.ok{background:var(--good);border-color:var(--good);color:#fff}.lpin.over{background:var(--surface);border-color:var(--warn);color:var(--warn)}.lpin.top{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
 .lpop{width:270px;font:13px/1.4 var(--f-body)}.lpop .ph{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:4px;border-radius:10px;margin-bottom:8px}
 .lpop .ph img{width:270px;height:170px;object-fit:cover;flex:0 0 100%;scroll-snap-align:start;border-radius:10px;background:#ccc}
@@ -630,19 +630,20 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
     <p class="hint">Un solo mapa con todas las playas. Usá los filtros de acá o los generales (Filtros) y tocá una playa para ver fotos, gastos, rango de precios y cómo llegar.</p>
   </div>
   <div class="lmapbar" id="lmapbar">
-    <input type="search" id="lm-q" class="tin" placeholder="Playas (varias con coma)…" list="lm-list" autocomplete="off"><datalist id="lm-list"></datalist><span class="lmchips" id="lm-chips"></span>
+    <input type="search" id="lm-q" class="tin" placeholder="Buscar playa (ej. Floripa, Pipa)…" list="lm-list" autocomplete="off"><datalist id="lm-list"></datalist><span class="lmchips" id="lm-chips"></span>
     <select id="lm-zone" class="carsel"><option value="">Todas las zonas</option></select>
     <label class="lmr">Hasta <b id="lm-maxv"></b><input type="range" id="lm-max" min="500" max="3000" step="50"></label>
     <select id="lm-color" class="carsel"><option value="total">Color: precio</option><option value="night">Color: noche y movida</option><option value="beach">Color: playa</option><option value="clima">Color: clima con El Niño</option><option value="lluvia">Color: lluvia esperada (mm)</option></select>
+    <details class="lmmore"><summary>Más opciones</summary><div class="lmmorein">
     <label class="chk"><input type="checkbox" id="lm-fit"> Solo las que entran en el presupuesto</label>
     <label class="chk"><input type="checkbox" id="lm-ap"> Mostrar aeropuertos</label>
     <label class="chk"><input type="checkbox" id="lm-rain"> Capa de lluvia del mes</label>
     <label class="chk"><input type="checkbox" id="lm-ruta"> Ruta en auto (ida y vuelta)</label>
-    <label class="chk"><input type="checkbox" id="lm-casas" checked> Casas libres de Airbnb en vivo (al acercar)</label>
+    <label class="chk"><input type="checkbox" id="lm-casas" checked> Casas libres de Airbnb en vivo (al acercar)</label></div></details>
     <span class="hint" id="lm-count"></span> <span class="hint" id="lm-hst"></span>
     <div class="lmleg" id="lm-leg"></div>
   </div>
-  <div class="lmapwrap"><div id="lmap" aria-label="Mapa con la ubicación exacta de cada playa"></div>
+  <div class="lmapwrap"><button type="button" class="lmfs" id="lmfs" aria-pressed="false">⤢ Pantalla completa</button><div id="lmap" aria-label="Mapa con la ubicación exacta de cada playa"></div>
     <p class="hint">Mapa real (OpenStreetMap): cada etiqueta es una playa con el total por persona según lo elegido arriba. Tocala para ver fotos, descripción, clima y precio. Fotos de Wikimedia Commons.</p></div>
   <div class="mapwrap" hidden style="display:none">
     <div class="mapbox" id="mapbox"><svg id="map" viewBox="0 0 690 625" role="img" aria-label="Mapa interactivo con playas, aeropuertos de llegada y ciudades de salida"></svg><div class="mapctl"><button type="button" data-z="in" aria-label="Acercar">+</button><button type="button" data-z="out" aria-label="Alejar">−</button><button type="button" data-z="reset">Ver todo</button></div><div class="mappop" id="mappop" hidden></div><div class="mapnote" id="mapnote" hidden>Para acercar: Ctrl + rueda, pellizcá o usá +</div></div>
@@ -2172,6 +2173,8 @@ function openBeach(r,ll){const sk=r.parts?r.parts[0][0]:r.k;if(BPOP)hideTrip();B
   const el=BBOX.getContainer();el.innerHTML=`<button type="button" class="bbx" aria-label="Cerrar">✕</button>`+lpop(r);el.hidden=innerWidth<700;el.querySelector(".bbx").onclick=closeBeach;el.scrollTop=0;
   LMAP._salk=sk;drawSal(sk,r.name);drawTrip(r,ll);L.circleMarker(ll,{radius:9,color:"#fff",weight:3,fillColor:"#e4572e",fillOpacity:1}).addTo(LTRIP);
   if(innerWidth<700){const o=tripEl();const c=document.createElement("div");c.className="lpopc";c.innerHTML=lpop(r);o.prepend(c);}focusMode(true);}
+document.addEventListener("click",e=>{const b=e.target.closest("#lmfs");if(!b)return;const w=b.closest(".lmapwrap"),on=!w.classList.contains("full");w.classList.toggle("full",on);document.body.classList.toggle("lmfull",on);b.setAttribute("aria-pressed",String(on));b.textContent=on?"✕ Salir de pantalla completa":"⤢ Pantalla completa";if(LMAP)setTimeout(()=>LMAP.invalidateSize(),60);});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){const w=document.querySelector(".lmapwrap.full");if(w)document.getElementById("lmfs").click();}});
 function closeBeach(){BPOP=null;if(BBOX)BBOX.getContainer().hidden=true;hideTrip();}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&BPOP&&!(document.getElementById("glight")&&!document.getElementById("glight").hidden))closeBeach();});
 function focusMode(on){if(!LMAP)return;[LLAYER,LRAIN,LAPL].forEach(g=>{if(!g)return;if(on)LMAP.removeLayer(g);else if(!LMAP.hasLayer(g))LMAP.addLayer(g);});
@@ -2223,7 +2226,7 @@ function drawLMap(fit){if(!LMAP)return;initLMBar();lmLegend();LLAYER.clearLayers
     const cls=lmClass(r,best);
     L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="lpin ${cls}"><span class="ln">${r.name.replace(/\s*\(.*?\)/g,"").replace(/ noches/g,"")}</span> ${lmLabel(r)}</span>`,iconSize:null}),title:r.name,riseOnHover:true,tot:r.total,k:r.k,sv:LMF.color==="lluvia"?(()=>{const c=climOf(r);return c?c.esp:null;})():LMF.color==="night"?(r.s[1]+r.s[2])/2:LMF.color==="beach"?r.s[0]:LMF.color==="clima"?NINO[r.zone]:null})
       .on('click',()=>openBeach(r,ll)).addTo(LLAYER);});
-  if(fit)LMAP.invalidateSize();if(fit&&pts.length===1)LMAP.setView(pts[0],11);else if(fit&&pts.length)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:9});
+  if(fit)LMAP.invalidateSize();if(fit&&pts.length===1)LMAP.setView(pts[0],11);else if(fit&&pts.length){const sa=(LMF.q||LMF.zone)?pts:pts.filter(p=>p[0]<2);LMAP.fitBounds(sa.length>2?sa:pts,{padding:[30,30],maxZoom:9});}
   if(window.__reopen){const k=window.__reopen;window.__reopen=null;LLAYER.eachLayer(m=>{if(m.options.k===k)m.fire("click");});}}
 document.addEventListener("click",e=>{if(e.target.closest('[data-tab="mapa"]'))setTimeout(()=>{initLMap();if(LMAP){LMAP.invalidateSize();drawLMap(!LMAP.__shown);LMAP.__shown=1;}},60);});
 function renderMap(base,out){MAPARGS=[base,out];LROWS=out;if(LMAP)drawLMap(false);else setTimeout(initLMap,0);
