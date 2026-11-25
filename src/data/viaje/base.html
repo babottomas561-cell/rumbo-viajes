@@ -128,7 +128,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 #glight .gcap{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#ddd;font:13px var(--f-body,Inter,system-ui,sans-serif)}
 .lsal{font-size:12px;margin:4px 0 6px}.lsal:empty{display:none}
 .livest{font-size:12.5px;margin:2px 0 8px;color:var(--muted)}.livest.ok{color:var(--good,#1a7f4b)}.livest.err{color:var(--warn,#b45309)}.livest .linkb{font-size:12.5px}.hpin{border-color:#e4572e;font-size:10.5px}.hpop img{width:100%;border-radius:8px;margin-bottom:4px;aspect-ratio:4/3;object-fit:cover}.hpop{font-size:12.5px;line-height:1.45}
-.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
+#list .card{scroll-margin-top:72px}.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
 .salpin{font-size:16px;line-height:22px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:99px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .csal{margin:6px 0;font-size:14px}.csal summary{cursor:pointer;color:var(--accent,#0a7c86);font-weight:600}
 .salbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:8px}
@@ -2689,7 +2689,7 @@ document.addEventListener("click",async e=>{const b=e.target.closest("[data-shar
   TIN=Math.max(1,(r.leg&&r.leg.d)||6);GM=m;const fechas=`del ${liveD(IND())} al ${liveD(OUTD())}`;TIN=6;GM=1;
   const p=new URLSearchParams({p:k,pax:PAX,n:NIGHTS(),mes:m});if(h&&h[8])p.set("casa",h[8]);if(r.flk&&r.flk!=="car")p.set("via",r.flk);else if(r.flk==="car")p.set("via","car");
   const url=`${location.origin}${location.pathname}?${p}`;
-  const text=`${r.name.replace(/\s*\(.*?\)/g,"")}: ${fmt(r.total)} por persona todo incluido (vuelo, casa, comida y salidas) para ${PAX}, ${NIGHTS()} noches ${fechas}.${h&&h[7]?` Casa: ${h[7]}.`:""}`;
+  const text=`${r.name.replace(/\s*\(.*?\)/g,"")}: ${fmt(r.total)} por persona en total (vuelo, casa, comida y salidas) para ${PAX}, ${NIGHTS()} noches ${fechas}.${h&&h[7]?` Casa: ${h[7]}.`:""}`;
   if(navigator.share){try{await navigator.share({title:`${r.name} · Viaje 2027`,text,url});return;}catch(err){if(err&&err.name==="AbortError")return;}}
   try{await navigator.clipboard.writeText(`${text}\n${url}`);}catch(_){}
   shareToast(`Link copiado. <a href="https://wa.me/?text=${encodeURIComponent(text+"\n"+url)}" target="_blank" rel="noopener">Mandarlo por WhatsApp</a>`);});
