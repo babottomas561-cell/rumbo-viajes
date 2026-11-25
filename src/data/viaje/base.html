@@ -2320,12 +2320,14 @@ function pickAp(e){const t=e.target.closest("[data-ap]");if(!t||t.disabled)retur
 document.getElementById("map").addEventListener("click",pickAp);
 document.getElementById("aplist").addEventListener("click",pickAp);
 function renderTable(){
+  try{applyFE();}catch(_){}// los precios nuevos del calendario antes de dibujar (si no, quedan los del 20/11)
   const head=`<thead><tr><th>Aeropuerto</th>${RKEYS.map(k=>`<th>${RLAB[k]}</th>`).join("")}</tr></thead>`;
   const body=APS.map(ap=>{const r=routes(ap);const m=Math.min(...RKEYS.map(k=>r[k].p));
     return `<tr><td><b>${CITY[ap]}</b> <span class="mono" style="color:var(--muted);font-size:12px">${ap}</span></td>${RKEYS.map(k=>{const l=r[k];const ok=isFinite(l.p);return `<td class="${ok&&l.p===m?"min":""}">${ok?fmt(l.p):"—"}<small>${ok?dr(l):""}</small></td>`;}).join("")}</tr>`;}).join("");
   document.getElementById("ftable").innerHTML=head+"<tbody>"+body+"</tbody>";
 }
 function renderDayTable(){
+  try{applyFE();}catch(_){}// los precios nuevos del calendario antes de dibujar (si no, quedan los del 20/11)
   const days=[...Array(12)].map((_,i)=>i+1);
   const aps=APS.filter(ap=>FL.TUC[ap]);
   const head=`<thead><tr><th>Destino</th>${days.map(d=>`<th>${d}</th>`).join("")}</tr></thead>`;
