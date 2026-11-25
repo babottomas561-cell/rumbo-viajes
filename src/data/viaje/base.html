@@ -2776,6 +2776,8 @@ syncRanges();render();renderTable();renderDayTable();renderHeat();renderOcc();re
 })();
 
 const OWLIVE=null;const FELIVE=null;
+// Las tablas de Vuelos se dibujan antes de esta línea: se redibujan con los precios nuevos apenas están
+window.addEventListener("load",()=>{try{FE_N=null;renderTable();renderDayTable();}catch(_){}});
 (function(){const OW=OWLIVE||{},FE=FELIVE||{};
 const CN={TUC:"Tucumán",SLA:"Salta",BUE:"Buenos Aires",COR:"Córdoba",MDZ:"Mendoza",ROS:"Rosario",JUJ:"Jujuy",IGU:"Foz do Iguaçu",ASU:"Asunción",VVI:"Santa Cruz (Bolivia)",LPB:"La Paz (Bolivia)",RIO:"Río de Janeiro",SAO:"San Pablo",FLN:"Florianópolis",SSA:"Salvador",REC:"Recife",NAT:"Natal",FOR:"Fortaleza",MCZ:"Maceió",JPA:"João Pessoa",AJU:"Aracaju",IOS:"Ilhéus",BPS:"Porto Seguro",SLZ:"São Luís",MVD:"Montevideo",PDP:"Punta del Este",MDQ:"Mar del Plata",SCL:"Santiago",CUN:"Cancún",PUJ:"Punta Cana",CTG:"Cartagena",ADZ:"San Andrés",PTY:"Panamá",SJO:"San José (Costa Rica)",GYE:"Guayaquil",PIU:"Piura",TRU:"Trujillo",PVR:"Puerto Vallarta",PXM:"Puerto Escondido",CUR:"Curazao",MGA:"Managua",SMR:"Santa Marta",NVT:"Navegantes"};
 const ORIG=["TUC","SLA","BUE","COR","MDZ","ROS","JUJ","IGU","ASU","VVI","LPB"];
