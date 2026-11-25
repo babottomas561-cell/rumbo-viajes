@@ -128,6 +128,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 #glight .gcap{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#ddd;font:13px var(--f-body,Inter,system-ui,sans-serif)}
 .lsal{font-size:12px;margin:4px 0 6px}.lsal:empty{display:none}
 .livest{font-size:12.5px;margin:2px 0 8px;color:var(--muted)}.livest.ok{color:var(--good,#1a7f4b)}.livest.err{color:var(--warn,#b45309)}.livest .linkb{font-size:12.5px}.hpin{border-color:#e4572e;font-size:10.5px}.hpop img{width:100%;border-radius:8px;margin-bottom:4px;aspect-ratio:4/3;object-fit:cover}.hpop{font-size:12.5px;line-height:1.45}
+.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
 .salpin{font-size:16px;line-height:22px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:99px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .csal{margin:6px 0;font-size:14px}.csal summary{cursor:pointer;color:var(--accent,#0a7c86);font-weight:600}
 .salbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:8px}
@@ -1902,7 +1903,7 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
       <div class="rank"><span class="n">${i+1}</span><span class="sc">${r.score.toFixed(1)}</span></div>
       <div class="body">
         <div>
-          <div class="title-row"><h3>${r.name}</h3><span class="iata">${r.ap}</span>${r.leg&&r.leg.m?`<span class="mespill">${MESL[r.leg.m-1]}</span>`:""}${r.combo?'<span class="combo">COMBO</span>':""}${r.nw?'<span class="new">NUEVO</span>':""}<span class="region">${r.zone}</span></div>
+          <div class="title-row"><h3>${r.name}</h3><button type="button" class="sharebtn" data-share="${r.k}" aria-label="Compartir ${r.name.replace(/"/g,"&quot;")}">Compartir</button><span class="iata">${r.ap}</span>${r.leg&&r.leg.m?`<span class="mespill">${MESL[r.leg.m-1]}</span>`:""}${r.combo?'<span class="combo">COMBO</span>':""}${r.nw?'<span class="new">NUEVO</span>':""}<span class="region">${r.zone}</span></div>
           <p class="clima ${nt[0]}">● ${nt[1]}<span class="nd"> · ${ninoLine(r)}</span></p>${occLine(r)}
           ${r.combo?"":gal(r.k,r.name,"cgal")}<p class="vibe">${r.vibe}</p>${!r.combo&&WIKI[r.k]?`<details class="cwiki"><summary>Sobre el lugar</summary><p>${WIKI[r.k]}</p><small>Fuente: Wikipedia</small></details>`:""}${r.combo?"":`<details class="csal" data-sk="${r.k}" data-sn="${r.name.replace(/"/g,"&quot;")}"><summary>Para salir, comer y conocer</summary><div class="salbody">Cargando…</div></details>`}${EV[r.k]?`<p class="ev">En esas fechas: ${EV[r.k]}</p>`:""}<p class="how">${r.how}</p>
           <div class="bars">${bars}</div>
@@ -2669,6 +2670,28 @@ document.getElementById("yrzone").addEventListener("change",e=>{S.zone=e.target.
 document.getElementById("anio").addEventListener("click",e=>{const b=e.target.closest("[data-yk]");if(!b)return;YSEL=[b.dataset.yk,+b.dataset.ym];renderAnio();
   const det=document.getElementById("yrdet");if(b.closest(".yr-card"))det.scrollIntoView({behavior:"smooth",block:"nearest"});});
 
+// ── Compartir una ficha ─────────────────────────────────────────────────────────────────────────────
+// El link lleva la playa, el grupo, las noches, el mes, la casa y la forma de viajar de esa ficha:
+// /viaje?p=jurere&pax=6&n=8&mes=1&casa=123&via=tuc. Quien lo abre ve esa ficha con los precios en vivo de ese momento.
+const SHARED=(()=>{try{const q=new URLSearchParams(location.search),k=(q.get("p")||"").replace(/[^a-z0-9_]/g,"");if(!k)return null;
+  const pax=+q.get("pax"),n=+q.get("n"),m=+q.get("mes"),casa=q.get("casa"),via=q.get("via");
+  if(pax>=1&&pax<=16)S.pax=pax;if(n>=2&&n<=30)S.nights=n;if(m>=1&&m<=12)S.mes=m;
+  if(casa&&/^\d{3,25}$/.test(casa))PICK[k]=casa;if(via&&/^[a-z]{2,4}$/.test(via))RPICK[k]=via;
+  for(const id of ["pax","nights","mes"])try{setSeg(id,S[id]);}catch(_){}
+  return {k};}catch(_){return null;}})();
+window.addEventListener("load",()=>{if(SHARED)setTimeout(()=>goCard(SHARED.k),300);});
+function shareToast(html){let t=document.getElementById("sharetoast");if(!t){t=document.createElement("div");t.id="sharetoast";t.setAttribute("role","status");document.body.appendChild(t);}
+  t.innerHTML=html;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,6000);}
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-share]");if(!b)return;e.preventDefault();
+  const k=b.dataset.share,r=(LROWS||[]).find(x=>x.k===k);if(!r)return;
+  const d=r.combo&&r.comboParts?r.comboParts[0]:r,h=D.find(x=>x.k===d.k)?pickStay(D.find(x=>x.k===d.k)):null,m=(r.leg&&r.leg.m)||1;
+  TIN=Math.max(1,(r.leg&&r.leg.d)||6);GM=m;const fechas=`del ${liveD(IND())} al ${liveD(OUTD())}`;TIN=6;GM=1;
+  const p=new URLSearchParams({p:k,pax:PAX,n:NIGHTS(),mes:m});if(h&&h[8])p.set("casa",h[8]);if(r.flk&&r.flk!=="car")p.set("via",r.flk);else if(r.flk==="car")p.set("via","car");
+  const url=`${location.origin}${location.pathname}?${p}`;
+  const text=`${r.name.replace(/\s*\(.*?\)/g,"")}: ${fmt(r.total)} por persona todo incluido (vuelo, casa, comida y salidas) para ${PAX}, ${NIGHTS()} noches ${fechas}.${h&&h[7]?` Casa: ${h[7]}.`:""}`;
+  if(navigator.share){try{await navigator.share({title:`${r.name} · Viaje 2027`,text,url});return;}catch(err){if(err&&err.name==="AbortError")return;}}
+  try{await navigator.clipboard.writeText(`${text}\n${url}`);}catch(_){}
+  shareToast(`Link copiado. <a href="https://wa.me/?text=${encodeURIComponent(text+"\n"+url)}" target="_blank" rel="noopener">Mandarlo por WhatsApp</a>`);});
 syncRanges();render();renderTable();renderDayTable();renderHeat();renderOcc();renderAnio();
 
 // Pestañas, panel de filtros y filtros activos

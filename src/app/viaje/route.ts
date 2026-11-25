@@ -3,7 +3,7 @@ import path from "node:path";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 // Sirve la misma página del artefacto, con los precios del año (ANIO) leídos en vivo de Supabase.
-export async function GET() {
+export async function GET(req: Request) {
   let html = await readFile(path.join(process.cwd(), "src/data/viaje/base.html"), "utf8");
   const db = getSupabaseAdmin();
   const { data } = db ? await db.from("app_snapshots").select("data,updated_at").eq("key", "anio").maybeSingle() : { data: null };
@@ -46,6 +46,31 @@ export async function GET() {
     const res = await Promise.all(chunks.map((c) => db.from("listing_beach").select("listing_id,beach_m,lat,lon,beach_name").in("listing_id", c)));
     for (const r of res) for (const x of r.data ?? []) live[x.listing_id] = [x.beach_m, x.lat, x.lon, x.beach_name];
     if (Object.keys(live).length) html = html.replace("const BEACHLIVE=null;", "const BEACHLIVE=" + JSON.stringify(live).replace(/</g, "\\u003c") + ";");
+  }
+  // Link compartido de una ficha (?p=jurere&pax=6&n=8): vista previa con la playa, la foto de una casa libre y el precio en vivo
+  const sp = new URL(req.url).searchParams;
+  const pk = (sp.get("p") ?? "").replace(/[^a-z0-9_]/g, "");
+  if (db && pk) {
+    const pax = Math.min(16, Math.max(1, Number(sp.get("pax")) || 6)), n = Math.min(30, Math.max(2, Number(sp.get("n")) || 9));
+    const casa = (sp.get("casa") ?? "").replace(/\D/g, "");
+    const [{ data: dest }, { data: st }] = await Promise.all([
+      db.from("destinations").select("name").eq("k", pk).maybeSingle(),
+      db.from("stay_listings").select("listing_id,name,stay_price_usd,photos,checkin,checkout,adults,fetched_at").eq("k", pk).not("photos", "is", null)
+        .gte("fetched_at", new Date(Date.now() - 3 * 864e5).toISOString()).order("fetched_at", { ascending: false }).limit(60),
+    ]);
+    if (dest?.name) {
+      const rows = (st ?? []).filter((r) => r.photos?.length);
+      const same = rows.filter((r) => r.adults === pax);
+      const h = rows.find((r) => r.listing_id === casa) ?? [...(same.length ? same : rows)].sort((a, b) => a.stay_price_usd - b.stay_price_usd)[0];
+      const nights = h?.checkin && h?.checkout ? (Date.parse(h.checkout) - Date.parse(h.checkin)) / 864e5 : n;
+      const pp = h ? Math.round((Number(h.stay_price_usd) / (h.adults || pax)) * (n / nights)) : null;
+      const esc = (x: string) => x.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+      const title = `${dest.name} · Viaje Brasil 2027`;
+      const desc = pp ? `Casa libre en Airbnb desde USD ${pp.toLocaleString("es-AR")} por persona (${pax} personas, ${n} noches). Precios, vuelos y distancia a la playa en vivo.` : `Casas, vuelos y distancia a la playa en vivo para ${pax} personas, ${n} noches.`;
+      const img = h?.photos?.[0] ? `${h.photos[0].split("?")[0]}?im_w=1200` : "";
+      const og = `<meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta name="description" content="${esc(desc)}">${img ? `<meta property="og:image" content="${esc(img)}"><meta name="twitter:card" content="summary_large_image">` : ""}<meta property="og:url" content="${esc(req.url)}">`;
+      html = og + html.replace("<title>Brasil Verano 2027</title>", `<title>${esc(title)}</title>`);
+    }
   }
   // La plantilla es un artefacto (sin <head>): se agrega lo necesario para que el celular la muestre a su ancho real
   if (!/name="viewport"/.test(html)) html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` + html;
