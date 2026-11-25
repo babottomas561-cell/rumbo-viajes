@@ -1633,6 +1633,17 @@ function liveTuple(x,n){const b=x.beach,beds=x.beds||(x.bedrooms?x.bedrooms*2:0)
   if(b&&b.lat!=null)BEACH[x.id]=[b.m,b.lat,b.lon,b.name||null];if(x.lat!=null)HLL[x.id]=[x.lat,x.lon];
   if(x.photos&&x.photos.length)LIVEP[x.id]=x.photos.map(u=>u.replace(/^https:\/\/a0\.muscache\.com\/im\/pictures\//,"").replace(/\?.*$/,""));
   return [Math.round(x.price*8/n),x.rating||0,x.reviews||0,x.guestFav?1:0,x.bedrooms||0,x.baths??"",beds,x.title,x.id,[""],b?b.m:null,x.lat!=null?[x.lat,x.lon]:null,b?[b.lat,b.lon]:null,null,null,b&&b.name||"",PAX,null,1];}
+// Foto guardada de TODAS las playas (Supabase, renovada cada 20 min por el servidor y por cada ficha que se abre):
+// con esto el mapa y el orden de todas las propuestas usan precios de Airbnb recientes; las fichas a la vista igual piden en vivo.
+let LIVEBASE_Q="";
+async function liveBase(){const m=liveM(),q=`${PAX}|${m}|${NIGHTS()}`;if(q===LIVEBASE_Q)return;LIVEBASE_Q=q;
+  try{const r=await fetch(`/api/stays/latest?adults=${PAX}&month=${m}`);if(!r.ok)return;const j=await r.json();let n=0;
+    for(const [k,x] of Object.entries(j)){if(!x||!x.items||!x.items.length)continue;const id=liveId(k,m),old=LIVE[id];if(old&&(old.st==="ok"||old.st==="viejo"||(old.items&&old.items.length)))continue;
+      const sn=Math.max(1,Math.round((Date.parse(x.co)-Date.parse(x.ci))/864e5)),it=x.items.map(h=>liveTuple(h,sn)).sort((a,b)=>a[0]-b[0]);
+      const c=it.find(h=>h[1]>=4.7)||it[0];if(c)c[9]=["La más barata"];
+      LIVE[id]={...(old||{}),st:old&&old.st==="cargando"?"cargando":"base",items:it,at:x.at,ci:x.ci,co:x.co,url:"",t:0};n++;}
+    if(n)liveRender();}catch(_){LIVEBASE_Q="";}}
+const liveWhen=t=>{const d=new Date(t),hoy=new Date();return d.toDateString()===hoy.toDateString()?`de las ${liveHM(t)}`:`del ${d.getDate()}/${d.getMonth()+1} a las ${liveHM(t)}`;};
 function liveFetch(k,m,tin,fresh){const id=liveId(k,m),box=liveBox(k);if(!box)return;const old=LIVE[id];
   if(!fresh&&old&&(old.st==="cargando"||(old.st!=="error"&&Date.now()-old.t<LIVE_TTL)))return;
   const n=NIGHTS(),ci=`2027-${String(m).padStart(2,"0")}-${String(tin).padStart(2,"0")}`,co=new Date(Date.UTC(2027,m-1,tin+n)).toISOString().slice(0,10);
@@ -1658,10 +1669,12 @@ const liveHM=t=>new Date(t).toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2
 const liveD=s=>{const [y,m,d]=s.split("-");return `${+d} ${MABR[+m-1]}`;};
 function liveNote(d){const x=LIVE[liveId(d.k,liveM())];if(typeof liveBox!=="function"||!liveBox(d.k))return "";
   const rb=`<button type="button" class="linkb" data-liverf="${d.k}" data-gm="${GM}" data-tin="${TIN}">Actualizar</button>`;
-  if(!x||x.st==="cargando")return `<p class="livest wait">⏳ Buscando en Airbnb las casas libres para ${PAX} del ${liveD(IND())} al ${liveD(OUTD())}…</p>`;
+  if(!x||(x.st==="cargando"&&!(x.items&&x.items.length)))return `<p class="livest wait">⏳ Buscando en Airbnb las casas libres para ${PAX} del ${liveD(IND())} al ${liveD(OUTD())}…</p>`;
+  if(x.st==="cargando")return `<p class="livest wait">⏳ Actualizando en Airbnb las casas libres para ${PAX} del ${liveD(IND())} al ${liveD(OUTD())}…</p>`;
   if(x.st==="error")return `<p class="livest err">No se pudo consultar Airbnb ahora (${x.err}): se muestran las casas guardadas. ${rb}</p>`;
   if(!x.items.length)return `<p class="livest err">Airbnb no tiene casas libres para ${PAX} del ${liveD(x.ci)} al ${liveD(x.co)} en esta zona: las de abajo son de la última búsqueda y pueden estar tomadas. <a href="${x.url}" target="_blank" rel="noopener">Ver en Airbnb</a></p>`;
-  return `<p class="livest ${x.st==="viejo"?"err":"ok"}">${x.st==="viejo"?"Airbnb no respondió: datos guardados":"● En vivo"}: ${x.items.length} casas libres para ${PAX} del ${liveD(x.ci)} al ${liveD(x.co)}, precios de Airbnb de las ${liveHM(x.at)} · ${rb} · <a href="${x.url}" target="_blank" rel="noopener">Ver la búsqueda en Airbnb</a></p>`;}
+  if(x.st==="base")return `<p class="livest">Precios guardados de Airbnb ${liveWhen(x.at)} (búsqueda del ${liveD(x.ci)} al ${liveD(x.co)}). ${rb}</p>`;
+  return `<p class="livest ${x.st==="viejo"?"err":"ok"}">${x.st==="viejo"?"Airbnb no respondió: datos guardados":"● En vivo"}: ${x.items.length} casas libres para ${PAX} del ${liveD(x.ci)} al ${liveD(x.co)}, precios de Airbnb ${liveWhen(x.at)} · ${rb} · <a href="${x.url}" target="_blank" rel="noopener">Ver la búsqueda en Airbnb</a></p>`;}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-liverf]");if(!b)return;e.preventDefault();liveFetch(b.dataset.liverf,+b.dataset.gm||1,+b.dataset.tin||6,true);liveRender();});
 // Qué fichas se piden: las que están dibujadas, en orden (las primeras primero) y las playas que se abren en el mapa
 function liveScan(){document.querySelectorAll("#list .hwrap[data-k]").forEach(w=>liveFetch(w.dataset.k,+w.dataset.gm||1,+w.dataset.tin||6));}
@@ -1930,7 +1943,7 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
 }
 
 // Después de cada dibujo se piden en vivo las fichas que quedaron a la vista; abrir una playa en el mapa también la pide
-{const r0=render;render=function(){r0.apply(this,arguments);try{liveScan();}catch(_){}
+{const r0=render;render=function(){r0.apply(this,arguments);try{liveScan();liveBase();}catch(_){}
   try{if(BPOP&&BBOX&&!BBOX.getContainer().hidden){const r=LROWS.find(x=>x.k===BPOP);if(r){const el=BBOX.getContainer(),st=el.scrollTop;el.innerHTML=`<button type="button" class="bbx" aria-label="Cerrar">✕</button>`+lpop(r);el.querySelector(".bbx").onclick=closeBeach;el.scrollTop=st;}}}catch(_){}};}
 {const o0=openBeach;openBeach=function(r){try{const d=r.combo&&r.comboParts?r.comboParts[0]:r;liveFetch(d.k,(r.leg&&r.leg.m)||1,(r.leg&&r.leg.d)||6);}catch(_){}return o0.apply(this,arguments);};}
 // Mapa: al acercarse a una playa aparecen las casas libres de Airbnb de esa zona, con su precio por persona de este momento
