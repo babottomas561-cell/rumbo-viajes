@@ -15,10 +15,16 @@ const TABS = Number(process.env.TABS || 3);
 const run = Math.floor(Date.now() / 36e5 / 4);
 const MESES = process.env.MESES ? process.env.MESES.split(",").map(Number) : [run % 2 === 0 ? 1 : 2 + (Math.floor(run / 2) % 11)];
 
+// Reintenta si Supabase no responde (5xx o red caída): hasta 5 veces, esperando 10 s, 20 s, 40 s...
 async function sb(path, init = {}) {
-  const r = await fetch(`${URL}/rest/v1/${path}`, { ...init, headers: { ...H, ...(init.headers || {}) } });
-  if (!r.ok) throw new Error(`${path}: ${r.status} ${await r.text()}`);
-  return r.status === 204 || init.method === "POST" ? null : r.json();
+  for (let i = 0; ; i++) {
+    let r;
+    try { r = await fetch(`${URL}/rest/v1/${path}`, { ...init, headers: { ...H, ...(init.headers || {}) } }); }
+    catch (e) { if (i < 5) { await new Promise((ok) => setTimeout(ok, 10000 * 2 ** i)); continue; } throw e; }
+    if (r.status >= 500 && i < 5) { await r.text(); await new Promise((ok) => setTimeout(ok, 10000 * 2 ** i)); continue; }
+    if (!r.ok) throw new Error(`${path}: ${r.status} ${(await r.text()).slice(0, 300)}`);
+    return r.status === 204 || init.method === "POST" ? null : r.json();
+  }
 }
 
 function parse(labels) {
