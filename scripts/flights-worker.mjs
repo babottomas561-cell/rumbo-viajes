@@ -160,7 +160,7 @@ const ok = okAll.filter((r) => r.d === 10);
 if (okAll.some((r) => r.d !== 10) || DIAS.length > 1) {
   const [fs] = await sb("app_snapshots?key=eq.fechas&select=data");
   const fe = fs?.data || {};
-  for (const { o, ap, m, d, opts } of okAll) fe[`${o}-${ap}-${m}-${d}${NK}`] = [opts[0].price, opts[0].stops, opts[0].airline, opts[0].dur, fetched_at.slice(0, 10)];
+  for (const { o, ap, m, d, opts } of okAll) fe[`${o}-${ap}-${m}-${d}${NK}`] = [opts[0].price, opts[0].stops, opts[0].airline, opts[0].dur, fetched_at.slice(0, 10), "v"]; // "v": vuelo concreto de la búsqueda, no tarifa de calendario
   await sb("app_snapshots?on_conflict=key", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "fechas", data: fe, updated_at: fetched_at }) });
 }
 // Detalle por ruta (aeropuerto de salida y llegada, horarios, escalas) para la página: app_snapshots 'fdet'

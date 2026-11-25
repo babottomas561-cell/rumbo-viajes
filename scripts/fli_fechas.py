@@ -91,6 +91,9 @@ def main():
             for day, p in res.items():
                 k = f"{o}-{ap}-1-{day}{suf}"
                 prev = old.get(k)
+                # Un precio verificado con un vuelo concreto (fli_verificar.py) de los últimos 2 días no se pisa con el calendario
+                if prev and len(prev) > 5 and prev[5] == "v" and (dt.date.today() - dt.date.fromisoformat(prev[4])).days <= 2:
+                    continue
                 same = prev and abs((prev[0] or 0) - p) < 1
                 # Si el precio no cambió se conserva aerolínea/escalas/duración del robot; si cambió, no se inventan
                 upd[k] = [p, prev[1] if same else None, prev[2] if same else "", prev[3] if same else "", TODAY]

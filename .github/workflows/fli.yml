@@ -32,3 +32,9 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      - name: Verificar los días más baratos con un vuelo concreto (precio que se puede comprar)
+        if: always()
+        run: python3 scripts/fli_verificar.py "${{ inputs.origenes || 'TUC,IGU,BUE,COR,SLA' }}"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}

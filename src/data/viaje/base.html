@@ -543,6 +543,7 @@ small.fz{opacity:.75;font-weight:400}small.fz.new{color:#2e7d32;opacity:1}
 article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition:outline-color .8s}
 @media (max-width:600px){#qbar .qctl{display:grid!important;grid-template-columns:1fr 1fr;gap:6px!important}#qbar .qctl>*{min-width:0;margin:0!important;width:auto!important}#qbar .qctl .qsel{flex-direction:column;align-items:stretch;gap:0}#qbar .qctl select{min-width:0;max-width:100%;width:100%}}
 .cheapj{margin:.5rem 0;border:1px solid var(--line,#ddd);border-radius:10px;padding:.4rem .7rem;background:var(--card,#fff)}.cheapj summary{cursor:pointer;font-weight:600}.cheapj ol{margin:.4rem 0 .2rem;padding-left:1.3rem}.cheapj li{margin:.25rem 0}.cheapj button{all:unset;cursor:pointer;color:var(--accent,#0a6);text-decoration:underline}.cheapj small{color:var(--muted,#666)}
+.drange{margin:.4rem 0;font-size:.95em}.drange select{margin:0 .2rem;padding:.1rem .3rem}
 </style>
 
 <div class="wrap">
@@ -989,7 +990,8 @@ window.addEventListener("load",()=>{renderRuta();
   <div class="ctl wide">
     <span class="lbl">Fecha de ida (enero 2027)</span>
     <div class="seg days" id="dep" role="group" aria-label="Fecha de ida"></div>
-    <span class="hint">Cada día muestra la mejor vuelta para un viaje de 7 a 10 noches. Del 8 al 12 hay datos desde Tucumán y desde Foz (Río, Salvador, Porto Seguro, Maceió, Recife, Natal y Fortaleza); Buenos Aires y Córdoba solo llegan hasta el 7.</span>
+    <div class="drange">Con “la mejor”, buscar salidas entre el <select id="dmin" aria-label="Salir desde el día"></select> y el <select id="dmax" aria-label="Salir hasta el día"></select> de enero</div>
+    <span class="hint">“La mejor” busca el día más barato dentro de ese rango. La vuelta es la salida más las noches elegidas.</span>
   </div>
   <div class="ctl">
     <span class="lbl">Cómo salen de Tucumán</span>
@@ -1557,19 +1559,21 @@ const ymd=d=>d===0?"2026-12-31":`2027-01-${pad(d)}`;
 const GFL2=(o,ap,d,r)=>`https://www.google.com/travel/flights?q=Flights%20from%20${o}%20to%20${ap}%20on%20${ymd(d)}%20through%202027-01-${pad(r)}&curr=USD&hl=es-419&gl=AR`;
 
 function slaFL(){if(FL.SLA)return;FL.SLA={};for(const ap in ANIO.fl){const f=ANIO.fl[ap][1];if(f&&f[7]!=null&&!f[5])FL.SLA[ap]={"10":[f[7]]};}}
+// Rango de fechas de salida para “la mejor” (S.dmin–S.dmax, días de enero)
+const dOK=d=>d>=(S.dmin||1)&&d<=(S.dmax||31);
 function leg(o,ap,d){if(o==="SLA")slaFL();const t=FL[o]&&FL[o][ap];if(!t)return null;
-  if(d==="best"){let b=null;for(const [k,v] of Object.entries(t)){if(!b||v[0]<b.p)b={p:v[0],d:+k,r:+k+NIGHTS()};}return b;}
+  if(d==="best"){let b=null;const ver=Object.keys(t).some(k=>FE_V[`${o}-${ap}-${k}`]);for(const [k,v] of Object.entries(t)){if(!dOK(+k))continue;if(ver&&!FE_V[`${o}-${ap}-${k}`])continue;if(!b||v[0]<b.p)b={p:v[0],d:+k,r:+k+NIGHTS()};}return b;}
   const v=t[d];return v?{p:v[0],d:+d,r:+d+NIGHTS()}:null;}
 // Precios en vivo del robot ('fechas'): pisan la tabla FL de enero con el dato más nuevo para las noches elegidas
 // (claves "TUC-RIO-1-10" = 8 noches, "TUC-RIO-1-10-n9" = 9 noches). Si para 9 noches no hay dato, queda el de 8 y se marca.
-let FL0=null,FE_N=null,FE_LIVE=0;const FE_D={};const fz=(l,r)=>{if(!l||l.d==null||(l.m&&l.m!==1))return "";const d=FE_D[`${l.o||"TUC"}-${r.ap}-${l.d}`];return d?` <small class="fz new">· precio del ${d.slice(8,10)}/${d.slice(5,7)}</small>`:` <small class="fz">· precio del 20/11, actualizándose</small>`;};
+let FL0=null,FE_N=null,FE_LIVE=0;const FE_D={},FE_V={};const fz=(l,r)=>{if(!l||l.d==null||(l.m&&l.m!==1))return "";const key=`${l.o||"TUC"}-${r.ap}-${l.d}`,d=FE_D[key];if(FE_V[key])return ` <small class="fz new">· vuelo para comprar, precio del ${d.slice(8,10)}/${d.slice(5,7)}</small>`;return ` <small class="fz">· tarifa de calendario${d?` del ${d.slice(8,10)}/${d.slice(5,7)}`:""}, puede subir al buscar</small>`;};
 function applyFE(){if(typeof FELIVE==="undefined"||!FELIVE)return;const n=NIGHTS();if(FE_N===n)return;FE_N=n;
   if(!FL0)FL0=JSON.parse(JSON.stringify(FL));
   for(const o in FL0){FL[o]=FL[o]||{};for(const ap in FL0[o])FL[o][ap]={...FL0[o][ap]};}
-  const suf=n===8?"":n===9?"-n9":null;FE_LIVE=0;for(const k in FE_D)delete FE_D[k];if(suf===null)return;
+  const suf=n===8?"":n===9?"-n9":null;FE_LIVE=0;for(const k in FE_D)delete FE_D[k];for(const k in FE_V)delete FE_V[k];if(suf===null)return;
   for(const k in FELIVE){const m=/^([A-Z]{3})-([A-Z]{3})-1-(\d+)(-n\d+)?$/.exec(k);if(!m||(m[4]||"")!==suf)continue;
     const [,o,ap,d]=m,v=FELIVE[k];if(!v||!v[0])continue;FL[o]=FL[o]||{};FL[o][ap]=FL[o][ap]||{};
-    const old=FL[o][ap][d];FL[o][ap][d]=old?[v[0],...old.slice(1)]:[v[0]];FE_LIVE++;FE_D[`${o}-${ap}-${d}`]=v[4]||"";}}
+    const old=FL[o][ap][d];FL[o][ap][d]=old?[v[0],...old.slice(1)]:[v[0]];FE_LIVE++;FE_D[`${o}-${ap}-${d}`]=v[4]||"";if(v[5]==="v")FE_V[`${o}-${ap}-${d}`]=v;}}
 function routes(ap,dep=S.dep){
   const r={};const t=leg("TUC",ap,dep);r.tuc=t?{...t,o:"TUC"}:NA;
   const b=leg("BUE",ap,dep);r.bue=b?{...b,p:b.p+hubCost("bue"),o:"BUE",air:b.p}:NA;
@@ -1584,13 +1588,22 @@ function routes(ap,dep=S.dep){
 // Foz en avión: TUC→Puerto Iguazú el mismo día o el anterior (el más barato) + remís/cruce + Foz→destino
 // Pasaje TUC↔IGR que sale el día x y vuelve el día r (el mismo día que el vuelo de vuelta desde Foz): de Google Flights (fli) con esas noches exactas;
 // el dato viejo solo si su fecha de vuelta coincide.
+// ¿Se llega a tiempo? Con horarios verificados: llegar a Iguazú, cruzar y estar en el aeropuerto de Foz 3 h antes del vuelo.
+// Volando a Iguazú el día anterior se suma una noche en Foz (USD 35). A la vuelta, si no da el tiempo (o no se sabe), otra noche.
+const tH=s=>{if(!s)return null;const m=/T(\d\d):(\d\d)/.exec(s);return m?+m[1]+m[2]/60:null;},tD=s=>s?+s.slice(8,10)+(s.slice(5,7)==="02"?31:0):null;
+function igrFit(x,d,r,ap){const n=r-x,a=FE_V[`TUC-IGR-${x}${n===8?"":"-n"+n}`]||FE_V[`TUC-IGR-${x}`],f=FE_V[`IGU-${ap}-${d}`];let h=0,ok=true,nota=[];
+  if(x<d){h+=35;nota.push("una noche en Foz a la ida");}
+  else{const ar=a&&tH(a[7]),dp=f&&tH(f[6]);if(ar==null||dp==null||tD(a[7])!==d||ar+3>dp)ok=false;}
+  const rr=f&&tH(f[9]),rd=a&&tH(a[8]);if(rr==null||rd==null||tD(f[9])!==tD(a[8])||rr+3>rd){h+=35;nota.push("quizá una noche en Foz a la vuelta");}
+  return {ok,h,nota:nota.join(" y ")};}
 function igrFare(x,r){const n=r-x,k=`TUC-IGR-1-${x}${n===8?"":"-n"+n}`;try{const v=FELIVE&&FELIVE[k];if(v&&v[0])return v[0];}catch(_){}
   const g=FL0&&FL0.TUC&&FL0.TUC.IGR||FL.TUC.IGR;return g&&g[x]&&g[x][1]===r?g[x][0]:null;}
 function legIGR(ap,dep){const t=FL.IGU&&FL.IGU[ap];if(!t||!FL.TUC.IGR)return null;
   let b=null;
-  for(const d of (dep==="best"?Object.keys(t).map(Number):[dep])){const f=t[d];if(!f)continue;const r=d+NIGHTS();
-    const a=[d-1,d].map(x=>({p:igrFare(x,r),d:x,r})).filter(x=>x.p).sort((x,y)=>x.p-y.p)[0];
-    if(a){const p=a.p+IGR_X+f[0];if(!b||p<b.p)b={p,d,r,o:"IGU",air:f[0],leg1:a.p,a};}
+  for(const d of (dep==="best"?Object.keys(t).map(Number).filter(dOK):[dep])){const f=t[d];if(!f)continue;const r=d+NIGHTS();
+    if(Object.keys(t).some(k=>FE_V[`IGU-${ap}-${k}`])&&!FE_V[`IGU-${ap}-${d}`])continue;
+    const a=[d-1,d].map(x=>({p:igrFare(x,r),d:x,r})).filter(x=>x.p).map(x=>({...x,...igrFit(x.d,d,r,ap)})).filter(x=>x.ok).sort((x,y)=>x.p+x.h-y.p-y.h)[0];
+    if(a){const p=a.p+IGR_X+f[0]+a.h;if(!b||p<b.p)b={p,d,r,o:"IGU",air:f[0],leg1:a.p,a,hotel:a.h,nota:a.nota};}
     // Con pasajes de solo ida: ida por Foz y la vuelta por donde salga más barato (directo a Tucumán o de nuevo por Foz)
     const go=Math.min(...[d-1,d].map(x=>owP("TUC","IGR",x)).filter(isFinite)),g2=owP("IGU",ap,d);
     if(isFinite(go)&&isFinite(g2)){const vd=owP(ap,"TUC",r),vf=owP(ap,"IGU",r)+IGR_X/2+owP("IGR","TUC",r);
@@ -1606,7 +1619,7 @@ function mixWay(ap,d,back){const P=(a,b,x)=>back?owP(b,a,x):owP(a,b,x),o=[];
   for(const H of MIXH)if(H!==ap)o.push({p:P("TUC",H,d)+P(H,ap,d)+MIX_HOTEL,via:H});
   for(const x of back?[d]:[d-1,d])o.push({p:P("TUC","IGR",x)+IGR_X/2+P("IGU",ap,d)+(x<d||back?MIX_HOTEL:0),via:"IGU"});
   return o.filter(v=>isFinite(v.p)).sort((a,b)=>a.p-b.p)[0]||null;}
-function legMIX(ap,dep){if(ap==="IGU")return null;const t=FL.TUC&&FL.TUC[ap],ds=dep==="best"?[...Array(31)].map((_,i)=>i+1):[dep];let b=null;
+function legMIX(ap,dep){if(ap==="IGU")return null;const t=FL.TUC&&FL.TUC[ap],ds=dep==="best"?[...Array(31)].map((_,i)=>i+1).filter(dOK):[dep];let b=null;
   for(const d of ds){const r=d+NIGHTS();if(r>31)continue;const i=mixWay(ap,d,0),v=mixWay(ap,r,1);if(!i||!v)continue;
     // Solo si de verdad cambia algo respecto a los pasajes de ida y vuelta de siempre
     if(i.via==="directo"&&v.via==="directo"&&t&&t[d])continue;
@@ -1928,7 +1941,7 @@ function flightRows(r){const l=r.leg;
   if(r.flk==="mix")return `<span>Ida ${MIXN[l.i.via]} (${dd(l.d)}), solo ida</span><span>${fmt(Math.round(l.i.p))}</span><span>Vuelta ${MIXN[l.v.via]} (${dd(l.r)}), solo ida</span><span>${fmt(Math.round(l.v.p))}</span>`;
   if(r.flk==="igr"&&l.ow&&l.ret==="tuc")return `<span>Ida: TUC → Puerto Iguazú, cruce y Foz → ${r.ap} (${dd(l.d)})${fz(l,r)}</span><span>${fmt(l.p-l.retP)}</span><span>Vuelta directa ${r.ap} → Tucumán (${dd(l.r)}), pasaje de solo ida</span><span>${fmt(l.retP)}</span>`;
   if(r.flk==="igr"&&l.ow)return `<span>Ida: TUC → Puerto Iguazú, cruce y Foz → ${r.ap} (${dd(l.d)}), pasajes de solo ida</span><span>${fmt(l.p-l.retP)}</span><span>Vuelta: ${r.ap} → Foz, cruce y Puerto Iguazú → TUC (${dd(l.r)})</span><span>${fmt(l.retP)}</span>`;
-  if(r.flk==="igr")return `<span>Vuelo TUC ↔ Puerto Iguazú (ida el ${dd(l.a.d)})</span><span>${fmt(l.leg1)}</span><span>Remís y cruce a Foz, ida y vuelta</span><span>${fmt(IGR_X)}</span><span>Vuelo Foz ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.air)}</span>`;
+  if(r.flk==="igr")return `<span>Vuelo TUC ↔ Puerto Iguazú (ida el ${dd(l.a.d)})</span><span>${fmt(l.leg1)}</span>${l.hotel?`<span>Hotel en Foz: ${l.nota}</span><span>${fmt(l.hotel)}</span>`:""}<span>Remís y cruce a Foz, ida y vuelta</span><span>${fmt(IGR_X)}</span><span>Vuelo Foz ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.air)}</span>`;
   if(r.flk==="tuc")return `<span>Vuelo TUC ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.p)}</span>`;
   if(r.flk==="car"){const c=l.cc;return `<span>En auto (${CS.n} ${CS.n>1?"autos":"auto"}): nafta, peajes${c.cv?", Carta Verde":""}, ${c.legDays*2} noches de ruta con hotel y comida</span><span>${fmt(l.p)}</span>`;}
   if(r.flk==="sla")return `<span>${CS.hub?"Auto TUC ↔ Salta y estacionamiento":"Micro TUC ↔ Salta (estimado)"}</span><span>${fmt(hubCost("sla"))}</span><span>Vuelo SLA ↔ ${r.ap} (${dr(l)})${fz(l,r)}</span><span>${fmt(l.air)}</span>`;
@@ -2819,6 +2832,12 @@ syncRanges();render();renderTable();renderDayTable();renderHeat();renderOcc();re
 const OWLIVE=null;const FELIVE=null;
 // Las tablas de Vuelos se dibujan antes de esta línea: se redibujan con los precios nuevos apenas están
 window.addEventListener("load",()=>{try{FE_N=null;renderTable();renderDayTable();}catch(_){}});
+{const a=document.getElementById("dmin"),b=document.getElementById("dmax");if(a&&b){const o=[...Array(31)].map((_,i)=>`<option value="${i+1}">${i+1}</option>`).join("");a.innerHTML=o;b.innerHTML=o;
+  const u=new URLSearchParams(location.search);S.dmin=+u.get("dmin")||S.dmin||1;S.dmax=+u.get("dmax")||S.dmax||31;a.value=S.dmin;b.value=S.dmax;
+  const ch=()=>{let x=+a.value,y=+b.value;if(x>y){if(document.activeElement===a)y=x;else x=y;a.value=x;b.value=y;}S.dmin=x;S.dmax=y;FE_N=null;
+    const q=new URLSearchParams(location.search);x>1?q.set("dmin",x):q.delete("dmin");y<31?q.set("dmax",y):q.delete("dmax");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash);render();try{renderTable();renderDayTable();}catch(_){}};
+  a.onchange=ch;b.onchange=ch;}}
+
 // Buscador: las 10 idas y vueltas más baratas de enero (precio del pasaje por persona, el mejor camino y el mejor día de cada aeropuerto)
 function renderCheapJ(){const el=document.getElementById("cheapjl");if(!el)return;if(S.mes!==1||S.dep!=="best"){el.innerHTML=`<p><small>Elegí enero y fecha “la mejor” para ver el ranking.</small></p>`;return;}
   const {rows}=build(),by={};
