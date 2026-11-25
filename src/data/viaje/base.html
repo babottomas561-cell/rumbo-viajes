@@ -1897,7 +1897,8 @@ let SHOWN=24,WANTK=null,KEEPK=null;
 document.addEventListener("click",e=>{if(e.target.id==="cardmore"){SHOWN+=24;const y=scrollY;render();scrollTo(0,y);}});
 function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1;try{fillPay();}catch(_){}syncQuick();try{if(typeof renderAnio==='function'&&document.getElementById('yrt')&&document.getElementById('yrt').innerHTML)setTimeout(renderAnio,0);}catch(e){}document.querySelectorAll(".v-pax").forEach(e=>e.textContent=PAX);document.querySelectorAll(".v-nights").forEach(e=>e.textContent=NIGHTS());document.querySelectorAll(".v-days").forEach(e=>e.textContent=DAYS);
   const {base,out,all,noflight,rows}=build();
-  renderMap(base,out);{const fm=document.getElementById("fmap");if(fm)fm.innerHTML=floripaMap(out);}renderFit(rows);renderCar(rows);
+  // cada parte por separado: si una falla, el resto (fichas, totales, mapa) se sigue actualizando
+  try{renderMap(base,out);}catch(e){console.error("mapa",e);}try{const fm=document.getElementById("fmap");if(fm)fm.innerHTML=floripaMap(out);}catch(e){console.error("floripa",e);}try{renderFit(rows);}catch(e){console.error("fit",e);}try{renderCar(rows);}catch(e){console.error("auto",e);}
   document.querySelectorAll(".v-ndest").forEach(e=>e.textContent=D.length+C.length);document.getElementById("count").textContent=`${out.length} de ${all} propuestas${S.aloj==="ai"?" con all inclusive":""}`+(S.mes===1?"":S.mes==="best"?` · el mes más barato entre ${MESL[Math.min(S.m1,S.m2)-1]} y ${MESL[Math.max(S.m1,S.m2)-1]}`:` · en ${MESL[S.mes-1]}`)+(S.ap?` · llegando a ${CITY[S.ap]}`:"");
   document.getElementById("countnote").textContent=noflight?`${noflight} sin vuelo para esta fecha y forma de salir`:"";
   const list=document.getElementById("list");
@@ -2226,7 +2227,7 @@ function renderMap(base,out){MAPARGS=[base,out];LROWS=out;if(LMAP)drawLMap(false
   const st={};MAPAPS.forEach(ap=>st[ap]={n:0,min:Infinity});
   base.forEach(r=>{const q=st[r.ap];if(q){q.n++;q.min=Math.min(q.min,r.total);}});
   const top=out[0];let path="";
-  if(top){const a=APGEO[top.ap],T=ORGEO.TUC.slice(0,2),k=top.flk;
+  if(top&&(APGEO[top.ap]||PLL[top.k])){const a=(top.flk==="car"&&PLL[top.k])||APGEO[top.ap]||PLL[top.k],T=ORGEO.TUC.slice(0,2),k=top.flk;
     if(k==="tuc")path=`<path class="path" d="${curve(T,a)}"/>`;
     else if(k==="car")path=`<path class="path bus" d="M${P(...T).join(" ")}L${P(...a).join(" ")}"/>`;
     else if(k==="rio")path=`<path class="path" d="${curve(T,APGEO.RIO)}"/><path class="path" d="${curve(APGEO.RIO,a,.15)}"/>`;
