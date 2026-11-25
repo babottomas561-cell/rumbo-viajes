@@ -543,7 +543,7 @@ small.fz{opacity:.75;font-weight:400}small.fz.new{color:#2e7d32;opacity:1}
 article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition:outline-color .8s}
 @media (max-width:600px){#qbar .qctl{display:grid!important;grid-template-columns:1fr 1fr;gap:6px!important}#qbar .qctl>*{min-width:0;margin:0!important;width:auto!important}#qbar .qctl .qsel{flex-direction:column;align-items:stretch;gap:0}#qbar .qctl select{min-width:0;max-width:100%;width:100%}}
 .cheapj{margin:.5rem 0;border:1px solid var(--line,#ddd);border-radius:10px;padding:.4rem .7rem;background:var(--card,#fff)}.cheapj summary{cursor:pointer;font-weight:600}.cheapj ol{margin:.4rem 0 .2rem;padding-left:1.3rem}.cheapj li{margin:.25rem 0}.cheapj button{all:unset;cursor:pointer;color:var(--accent,#0a6);text-decoration:underline}.cheapj small{color:var(--muted,#666)}
-.drange{margin:.4rem 0;font-size:.95em}.drange select{margin:0 .2rem;padding:.1rem .3rem}
+.drange.qd{font-weight:600}.drange{margin:.4rem 0;font-size:.95em}.drange select{margin:0 .2rem;padding:.1rem .3rem}
 </style>
 
 <div class="wrap">
@@ -561,6 +561,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
   <div class="qrow">
     <label class="qsearch"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Buscar: Floripa, Jurerê… (varias separadas por coma)" list="qlist" autocomplete="off" aria-label="Buscar destino"><datalist id="qlist"></datalist></label>
   </div>
+  <div class="drange qd">📅 Salir entre el <select id="dmin" aria-label="Salir desde el día"></select> y el <select id="dmax" aria-label="Salir hasta el día"></select> de enero <small>(se busca el día más barato en ese rango)</small></div>
   <details class="cheapj" id="cheapj"><summary>💸 Las idas y vueltas más baratas de enero</summary><div id="cheapjl"></div></details>
   <div class="qplaces" id="qplaces" role="group" aria-label="Destinos rápidos">
     <button type="button" data-q="">Todos</button><button type="button" data-q="floripa">Floripa (todas las playas)</button><button type="button" data-q="jurere">Jurerê</button><button type="button" data-q="camboriu">Camboriú</button><button type="button" data-q="rosa">Praia do Rosa</button><button type="button" data-q="sur">Sur de Brasil</button><button type="button" data-q="rio">Río y Búzios</button><button type="button" data-q="bahia">Bahía</button><button type="button" data-q="nordeste">Nordeste</button><button type="button" data-q="caribe">Caribe</button>
@@ -990,7 +991,6 @@ window.addEventListener("load",()=>{renderRuta();
   <div class="ctl wide">
     <span class="lbl">Fecha de ida (enero 2027)</span>
     <div class="seg days" id="dep" role="group" aria-label="Fecha de ida"></div>
-    <div class="drange">Con “la mejor”, buscar salidas entre el <select id="dmin" aria-label="Salir desde el día"></select> y el <select id="dmax" aria-label="Salir hasta el día"></select> de enero</div>
     <span class="hint">“La mejor” busca el día más barato dentro de ese rango. La vuelta es la salida más las noches elegidas.</span>
   </div>
   <div class="ctl">
@@ -2834,7 +2834,7 @@ const OWLIVE=null;const FELIVE=null;
 window.addEventListener("load",()=>{try{FE_N=null;renderTable();renderDayTable();}catch(_){}});
 {const a=document.getElementById("dmin"),b=document.getElementById("dmax");if(a&&b){const o=[...Array(31)].map((_,i)=>`<option value="${i+1}">${i+1}</option>`).join("");a.innerHTML=o;b.innerHTML=o;
   const u=new URLSearchParams(location.search);S.dmin=+u.get("dmin")||S.dmin||1;S.dmax=+u.get("dmax")||S.dmax||31;a.value=S.dmin;b.value=S.dmax;
-  const ch=()=>{let x=+a.value,y=+b.value;if(x>y){if(document.activeElement===a)y=x;else x=y;a.value=x;b.value=y;}S.dmin=x;S.dmax=y;FE_N=null;
+  const ch=()=>{let x=+a.value,y=+b.value;if(x>y){if(document.activeElement===a)y=x;else x=y;a.value=x;b.value=y;}S.dmin=x;S.dmax=y;FE_N=null;if(S.dep!=="best"){S.dep="best";try{setSeg("dep","best");}catch(_){}}
     const q=new URLSearchParams(location.search);x>1?q.set("dmin",x):q.delete("dmin");y<31?q.set("dmax",y):q.delete("dmax");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash);render();try{renderTable();renderDayTable();}catch(_){}};
   a.onchange=ch;b.onchange=ch;}}
 
