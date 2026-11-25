@@ -128,7 +128,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 #glight .gcap{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#ddd;font:13px var(--f-body,Inter,system-ui,sans-serif)}
 .lsal{font-size:12px;margin:4px 0 6px}.lsal:empty{display:none}
 .livest{font-size:12.5px;margin:2px 0 8px;color:var(--muted)}.livest.ok{color:var(--good,#1a7f4b)}.livest.err{color:var(--warn,#b45309)}.livest .linkb{font-size:12.5px}.hpin{border-color:#e4572e;font-size:10.5px}.hpop img{width:100%;border-radius:8px;margin-bottom:4px;aspect-ratio:4/3;object-fit:cover}.hpop{font-size:12.5px;line-height:1.45}
-#list .card{scroll-margin-top:72px}.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
+#list .card{scroll-margin-top:72px}.carmode{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;justify-content:space-between;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:12px 0;font-size:14.5px;background:var(--surface)}.carmode.flash{outline:2px solid var(--accent);outline-offset:2px}.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
 .salpin{font-size:16px;line-height:22px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:99px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .csal{margin:6px 0;font-size:14px}.csal summary{cursor:pointer;color:var(--accent,#0a7c86);font-weight:600}
 .salbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:8px}
@@ -708,6 +708,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
 <div class="panel" data-panel="auto" role="tabpanel" hidden><section class="incl" id="auto" aria-label="Viajar en auto">
   <h2>En auto: al sur de Brasil, la costa, Uruguay o hasta el aeropuerto</h2>
   <p class="hint">Tucumán → Florianópolis son 2.061 km y ~26 h de manejo (<a href="https://www.ruta0.com/ruta/internacional/san-miguel-de-tucuman-a-florianopolis/" target="_blank" rel="noopener">Ruta0</a>): unos 1.400 km en Argentina y 660 en Brasil. Mar del Plata está a 1.683 km, Punta del Este a 1.579 y Punta del Diablo a 1.728. La calculadora reparte nafta, peajes, Carta Verde, desgaste y las noches de ruta entre los 6, lo compara con ir en avión a la misma casa y también calcula manejar hasta Bs. As., Córdoba o Foz para tomar el vuelo ahí.</p>
+  <div class="carmode" id="carmode" role="group" aria-label="Qué suman las propuestas"></div>
   <div class="carbox">
     <div class="carctl">
       <div class="ctl"><span class="lbl">Vehículo</span><div class="seg" id="carveh" role="group" aria-label="Vehículo"><button type="button" data-v="auto" aria-pressed="true">Auto nafta</button><button type="button" data-v="cam" aria-pressed="false">Camioneta diésel</button></div></div>
@@ -998,6 +999,7 @@ window.addEventListener("load",()=>{renderRuta();
       <button type="button" data-v="cor" aria-pressed="false">Vía Córdoba</button>
       <button type="button" data-v="foz" aria-pressed="false">Foz en micro</button>
       <button type="button" data-v="igr" aria-pressed="false">Foz en avión</button>
+      <button type="button" data-v="car" aria-pressed="false">En auto</button>
     </div>
   </div>
   <h3 class="dgrp">Destino</h3>
@@ -1817,7 +1819,7 @@ function build(){
     rows.push({...c,combo:true,houseTotal:ps.reduce((a,p)=>a+hpT(pickStay(p.d))*p.f,0),stayS:ps.reduce((a,p)=>a+stayScore(pickStay(p.d))*p.f,0),comboParts:ps.map(p=>p.d),
       ex:Math.round((ps.reduce((a,p)=>a+(EX[p.d.k]??40)*p.f,0)+20)*g.ex),fee:ps.reduce((a,p)=>a+(FEE[p.d.k]||0),0)});});
   const sw=Object.values(S.W).reduce((a,b)=>a+b,0)||1;
-  try{applyFE();}catch(_){}rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla"].includes(S.strat)))?bestKeyT(r,rt):S.strat;if(!r.ai&&!r.combo&&CARKM[r.k]){const cc=carCost(r.k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else if(!r.ai&&r.combo&&r.comboParts&&CARKM[r.comboParts[r.comboParts.length-1].k]){const cc=carCost(r.comboParts[r.comboParts.length-1].k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else rt.car=NA;
+  try{applyFE();}catch(_){}rows.forEach(r=>{const rt=S.mes===1?routes(r.ap):routesM(r);r.rt=rt;r.flk=(S.strat==="best"||(S.mes!==1&&!["tuc","bue","sla","car"].includes(S.strat)))?bestKeyT(r,rt):S.strat;if(!r.ai&&!r.combo&&CARKM[r.k]){const cc=carCost(r.k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else if(!r.ai&&r.combo&&r.comboParts&&CARKM[r.comboParts[r.comboParts.length-1].k]){const cc=carCost(r.comboParts[r.comboParts.length-1].k);rt.car={p:cc.total-r.tr,o:"CAR",cc,d:"",r:""};}else rt.car=NA;
     if(RPICK[r.k]&&rt[RPICK[r.k]]&&isFinite(rt[RPICK[r.k]].p))r.flk=RPICK[r.k];r.leg=rt[r.flk];r.fl=r.leg.p;
     r.bag=Math.round((CS.hub&&r.flk==="bue"?40:BAG[r.flk])*g.bag);r.ins=r.dom?0:g.ins;r.dc=r.ai?null:dayCost(r,S.gasto);r.dayv=r.ai?(S.gasto==="ahorro"?8:20):r.dc?Math.round(r.dc.tot):Math.round(r.day*g.day);r.stayPP=r.houseTotal/PAX;r.daily=r.dayv*DAYS;r.total=r.fl+r.bag+r.ins+r.stayPP+r.tr+r.fee+r.ex+r.daily;
     r.sc={price:priceScore(r.total),beach:r.s[0],night:r.s[1],young:r.s[2],clima:NINO[r.zone],stay:r.stayS};
@@ -1943,7 +1945,13 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
 }
 
 // Después de cada dibujo se piden en vivo las fichas que quedaron a la vista; abrir una playa en el mapa también la pide
-{const r0=render;render=function(){r0.apply(this,arguments);try{liveScan();liveBase();}catch(_){}
+// En auto ↔ propuestas: la calculadora siempre cambia la opción "En auto" de cada ficha; con este botón además el auto
+// pasa a ser lo que suman todas las propuestas (y el mapa), igual que elegir "En auto" en Filtros → Cómo salen.
+function carModeUI(){const el=document.getElementById("carmode");if(!el)return;const on=S.strat==="car";
+  el.innerHTML=`<span>${on?"<b>Las propuestas y el mapa están sumando el auto</b> con esta calculadora (solo aparecen los destinos a los que se llega manejando).":"<b>Las propuestas y el mapa están sumando el avión.</b> Lo que cambies acá se ve en el botón “En auto” de cada ficha."}</span><button type="button" class="btn" data-carmode="${on?"best":"car"}">${on?"Volver a sumar el avión":"Sumar el auto en todas las propuestas"}</button>`;}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-carmode]");if(!b)return;S.strat=b.dataset.carmode;try{setSeg("strat",S.strat);}catch(_){}render();
+  const n=document.getElementById("carmode");if(n){n.classList.remove("flash");void n.offsetWidth;n.classList.add("flash");}});
+{const r0=render;render=function(){try{const need=Math.ceil(S.pax/CS.cap);if(CS.n<need&&need<=4){CS.n=need;setSeg("carn",CS.n);}}catch(_){}r0.apply(this,arguments);try{carModeUI();liveScan();liveBase();}catch(_){}
   try{if(BPOP&&BBOX&&!BBOX.getContainer().hidden){const r=LROWS.find(x=>x.k===BPOP);if(r){const el=BBOX.getContainer(),st=el.scrollTop;el.innerHTML=`<button type="button" class="bbx" aria-label="Cerrar">✕</button>`+lpop(r);el.querySelector(".bbx").onclick=closeBeach;el.scrollTop=st;}}}catch(_){}};}
 {const o0=openBeach;openBeach=function(r){try{const d=r.combo&&r.comboParts?r.comboParts[0]:r;liveFetch(d.k,(r.leg&&r.leg.m)||1,(r.leg&&r.leg.d)||6);}catch(_){}return o0.apply(this,arguments);};}
 // Mapa: al acercarse a una playa aparecen las casas libres de Airbnb de esa zona, con su precio por persona de este momento
@@ -2693,7 +2701,7 @@ const SHARED=(()=>{try{const q=new URLSearchParams(location.search),k=(q.get("p"
   for(const id of ["pax","nights","mes"])try{setSeg(id,S[id]);}catch(_){}
   return {k};}catch(_){return null;}})();
 let LIVEPIN=null;// ficha abierta desde un link: queda fija en pantalla mientras llegan los precios en vivo, hasta que la persona se mueva
-window.addEventListener("load",()=>{if(!SHARED)return;setTimeout(()=>{goCard(SHARED.k);LIVEPIN=SHARED.k;setTimeout(()=>{const c=document.getElementById("card-"+SHARED.k);if(c&&LIVEPIN)c.scrollIntoView({block:"start"});},700);["wheel","touchstart","keydown","mousedown"].forEach(ev=>addEventListener(ev,()=>{LIVEPIN=null;},{passive:true,once:true}));},300);});
+window.addEventListener("load",()=>{if(!SHARED)return;if(location.hash&&location.hash!=="#propuestas")return;setTimeout(()=>{goCard(SHARED.k);LIVEPIN=SHARED.k;setTimeout(()=>{const c=document.getElementById("card-"+SHARED.k);if(c&&LIVEPIN)c.scrollIntoView({block:"start"});},700);["wheel","touchstart","keydown","mousedown"].forEach(ev=>addEventListener(ev,()=>{LIVEPIN=null;},{passive:true,once:true}));},300);});
 function shareToast(html){let t=document.getElementById("sharetoast");if(!t){t=document.createElement("div");t.id="sharetoast";t.setAttribute("role","status");document.body.appendChild(t);}
   t.innerHTML=html;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,6000);}
 document.addEventListener("click",async e=>{const b=e.target.closest("[data-share]");if(!b)return;e.preventDefault();
