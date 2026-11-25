@@ -2817,7 +2817,7 @@ function draw(){const ri=S2.o+">"+S2.a,rv=S2.a+">"+S2.o;
  let best=null;
  if(xi&&xv){const p=xi[0]+xv[0],n=S2.v-S2.i;h=`<div class="tot">${usd(p)} por persona · ${usd(p*pax())} el grupo de ${pax()}</div><div>${n} noches (${n+1} días)</div>`+h;
   const iv=FE[`${S2.o}-${S2.a}-1-${S2.i}${n===8?"":"-n"+n}`];
-  if(iv&&(n===8||n===9))h+=`<div style="margin-top:6px">Comprado como ida y vuelta junto: <b>${usd(iv[0])}</b> (${iv[2]})${iv[0]<p?" · <b>más barato que por separado</b>":""}</div>`;}
+  if(iv&&(n===8||n===9))h+=`<div style="margin-top:6px">Comprado como ida y vuelta junto: <b>${usd(iv[0])}</b>${iv[2]?` (${iv[2]})`:""}${iv[0]<p?" · <b>más barato que por separado</b>":""}</div>`;}
  else{const ti=idx[ri]||{},tv=idx[rv]||{};let good=null;const sc=(a,b)=>a[0]+b[0]+15*((hrs(a[5])||0)+(hrs(b[5])||0));
   for(const i in ti)for(const v in tv){const n=v-i;if(n<7||n>10)continue;const p=ti[i][0]+tv[v][0];if(!best||p<best[0])best=[p,+i,+v];const q=sc(ti[i],tv[v]);if(!good||q<good[3])good=[p,+i,+v,q,(hrs(ti[i][5])||0)+(hrs(tv[v][5])||0)];}
   const hb=best?(hrs(ti[best[1]][5])||0)+(hrs(tv[best[2]][5])||0):0;

@@ -1,0 +1,34 @@
+name: Calendario de enero con fli (Google Flights)
+
+# Precio de ida y vuelta por fecha de salida en enero (8 y 9 noches) para las rutas de la página, con fli
+# (github.com/punitarani/fli). Pisa el snapshot 'fechas' solo donde trae precio; donde no, queda lo del robot
+# de Playwright (calendario.yml), que sigue corriendo cada 6 h.
+on:
+  schedule:
+    - cron: "37 */3 * * *"
+  workflow_dispatch:
+    inputs:
+      origenes:
+        description: "Orígenes (ej. TUC,BUE). Vacío = TUC,BUE,COR,SLA,IGU"
+        required: false
+
+concurrency:
+  group: fli
+  cancel-in-progress: false
+
+jobs:
+  fli:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "flights==0.9.0"
+      - run: fli --help > /dev/null
+      - name: Calendario de enero
+        run: python3 scripts/fli_fechas.py "${{ inputs.origenes || 'TUC,BUE,COR,SLA,IGU' }}"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
