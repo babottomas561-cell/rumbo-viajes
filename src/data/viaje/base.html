@@ -1616,7 +1616,7 @@ function owP(o,a,d){try{const v=OWLIVE&&OWLIVE[`${o}>${a==="GIG"?"RIO":a}|2027-0
 function bestKey(r){return RKEYS.reduce((a,b)=>r[a].p<=r[b].p?a:b);}
 // Copensador: horas de puerta a puerta (ida) de cada forma de llegar, y la que más conviene = precio + USD 15 por hora de viaje
 function wayHrs(r,k){try{const L=tripLegs({...r,flk:k},null);if(!L.length)return null;let t=0;for(const g of L){if(g.h==null)return null;t+=g.h;}return t;}catch(_){return null;}}
-function bestKeyT(r,rt){let b=null,bv=Infinity;for(const k of RKEYS){const l=rt[k];if(!l||!isFinite(l.p))continue;const h=wayHrs({...r,rt},k);const v=l.p+15*(h==null?(k==="mix"?20:14):h)*2;// Combinado: sin horarios confirmados se le cuentan 20 h por tramoif(v<bv){bv=v;b=k;}}return b||bestKey(rt);}
+function bestKeyT(r,rt){let b=null,bv=Infinity;for(const k of RKEYS){const l=rt[k];if(!l||!isFinite(l.p))continue;const h=wayHrs({...r,rt},k);const v=l.p+15*(h==null?(k==="mix"?20:14):h)*2;if(v<bv){bv=v;b=k;}}return b||bestKey(rt);}
 function stayScore(h){let s=4+(h[1]-4.7)*20;if(h[3])s+=.5;if(h[2]>=40)s+=.5;if(h[2]<15)s-=1;return Math.max(1,Math.min(10,s));}
 function priceScore(t){if(!isFinite(t))return 0;const [lo,span]=S.gasto==="ahorro"?[800,900]:[1050,1200];return Math.max(1,Math.min(10,10-(t-lo)/span*9));}
 // “La más barata” (lvl −1) usa la casa de AH solo si es más barata que la económica
