@@ -70,10 +70,11 @@ def fli_month(o, ap, n):
 
 def main():
     old = snapshot()
-    routes = sorted({tuple(k.split("-")[:2]) for k in old if k.split("-")[0] in ORIG})
+    routes = sorted({tuple(k.split("-")[:2]) for k in old if k.split("-")[0] in ORIG} | ({("TUC", "IGR")} if "TUC" in ORIG else set()))
     upd, empty, fails = {}, [], 0
     for o, ap in routes:
-        for n in NIGHTS:
+        # TUC-IGR ("Foz en avión"): si se llega a Foz el día anterior, el pasaje a Iguazú tiene una noche más
+        for n in (NIGHTS + [max(NIGHTS) + 1] if (o, ap) == ("TUC", "IGR") else NIGHTS):
             res = fli_month(o, ap, n)
             if not res:  # puede ser freno de Google: una espera y un reintento
                 time.sleep(15)

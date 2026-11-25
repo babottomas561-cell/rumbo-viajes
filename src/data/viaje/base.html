@@ -1578,10 +1578,14 @@ function routes(ap,dep=S.dep){
   r.igr=legIGR(ap,dep)||NA;
   return r;}
 // Foz en avión: TUC→Puerto Iguazú el mismo día o el anterior (el más barato) + remís/cruce + Foz→destino
-function legIGR(ap,dep){const t=FL.IGU&&FL.IGU[ap],g=FL.TUC.IGR;if(!t||!g)return null;
+// Pasaje TUC↔IGR que sale el día x y vuelve el día r (el mismo día que el vuelo de vuelta desde Foz): de Google Flights (fli) con esas noches exactas;
+// el dato viejo solo si su fecha de vuelta coincide.
+function igrFare(x,r){const n=r-x,k=`TUC-IGR-1-${x}${n===8?"":"-n"+n}`;try{const v=FELIVE&&FELIVE[k];if(v&&v[0])return v[0];}catch(_){}
+  const g=FL0&&FL0.TUC&&FL0.TUC.IGR||FL.TUC.IGR;return g&&g[x]&&g[x][1]===r?g[x][0]:null;}
+function legIGR(ap,dep){const t=FL.IGU&&FL.IGU[ap];if(!t||!FL.TUC.IGR)return null;
   let b=null;
-  for(const d of (dep==="best"?Object.keys(t).map(Number):[dep])){const f=t[d];if(!f)continue;
-    const a=[d-1,d].filter(x=>g[x]).map(x=>({p:g[x][0],d:x,r:d+NIGHTS()})).sort((x,y)=>x.p-y.p)[0];
+  for(const d of (dep==="best"?Object.keys(t).map(Number):[dep])){const f=t[d];if(!f)continue;const r=d+NIGHTS();
+    const a=[d-1,d].map(x=>({p:igrFare(x,r),d:x,r})).filter(x=>x.p).sort((x,y)=>x.p-y.p)[0];
     if(!a)continue;const p=a.p+IGR_X+f[0];
     if(!b||p<b.p)b={p,d,r:d+NIGHTS(),o:"IGU",air:f[0],leg1:a.p,a};}
   return b;}
