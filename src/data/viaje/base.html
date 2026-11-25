@@ -1904,7 +1904,7 @@ const hrs=t=>{if(!t)return null;const h=/(\d+) h/.exec(t),m=/(\d+) min/.exec(t);
 const hfmt=x=>{const h=Math.floor(x),m=Math.round((x-h)*60);return m?`${h} h ${String(m).padStart(2,"0")}`:`${h} h`;};
 const fdur=(o,ap)=>{const f=fd0(o,ap);return f?hrs(f[6]):null;};
 // Aerolínea, escalas y horas de viaje de puerta a puerta (micro + cruce + vuelos), por tramo de ida
-function finfo(k,l,ap){
+function finfo(k,l,ap,r){
   if(k==="car"){const c=l.cc;return `🚗 ~${c.hrs} h de manejo (${c.legDays} ${c.legDays>1?"días":"día"})<br>${CS.n} × ${CS.cap} plazas${carPay()<PAX?`, pagan ${carPay()}`:""}${carFits()?"":` <b style="color:var(--warn)">no entran</b>`}`;}
   if(l.m&&l.m!==1)return [l.al,stx(l.st)].filter(Boolean).join(" · ");
   const parts=[];let tot=0,ok=true;const leg=(lab,h)=>{if(h==null){ok=false;parts.push(lab);}else{tot+=h;parts.push(`${lab} ${hfmt(h)}`);}};
@@ -1918,6 +1918,8 @@ function finfo(k,l,ap){
   if(k==="rio"){head="2 vuelos, cambio en Río";leg("✈ TUC-RIO",fdur("TUC","RIO"));leg("✈",fdur("RIO",ap));}
   if(k==="sla"){const f=ANIO.fl[ap]&&ANIO.fl[ap][1];head=f?[f[9],stx(f[8])].filter(Boolean).join(" · "):"";leg(CS.hub?"🚗":"🚌",4.5);leg("✈",f&&f[10]?hrs(f[10]):null);}
   if(!parts.length)return head;
+  // Lo que falta de puerta a puerta (traslado del aeropuerto a la playa): así el total coincide con el de la ruta del mapa
+  if(r&&ok){try{const w=wayHrs(r,k);if(w!=null&&w>tot+.15)leg("🚐 a la playa",w-tot);}catch(_){}}
   return `${head?head+"<br>":""}${ok?`<b class="hh">⏱ ${hfmt(tot)} en total</b><br>`:""}${parts.join(" + ")}`;}
 function flightRows(r){const l=r.leg;
   if(r.flk==="rio")return `<span>TUC ↔ Río (${dr(l)})${fz(l,r)}</span><span>${fmt(l.leg1)}</span><span>Río ↔ ${r.ap} (${l.x.d}→${l.x.r} ${lm(l)})${fz(l,r)}</span><span>${fmt(l.leg2)}</span>`;
@@ -1948,7 +1950,7 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
   list.innerHTML=fmTop+out.slice(0,nShow).map((r,i)=>{TIN=Math.max(1,r.leg.d||6);GM=r.leg.m||1;
     const best=bestKey(r.rt);const nt=ninoTxt(r);
     const bars=CRIT.map(c=>`<span>${r.ai&&c.k==="stay"?"Calidad del hotel":c.l}</span><span class="bar"><i style="transform:scaleX(${(r.sc[c.k]/10).toFixed(2)})"></i></span><span class="v">${r.sc[c.k].toFixed(1)}</span>`).join("");
-    const rbox=[...RKEYS,"car"].filter(k=>k==="car"?(isFinite(r.rt.car.p)||!r.ai):isFinite(r.rt[k].p)).map(k=>{const l=r.rt[k];const ok=isFinite(l.p);const fi=ok?finfo(k,l,r.ap):"";
+    const rbox=[...RKEYS,"car"].filter(k=>k==="car"?(isFinite(r.rt.car.p)||!r.ai):isFinite(r.rt[k].p)).map(k=>{const l=r.rt[k];const ok=isFinite(l.p);const fi=ok?finfo(k,l,r.ap,r):"";
       return `<button type="button" class="route ${ok&&k===best?"win":""} ${k===r.flk?"sel":""} ${ok?"":"na"}" ${ok?`data-rpick="${r.k}" data-rk="${k}"`:"disabled"} aria-pressed="${k===r.flk}" title="${ok?"Usar esta forma de viajar en el total":"Sin datos"}"><span>${k==="car"?"En auto":RLAB[k]}${k===r.flk&&RPICK[r.k]?" ✓":""}</span><b>${ok?Math.round(l.p+(k==="car"?r.tr:0)).toLocaleString("es-AR"):"—"}</b><small>${ok?(k==="car"?`${l.cc.km.toLocaleString("es-AR")} km`:dr(l)):k==="car"?(NOCAR.has(r.k)||(r.comboParts||[]).some(p=>NOCAR.has(p.k))?"no se llega en auto":"sin ruta"):"sin datos"}</small>${fi?`<small class="fi">${fi}</small>`:""}</button>`;}).join("")+(RPICK[r.k]?`<button type="button" class="linkbtn" data-rpick="${r.k}" data-rk="">Volver a la más barata</button>`:"");
     let stays;
     if(r.combo){stays=r.comboParts.map(d=>`<div class="stays-head"><b>${d.name}</b><span class="headlinks"><a class="region" href="${GIMG(d.name+" playa")}" target="_blank" rel="noopener">Fotos de la playa</a><a class="region" href="${GMAP(d.name)}" target="_blank" rel="noopener">Mapa</a><a class="region" href="${ABS(d.q,d.k)}" target="_blank" rel="noopener">Más casas</a></span></div>${stayGrid(d)}`).join("");}
@@ -2095,7 +2097,7 @@ function lpop(r){const k=r.combo&&r.comboParts?r.comboParts[0].k:r.parts?r.parts
     ${(()=>{const c=climOf(r);if(!c)return "";return `<div class="lclim"><b>Clima esperado en ${MESL[c.m-1]}</b><span>☀ máx ${c.tmax}°</span><span>🌊 mar ${c.mar}°</span><span>🌧 ${c.esp} mm</span><span>☔ ~${Math.round(c.dias)} días con lluvia</span>${c.ep?`<small>Promedio 2015–2024: ${c.mm} mm; con El Niño se esperan ${c.ep>0?"+":""}${c.ep} mm.</small>`:`<small>Promedio 2015–2024 (Open-Meteo).</small>`}</div>`;})()}
     <div class="row"><span>Playa ${r.s[0]}/10</span><span>Noche ${r.s[1]}/10</span><span>Movida ${r.s[2]}/10</span></div>
     <p style="margin:4px 0">${r.vibe||""}</p>${nt?`<div class="z">${nt[1]}</div>`:""}
-    <div class="hw"><b>Cómo llegar</b>${[...RKEYS,"car"].filter(x=>r.rt&&r.rt[x]&&isFinite(r.rt[x].p)).sort((x,y)=>r.rt[x].p-r.rt[y].p).map(x=>{const l=r.rt[x];const tot=/⏱ ([^<]*) en total/.exec(finfo(x,l,r.ap)||"");let hh=x==="car"?`~${l.cc.hrs} h manejando, ${l.cc.legDays} días por tramo${l.cc.hrs/l.cc.legDays>10?" ⚠":""}`:tot?tot[1]:"";if(x!=="car"){try{const lg=tripLegs({...r,flk:x},null);if(lg.length&&lg.every(g=>g.m==="cruce"||g.h!=null))hh=hfmt(lg.reduce((a,g)=>a+(g.h||0),0));}catch(_){}}
+    <div class="hw"><b>Cómo llegar</b>${[...RKEYS,"car"].filter(x=>r.rt&&r.rt[x]&&isFinite(r.rt[x].p)).sort((x,y)=>r.rt[x].p-r.rt[y].p).map(x=>{const l=r.rt[x];const tot=/⏱ ([^<]*) en total/.exec(finfo(x,l,r.ap,r)||"");let hh=x==="car"?`~${l.cc.hrs} h manejando, ${l.cc.legDays} días por tramo${l.cc.hrs/l.cc.legDays>10?" ⚠":""}`:tot?tot[1]:"";if(x!=="car"){try{const lg=tripLegs({...r,flk:x},null);if(lg.length&&lg.every(g=>g.m==="cruce"||g.h!=null))hh=hfmt(lg.reduce((a,g)=>a+(g.h||0),0));}catch(_){}}
       return `<button type="button" class="hwr ${x===r.flk?"on":""}" data-rpick="${r.k}" data-rk="${x}"><span>${x==="car"?"En auto":RLAB[x]}</span><span>${hh}</span><b>${Math.round(l.p+(x==="car"?r.tr:0)).toLocaleString("es-AR")}</b></button>`;}).join("")}</div>
     <button type="button" onclick="goCard('${r.k}')">Ver la ficha completa</button><div class="cr">Fotos: Wikimedia Commons (deslizá)</div></div>`;}
 // Clima esperado de la playa en el mes elegido: [máx °C, lluvia mm, días de lluvia, mar °C] (Open-Meteo 2015–2024) + efecto El Niño (solo enero)
