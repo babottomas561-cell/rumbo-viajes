@@ -542,6 +542,7 @@ body.lock{overflow:hidden}
 small.fz{opacity:.75;font-weight:400}small.fz.new{color:#2e7d32;opacity:1}
 article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition:outline-color .8s}
 @media (max-width:600px){#qbar .qctl{display:grid!important;grid-template-columns:1fr 1fr;gap:6px!important}#qbar .qctl>*{min-width:0;margin:0!important;width:auto!important}#qbar .qctl .qsel{flex-direction:column;align-items:stretch;gap:0}#qbar .qctl select{min-width:0;max-width:100%;width:100%}}
+.cheapj{margin:.5rem 0;border:1px solid var(--line,#ddd);border-radius:10px;padding:.4rem .7rem;background:var(--card,#fff)}.cheapj summary{cursor:pointer;font-weight:600}.cheapj ol{margin:.4rem 0 .2rem;padding-left:1.3rem}.cheapj li{margin:.25rem 0}.cheapj button{all:unset;cursor:pointer;color:var(--accent,#0a6);text-decoration:underline}.cheapj small{color:var(--muted,#666)}
 </style>
 
 <div class="wrap">
@@ -559,6 +560,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
   <div class="qrow">
     <label class="qsearch"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Buscar: Floripa, Jurerê… (varias separadas por coma)" list="qlist" autocomplete="off" aria-label="Buscar destino"><datalist id="qlist"></datalist></label>
   </div>
+  <details class="cheapj" id="cheapj"><summary>💸 Las idas y vueltas más baratas de enero</summary><div id="cheapjl"></div></details>
   <div class="qplaces" id="qplaces" role="group" aria-label="Destinos rápidos">
     <button type="button" data-q="">Todos</button><button type="button" data-q="floripa">Floripa (todas las playas)</button><button type="button" data-q="jurere">Jurerê</button><button type="button" data-q="camboriu">Camboriú</button><button type="button" data-q="rosa">Praia do Rosa</button><button type="button" data-q="sur">Sur de Brasil</button><button type="button" data-q="rio">Río y Búzios</button><button type="button" data-q="bahia">Bahía</button><button type="button" data-q="nordeste">Nordeste</button><button type="button" data-q="caribe">Caribe</button>
   </div>
@@ -2817,6 +2819,17 @@ syncRanges();render();renderTable();renderDayTable();renderHeat();renderOcc();re
 const OWLIVE=null;const FELIVE=null;
 // Las tablas de Vuelos se dibujan antes de esta línea: se redibujan con los precios nuevos apenas están
 window.addEventListener("load",()=>{try{FE_N=null;renderTable();renderDayTable();}catch(_){}});
+// Buscador: las 10 idas y vueltas más baratas de enero (precio del pasaje por persona, el mejor camino y el mejor día de cada aeropuerto)
+function renderCheapJ(){const el=document.getElementById("cheapjl");if(!el)return;if(S.mes!==1||S.dep!=="best"){el.innerHTML=`<p><small>Elegí enero y fecha “la mejor” para ver el ranking.</small></p>`;return;}
+  const {rows}=build(),by={};
+  for(const r of rows){if(r.combo||r.ai)continue;for(const k of RKEYS){const l=r.rt&&r.rt[k];if(!l||!isFinite(l.p)||l.d==null)continue;const key=r.ap;
+    if(!by[key]||l.p<by[key].p)by[key]={p:l.p,k,l,r};}}
+  const top=Object.values(by).sort((a,b)=>a.p-b.p).slice(0,10);
+  el.innerHTML=`<ol>${top.map(x=>`<li><button type="button" data-cj="${x.r.k}">${CITY[x.r.ap]||x.r.ap}</button> · <b>${fmt(Math.round(x.p))}</b> el pasaje · ${RLAB[x.k]} · ${dd(x.l.d)} → ${dd(x.l.r)}<br><small>Ej.: ${x.r.name} · viaje completo ${fmt(Math.round(x.r.total))} por persona</small></li>`).join("")}</ol><p><small>Precios de Google Flights por persona, ida y vuelta, para ${NIGHTS()} noches. Se actualizan solos cada pocas horas.</small></p>`;}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-cj]");if(!b)return;const q=document.getElementById("q");const r=D.find(x=>x.k===b.dataset.cj);if(!q||!r)return;q.value=r.name.replace(/\s*\(.*?\)/g,"");q.dispatchEvent(new Event("input",{bubbles:true}));document.getElementById("list").scrollIntoView({behavior:"smooth"});});
+{const r1=render;render=function(){r1.apply(this,arguments);try{const d=document.getElementById("cheapj");if(d&&d.open)renderCheapJ();}catch(_){}};}
+document.getElementById("cheapj").addEventListener("toggle",e=>{if(e.target.open)try{renderCheapJ();}catch(_){}});
+
 (function(){const OW=OWLIVE||{},FE=FELIVE||{};
 const CN={TUC:"Tucumán",SLA:"Salta",BUE:"Buenos Aires",COR:"Córdoba",MDZ:"Mendoza",ROS:"Rosario",JUJ:"Jujuy",IGU:"Foz do Iguaçu",ASU:"Asunción",VVI:"Santa Cruz (Bolivia)",LPB:"La Paz (Bolivia)",RIO:"Río de Janeiro",SAO:"San Pablo",FLN:"Florianópolis",SSA:"Salvador",REC:"Recife",NAT:"Natal",FOR:"Fortaleza",MCZ:"Maceió",JPA:"João Pessoa",AJU:"Aracaju",IOS:"Ilhéus",BPS:"Porto Seguro",SLZ:"São Luís",MVD:"Montevideo",PDP:"Punta del Este",MDQ:"Mar del Plata",SCL:"Santiago",CUN:"Cancún",PUJ:"Punta Cana",CTG:"Cartagena",ADZ:"San Andrés",PTY:"Panamá",SJO:"San José (Costa Rica)",GYE:"Guayaquil",PIU:"Piura",TRU:"Trujillo",PVR:"Puerto Vallarta",PXM:"Puerto Escondido",CUR:"Curazao",MGA:"Managua",SMR:"Santa Marta",NVT:"Navegantes"};
 const ORIG=["TUC","SLA","BUE","COR","MDZ","ROS","JUJ","IGU","ASU","VVI","LPB"];
