@@ -1514,7 +1514,7 @@ const S={...DEF,W:Object.fromEntries(CRIT.map(c=>[c.k,c.def]))};
 const LV=["Económica","Recomendada","Premium"];
 const RKEYS=["tuc","sla","rio","bue","cor","foz","igr","mix"];
 const RLAB={car:"En auto",tuc:"Desde TUC",sla:"Vía Salta",rio:"Conexión Río",bue:"Vía Bs. As.",cor:"Vía Córdoba",foz:"Foz en micro",igr:"Foz en avión",mix:"Ida y vuelta combinadas"};
-const dd=x=>x===0?"31 dic":x+" ene";
+const dd=x=>x===0?"31 dic":x>31?(x-31)+" feb":x+" ene";
 const G=()=>GASTO[S.gasto];
 const fmt=n=>"USD "+Math.round(n).toLocaleString("es-AR");
 const byK=Object.fromEntries(D.map(d=>[d.k,d]));
