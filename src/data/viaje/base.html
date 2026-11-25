@@ -128,7 +128,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 #glight .gcap{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#ddd;font:13px var(--f-body,Inter,system-ui,sans-serif)}
 .lsal{font-size:12px;margin:4px 0 6px}.lsal:empty{display:none}
 .livest{font-size:12.5px;margin:2px 0 8px;color:var(--muted)}.livest.ok{color:var(--good,#1a7f4b)}.livest.err{color:var(--warn,#b45309)}.livest .linkb{font-size:12.5px}.hpin{border-color:#e4572e;font-size:10.5px}.hpop img{width:100%;border-radius:8px;margin-bottom:4px;aspect-ratio:4/3;object-fit:cover}.hpop{font-size:12.5px;line-height:1.45}
-#list .card{scroll-margin-top:72px}.carmode{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;justify-content:space-between;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:12px 0;font-size:14.5px;background:var(--surface)}.carmode.flash{outline:2px solid var(--accent);outline-offset:2px}.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
+#list .card{scroll-margin-top:72px}.carmode{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;justify-content:space-between;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:12px 0;font-size:14.5px;background:var(--surface)}.carmode .btn{background:var(--accent);color:var(--bg,#0f1d21);border-color:var(--accent);cursor:pointer;font-size:13.5px;padding:8px 14px}.carmode.flash{outline:2px solid var(--accent);outline-offset:2px}.sharebtn{margin-left:auto;order:9;font:600 12px var(--f-sans,inherit);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}.sharebtn:hover{border-color:var(--accent)}#sharetoast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9999;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)}#sharetoast a{color:inherit;font-weight:700}
 .salpin{font-size:16px;line-height:22px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:99px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .csal{margin:6px 0;font-size:14px}.csal summary{cursor:pointer;color:var(--accent,#0a7c86);font-weight:600}
 .salbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:8px}
@@ -707,7 +707,7 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
 </section></div>
 <div class="panel" data-panel="auto" role="tabpanel" hidden><section class="incl" id="auto" aria-label="Viajar en auto">
   <h2>En auto: al sur de Brasil, la costa, Uruguay o hasta el aeropuerto</h2>
-  <p class="hint">Tucumán → Florianópolis son 2.061 km y ~26 h de manejo (<a href="https://www.ruta0.com/ruta/internacional/san-miguel-de-tucuman-a-florianopolis/" target="_blank" rel="noopener">Ruta0</a>): unos 1.400 km en Argentina y 660 en Brasil. Mar del Plata está a 1.683 km, Punta del Este a 1.579 y Punta del Diablo a 1.728. La calculadora reparte nafta, peajes, Carta Verde, desgaste y las noches de ruta entre los 6, lo compara con ir en avión a la misma casa y también calcula manejar hasta Bs. As., Córdoba o Foz para tomar el vuelo ahí.</p>
+  <p class="hint">Tucumán → Florianópolis son 2.061 km y ~26 h de manejo (<a href="https://www.ruta0.com/ruta/internacional/san-miguel-de-tucuman-a-florianopolis/" target="_blank" rel="noopener">Ruta0</a>): unos 1.400 km en Argentina y 660 en Brasil. Mar del Plata está a 1.683 km, Punta del Este a 1.579 y Punta del Diablo a 1.728. La calculadora reparte nafta, peajes, Carta Verde, desgaste y las noches de ruta entre los <span class="v-pax">6</span>, lo compara con ir en avión a la misma casa y también calcula manejar hasta Bs. As., Córdoba o Foz para tomar el vuelo ahí.</p>
   <div class="carmode" id="carmode" role="group" aria-label="Qué suman las propuestas"></div>
   <div class="carbox">
     <div class="carctl">
@@ -1900,7 +1900,7 @@ function render(){PAX=S.pax;if(MESHG&&MESHG!==meshG())loadMesh();DAYS=S.nights+1
   // cada parte por separado: si una falla, el resto (fichas, totales, mapa) se sigue actualizando
   try{renderMap(base,out);}catch(e){console.error("mapa",e);}try{const fm=document.getElementById("fmap");if(fm)fm.innerHTML=floripaMap(out);}catch(e){console.error("floripa",e);}try{renderFit(rows);}catch(e){console.error("fit",e);}try{renderCar(rows);}catch(e){console.error("auto",e);}
   document.querySelectorAll(".v-ndest").forEach(e=>e.textContent=D.length+C.length);document.getElementById("count").textContent=`${out.length} de ${all} propuestas${S.aloj==="ai"?" con all inclusive":""}`+(S.mes===1?"":S.mes==="best"?` · el mes más barato entre ${MESL[Math.min(S.m1,S.m2)-1]} y ${MESL[Math.max(S.m1,S.m2)-1]}`:` · en ${MESL[S.mes-1]}`)+(S.ap?` · llegando a ${CITY[S.ap]}`:"");
-  document.getElementById("countnote").textContent=noflight?`${noflight} sin vuelo para esta fecha y forma de salir`:"";
+  document.getElementById("countnote").textContent=noflight?(S.strat==="car"?`${noflight} quedan afuera: no se llega en auto`:`${noflight} sin vuelo para esta fecha y forma de salir`):"";
   const list=document.getElementById("list");
   if(!out.length){list.innerHTML=`<div class="empty">Ninguna propuesta entra con estos filtros${S.q?` para “${S.q}”`:""}. ${S.q?`<button type="button" class="linkbtn" data-q="">Ver todos los destinos</button> o p`:"P"}robá otra fecha, subí el presupuesto o elegí “La más barata”.</div>`;return;}
   GM=1;if(S.lv==="prices"){list.innerHTML=(norm(S.q)==="floripa"?floripaMap(out,true):"")+priceTable(out);TIN=6;return;}
@@ -2698,7 +2698,7 @@ document.getElementById("anio").addEventListener("click",e=>{const b=e.target.cl
 const SHARED=(()=>{try{const q=new URLSearchParams(location.search),k=(q.get("p")||"").replace(/[^a-z0-9_]/g,"");if(!k)return null;
   const pax=+q.get("pax"),n=+q.get("n"),m=+q.get("mes"),casa=q.get("casa"),via=q.get("via");
   if(pax>=1&&pax<=16)S.pax=pax;if(n>=2&&n<=30)S.nights=n;if(m>=1&&m<=12)S.mes=m;
-  if(casa&&/^\d{3,25}$/.test(casa))PICK[k]=casa;if(via&&/^[a-z]{2,4}$/.test(via))RPICK[k]=via;
+  if(casa&&/^\d{3,25}$/.test(casa))PICK[k]=casa;try{if(CARKM[k])CS.dest=k;}catch(_){}if(via&&/^[a-z]{2,4}$/.test(via))RPICK[k]=via;
   for(const id of ["pax","nights","mes"])try{setSeg(id,S[id]);}catch(_){}
   return {k};}catch(_){return null;}})();
 let LIVEPIN=null;// ficha abierta desde un link: queda fija en pantalla mientras llegan los precios en vivo, hasta que la persona se mueva
