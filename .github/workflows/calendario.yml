@@ -1,0 +1,47 @@
+name: Calendario de vuelos de enero (solo ida y por fecha)
+
+# Renueva el calendario de la pestaña Vuelos (app_snapshots 'ow' y 'fechas'): cada corrida toma 4 días de enero
+# y busca solo ida (ida y vuelta por separado) y la ida y vuelta de esos días. 8 tandas = todo enero cada 2 días.
+on:
+  schedule:
+    - cron: "47 1,7,13,19 * * *"
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: "Días de enero (ej. 1,2,3,4). Vacío = la tanda que toca"
+        required: false
+
+concurrency:
+  group: calendario
+  cancel-in-progress: false
+
+jobs:
+  calendario:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.49.1
+      - run: npx playwright install --with-deps chromium
+      - name: Días de esta tanda
+        id: d
+        run: |
+          if [ -n "${{ inputs.dias }}" ]; then echo "dias=${{ inputs.dias }}" >> "$GITHUB_OUTPUT"; exit 0; fi
+          i=$(( ($(date -u +%s) / 21600) % 8 ))
+          a=$(( i * 4 + 1 )); dias=""
+          for d in $(seq $a $(( a + 3 ))); do [ $d -le 31 ] && dias="$dias${dias:+,}$d"; done
+          echo "dias=$dias" >> "$GITHUB_OUTPUT"; echo "Tanda $i: días $dias"
+      - name: Solo ida (Argentina → playa)
+        run: node scripts/flights-worker.mjs
+        env: { SUPABASE_URL: "${{ secrets.SUPABASE_URL }}", SUPABASE_SECRET_KEY: "${{ secrets.SUPABASE_SECRET_KEY }}", MESES: "1", DIAS: "${{ steps.d.outputs.dias }}", MODO: ida, TABS: 3 }
+      - name: Solo vuelta (playa → Argentina)
+        if: always()
+        run: node scripts/flights-worker.mjs
+        env: { SUPABASE_URL: "${{ secrets.SUPABASE_URL }}", SUPABASE_SECRET_KEY: "${{ secrets.SUPABASE_SECRET_KEY }}", MESES: "1", DIAS: "${{ steps.d.outputs.dias }}", MODO: vuelta, TABS: 3 }
+      - name: Ida y vuelta por fecha
+        if: always()
+        run: node scripts/flights-worker.mjs
+        env: { SUPABASE_URL: "${{ secrets.SUPABASE_URL }}", SUPABASE_SECRET_KEY: "${{ secrets.SUPABASE_SECRET_KEY }}", MESES: "1", DIAS: "${{ steps.d.outputs.dias }}", MODO: iv, TABS: 3 }
