@@ -1834,7 +1834,7 @@ function routesM(r){const g=G();const d=r.combo&&r.comboParts?r.comboParts[0]:r;
   for(const m of monthsSel()){const f=yFlight(r.ap,m);if(!f)continue;const hr=yHouseR(d,m);
     const bag=(CS.hub&&f.o==="BUE"?40:BAG[f.o==="BUE"?"bue":f.o==="SLA"?"sla":"tuc"])*g.bag;const c=f.p+bag+h0*hr.r/PAX;
     if(!best||c<best.c)best={c,m,hr};}
-  const out={tuc:NA,sla:NA,bue:NA,cor:NA,foz:NA,rio:NA,igr:NA};if(!best)return out;
+  const out={tuc:NA,sla:NA,bue:NA,cor:NA,foz:NA,rio:NA,igr:NA,mix:NA};if(!best)return out;
   r.houseTotal=h0*best.hr.r;r.hrSel=best.hr;
   const F=ANIO.fl[r.ap][best.m],R0=10,R1=10+NIGHTS();
   if(F[0]!=null)out.tuc={p:F[0],d:R0,r:R1,o:"TUC",m:best.m,est:!!F[5],al:F[4],st:F[2]};
