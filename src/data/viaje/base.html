@@ -561,7 +561,6 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
   <div class="qrow">
     <label class="qsearch"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Buscar: Floripa, Jurerê… (varias separadas por coma)" list="qlist" autocomplete="off" aria-label="Buscar destino"><datalist id="qlist"></datalist></label>
   </div>
-  <div class="drange qd">📅 Salir entre el <select id="dmin" aria-label="Salir desde el día"></select> y el <select id="dmax" aria-label="Salir hasta el día"></select> de enero <small>(se busca el día más barato en ese rango)</small></div>
   <details class="cheapj" id="cheapj"><summary>💸 Las idas y vueltas más baratas de enero</summary><div id="cheapjl"></div></details>
   <div class="qplaces" id="qplaces" role="group" aria-label="Destinos rápidos">
     <button type="button" data-q="">Todos</button><button type="button" data-q="floripa">Floripa (todas las playas)</button><button type="button" data-q="jurere">Jurerê</button><button type="button" data-q="camboriu">Camboriú</button><button type="button" data-q="rosa">Praia do Rosa</button><button type="button" data-q="sur">Sur de Brasil</button><button type="button" data-q="rio">Río y Búzios</button><button type="button" data-q="bahia">Bahía</button><button type="button" data-q="nordeste">Nordeste</button><button type="button" data-q="caribe">Caribe</button>
@@ -571,6 +570,8 @@ article.card.flash{outline:2px solid var(--accent);outline-offset:2px;transition
     <div class="qstep" role="group" aria-label="Noches"><span>Noches</span><button type="button" data-step="nights" data-d="-1" aria-label="Una noche menos">−</button><b id="qnights">8</b><button type="button" data-step="nights" data-d="1" aria-label="Una noche más">+</button></div>
     <label class="qsel"><span>Cuándo</span><select id="qmes"></select></label><span class="qrange" id="qrange" hidden><span>entre</span><select id="qm1" aria-label="Desde el mes"></select><span>y</span><select id="qm2" aria-label="Hasta el mes"></select></span>
     <label class="qsel" id="qdepw"><span>Día de ida</span><select id="qdep"></select></label>
+    <label class="qsel"><span>Salir desde el</span><select id="dmin" aria-label="Salir desde el día de enero"></select></label>
+    <label class="qsel"><span>Hasta el</span><select id="dmax" aria-label="Salir hasta el día de enero"></select></label>
     <label class="qsel"><span>Dormir en</span><select id="qaloj"><option value="casa">Casa de Airbnb</option><option value="ai">All inclusive</option></select></label>
     <label class="qsel"><span>Casa</span><select id="qlvl"><option value="-1">La más barata</option><option value="0">Económica</option><option value="1">Recomendada</option><option value="2">Premium</option></select></label>
     <label class="qsel"><span>Ordenar</span><select id="qsort"><option value="score">Mejor puntaje</option><option value="total">Más barato</option><option value="night">Más noche</option><option value="beach">Mejor playa</option></select></label>
@@ -2832,7 +2833,7 @@ syncRanges();render();renderTable();renderDayTable();renderHeat();renderOcc();re
 const OWLIVE=null;const FELIVE=null;
 // Las tablas de Vuelos se dibujan antes de esta línea: se redibujan con los precios nuevos apenas están
 window.addEventListener("load",()=>{try{FE_N=null;renderTable();renderDayTable();}catch(_){}});
-{const a=document.getElementById("dmin"),b=document.getElementById("dmax");if(a&&b){const o=[...Array(31)].map((_,i)=>`<option value="${i+1}">${i+1}</option>`).join("");a.innerHTML=o;b.innerHTML=o;
+{const a=document.getElementById("dmin"),b=document.getElementById("dmax");if(a&&b){const o=[...Array(31)].map((_,i)=>`<option value="${i+1}">${i+1} ene</option>`).join("");a.innerHTML=o;b.innerHTML=o;
   const u=new URLSearchParams(location.search);S.dmin=+u.get("dmin")||S.dmin||1;S.dmax=+u.get("dmax")||S.dmax||31;a.value=S.dmin;b.value=S.dmax;
   const ch=()=>{let x=+a.value,y=+b.value;if(x>y){if(document.activeElement===a)y=x;else x=y;a.value=x;b.value=y;}S.dmin=x;S.dmax=y;FE_N=null;if(S.dep!=="best"){S.dep="best";try{setSeg("dep","best");}catch(_){}}
     const q=new URLSearchParams(location.search);x>1?q.set("dmin",x):q.delete("dmin");y<31?q.set("dmax",y):q.delete("dmax");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash);render();try{renderTable();renderDayTable();}catch(_){}};
